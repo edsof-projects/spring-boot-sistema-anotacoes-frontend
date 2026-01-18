@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import Title from "../../Title"
 import { getAllAcessos } from "../../../services/ServiceAcessos"
-import { useNavigate } from "react-router-dom"
 
 const ListAcessos = ({ setCadastrando }) => {
 
