@@ -1,0 +1,17 @@
+*{
+  max-width: 1580px;
+  margin: 0 auto;
+  padding: 0; 
+}
+
+body, html{
+  font-family: Arial, Helvetica, sans-serif;   
+}
+
+a{
+  text-decoration: none;
+}
+
+li{
+  list-style: none;
+}
