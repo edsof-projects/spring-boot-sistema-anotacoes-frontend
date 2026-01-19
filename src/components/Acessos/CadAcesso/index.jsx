@@ -1,14 +1,11 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Title from "../../Title"
+import { useState }      from "react"
 import { getSaveAcesso } from "../../../services/ServiceAcessos"
+import Title             from "../../Title"
 
 const CadAcesso = ({ setCadastrando }) => {
 
   const [tipo, setTipo]       = useState("")
   const [errors, setErrors]   = useState({tipo : ""})
-  const navigator             = useNavigate()
-
 
   function voltarListagem(){
      setCadastrando(false)
@@ -21,28 +18,34 @@ const CadAcesso = ({ setCadastrando }) => {
     if(tipo.trim()){
       errorsCopy.tipo = ""
     }else{
-      errorsCopy.tipo = "Nome do tipo de acessso é obrigatório"
+      errorsCopy.tipo = "Entre com o tipo de acessso para continuar..."
       valid = false
     }
+    setErrors(errorsCopy)
+    console.log(errorsCopy)
+
+    return valid
   }
 
   function listAcesso(){
-        setCadastrando(false)
-    }
+      setCadastrando(false)
+  }
 
   function saveTipoAcesso(e){
     e.preventDefault()
 
-    const tipoAcesso = {
-      tipo
-    }
+    if (validateForm()){   
+        const tipoAcesso = {
+          tipo
+        }
 
-    console.log(tipoAcesso)
-    getSaveAcesso(tipoAcesso)
-    .then((response) =>{
-      console.log(response.data)
-      listAcesso()
-    })
+        console.log(tipoAcesso)
+        getSaveAcesso(tipoAcesso)
+        .then((response) =>{
+          console.log(response.data)
+          listAcesso()
+        })
+     }
   }
 
   return (

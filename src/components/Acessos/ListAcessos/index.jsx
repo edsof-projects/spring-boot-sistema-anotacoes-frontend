@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import Title from "../../Title"
-import { getAllAcessos } from "../../../services/ServiceAcessos"
+import { useEffect, useState }  from "react"
+import { getAllAcessos }        from "../../../services/ServiceAcessos"
+import Title                    from "../../Title"
 
 const ListAcessos = ({ setCadastrando }) => {
 
