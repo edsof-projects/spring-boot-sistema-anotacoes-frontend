@@ -1,0 +1,6 @@
+.ListAcessos {
+  flex: 1;
+  overflow-y: auto;   /* ✅ scroll vertical aqui */
+  padding: 0 16px;
+  width: 100%;
+}
