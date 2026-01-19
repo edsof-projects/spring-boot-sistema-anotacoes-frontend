@@ -1,6 +1,7 @@
 import { useEffect, useState }  from "react"
 import { getAllAcessos }        from "../../../services/ServiceAcessos"
 import Title                    from "../../Title"
+import './ListAcessos.css'
 
 const ListAcessos = ({ setCadastrando }) => {
 
@@ -26,7 +27,7 @@ const ListAcessos = ({ setCadastrando }) => {
     }
 
     return (
-        <div className="acessos">
+        <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center">
                 <Title title="Acessos" isPrimario={true} />
                 <button className="btn btn-success" onClick={cadAcesso}>Cadastrar</button>

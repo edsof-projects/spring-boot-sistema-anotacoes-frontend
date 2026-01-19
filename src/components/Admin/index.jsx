@@ -13,27 +13,31 @@ const Admin = () => {
   }
 
   return (
-    <aside className="admin">
-             
-      <nav className="sidebar">
-        <div className="areaFoto">
-          <img src={Foto} alt="Foto" className="foto_user"/>
-        </div>
-        <ul>
-            <li><a href="/" onClick={abrirListagem}>Acessos</a></li>
-            <li><a href="#">Usuários</a></li>
-            <li><a href="#">Anotações</a></li>
-        </ul>
-      </nav>          
-   
-      <div className="content">     
-        {cadastrando
-          ? <CadAcesso setCadastrando={setCadastrando} />
-          : <ListAcessos setCadastrando={setCadastrando} />
-        }
+    <div className="layout">  
+    
+        <aside className="sidebar">     
+            <div className="areaFoto">
+              <img src={Foto} alt="Foto" className="foto_user"/>
+            </div>   
+                    
+            <nav className="nav">              
+              <ul>
+                  <li><a href="/" onClick={abrirListagem}>Acessos</a></li>
+                  <li><a href="#">Usuários</a></li>
+                  <li><a href="#">Anotações</a></li>
+              </ul>
+            </nav>   
+                
+        </aside>
+
+        <main className="content">     
+          {cadastrando
+            ? <CadAcesso setCadastrando={setCadastrando} />
+            : <ListAcessos setCadastrando={setCadastrando} />
+          }
+        </main>        
+
       </div>
-      
-    </aside>
   )
 }
 

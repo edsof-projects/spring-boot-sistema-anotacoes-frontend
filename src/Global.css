@@ -6,6 +6,8 @@
 
 body, html{
   font-family: Arial, Helvetica, sans-serif;   
+  height: 100%;
+  overflow: hidden; /* 🚫 body não rola */
 }
 
 a{

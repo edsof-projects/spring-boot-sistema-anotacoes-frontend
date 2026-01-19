@@ -1,6 +1,7 @@
 import { useState }      from "react"
 import { getSaveAcesso } from "../../../services/ServiceAcessos"
 import Title             from "../../Title"
+import './CadAcesso.css'
 
 const CadAcesso = ({ setCadastrando }) => {
 
@@ -49,7 +50,7 @@ const CadAcesso = ({ setCadastrando }) => {
   }
 
   return (
-    <div>
+    <div className="cadAcesso">
        <Title title="Cadastrar Acesso" isPrimario={true} />
        <form>        
           <input 
