@@ -1,8 +1,8 @@
-import "./Admin.css"
 import { useState } from "react"
-import  Foto  from "../../assets/usuario.png"
+import  Foto        from "../../assets/usuario.png"
 import  ListAcessos from "../Acessos/ListAcessos"
-import  CadAcesso from "../Acessos/CadAcesso"
+import  CadAcesso   from "../Acessos/CadAcesso"
+import "./Admin.css"
 
 const Admin = () => {
   const [cadastrando, setCadastrando] = useState(false)
