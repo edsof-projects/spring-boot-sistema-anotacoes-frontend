@@ -28,11 +28,10 @@ const ListAcessos = ({ setCadastrando }) => {
 
     return (
         <div className="ListAcessos">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <Title title="Acessos" isPrimario={true} />
                 <button className="btn btn-success" onClick={cadAcesso}>Cadastrar</button>
             </div>
-            <hr />
             <table className="table table-striped">
                 <thead>
                     <tr>
