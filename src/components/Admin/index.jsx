@@ -6,6 +6,7 @@ import "./Admin.css"
 
 const Admin = () => {
   const [cadastrando, setCadastrando] = useState(false)
+  const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso")
 
   function abrirListagem(e){
     e.preventDefault()
@@ -32,8 +33,14 @@ const Admin = () => {
 
         <main className="content">     
           {cadastrando
-            ? <CadAcesso setCadastrando={setCadastrando} />
-            : <ListAcessos setCadastrando={setCadastrando} />
+            ? <CadAcesso 
+                setCadastrando={setCadastrando} 
+                textoTitle={textoTitle}
+              />
+            : <ListAcessos 
+                setCadastrando={setCadastrando} 
+                setTextoTitle={setTextoTitle}
+              />
           }
         </main>        
 

@@ -3,7 +3,7 @@ import { getSaveAcesso }  from "../../../services/ServiceAcessos"
 import Title              from "../../Title"
 import './CadAcesso.css'
 
-const CadAcesso = ({ setCadastrando }) => {
+const CadAcesso = ({ setCadastrando, textoTitle }) => {
 
   const [tipo, setTipo]             = useState("")
   const [errors, setErrors]         = useState({ tipo: "" })
@@ -63,7 +63,7 @@ const CadAcesso = ({ setCadastrando }) => {
 
   return (
     <div className="cadAcesso">
-      <Title title="Cadastrar Acesso" isPrimario={true} />
+      <Title title={textoTitle} isPrimario={true} />
 
       {successMsg && (
         <div className="alert alert-success alert-dismissible fade show" role="alert">

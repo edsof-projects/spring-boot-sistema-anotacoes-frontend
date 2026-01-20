@@ -3,26 +3,32 @@ import { getAllAcessos }        from "../../../services/ServiceAcessos"
 import Title                    from "../../Title"
 import './ListAcessos.css'
 
-const ListAcessos = ({ setCadastrando }) => {
+const ListAcessos = ({ setCadastrando, setTextoTitle }) => {
 
-    const [acessos, setAcessos] = useState([])    
-    
-    function listOfAcessos(){
+    const [acessos, setAcessos] = useState([])
+
+    function listOfAcessos() {
         getAllAcessos()
-        .then((response) =>{
-            // console.log(response.data)
-            setAcessos(response.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
+            .then((response) => {
+                // console.log(response.data)
+                setAcessos(response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 
     useEffect(() => {
         listOfAcessos()
-    },[])
+    }, [])
+ 
+    function cadastrar() {
+        setTextoTitle("Cadastrar Acesso")
+        setCadastrando(true)
+    }
 
-    function cadAcesso(){
+    function editar() {
+        setTextoTitle("Editar Acesso")
         setCadastrando(true)
     }
 
@@ -30,7 +36,7 @@ const ListAcessos = ({ setCadastrando }) => {
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <Title title="Acessos" isPrimario={true} />
-                <button className="btn btn-success" onClick={cadAcesso}>Cadastrar</button>
+                <button className="btn btn-success" onClick={cadastrar}>Cadastrar</button>
             </div>
             <table className="table table-striped">
                 <thead>
@@ -41,17 +47,17 @@ const ListAcessos = ({ setCadastrando }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {acessos.map((acesso) =>(
-                    <tr key={acesso.id}>
-                        <td className="align-middle">{acesso.id}</td>
-                        <td className="align-middle">{acesso.tipo}</td>
-                        <td className="align-middle">
-                            <div className="d-flex justify-content-end gap-2">
-                                <button className="btn btn-warning" onClick={cadAcesso}>Editar</button>
-                                <button className="btn btn-danger">Excluir</button>
-                            </div>
-                        </td>
-                    </tr>
+                    {acessos.map((acesso) => (
+                        <tr key={acesso.id}>
+                            <td className="align-middle">{acesso.id}</td>
+                            <td className="align-middle">{acesso.tipo}</td>
+                            <td className="align-middle">
+                                <div className="d-flex justify-content-end gap-2">
+                                    <button className="btn btn-warning" onClick={editar}>Editar</button>
+                                    <button className="btn btn-danger">Excluir</button>
+                                </div>
+                            </td>
+                        </tr>
                     ))}
                 </tbody>
             </table>
