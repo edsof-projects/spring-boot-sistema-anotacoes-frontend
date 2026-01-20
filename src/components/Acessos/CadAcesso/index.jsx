@@ -1,17 +1,35 @@
-import { useState }       from "react"
-import { getSaveAcesso }  from "../../../services/ServiceAcessos"
-import Title              from "../../Title"
+import { useEffect, useState }                     from "react"
+import { createAcesso, editAcesso }                from "../../../services/ServiceAcessos"
+import { getTipoById }                             from "../../../services/ServiceAcessos"
+import { useOutletContext,useNavigate, useParams } from "react-router-dom"
+import Title                                       from "../../Title"
 import './CadAcesso.css'
 
-const CadAcesso = ({ setCadastrando, textoTitle }) => {
+const CadAcesso = () => {
 
   const [tipo, setTipo]             = useState("")
   const [errors, setErrors]         = useState({ tipo: "" })
   const [apiError, setApiError]     = useState("")
   const [successMsg, setSuccessMsg] = useState("")
+  const {id}                        = useParams()
+  const isEdicao                    = Boolean(id)
+  const { textoTitle }              = useOutletContext()
+  const navigate                    = useNavigate()
+
+  useEffect(()=>{
+     if(id){
+      getTipoById(id)
+      .then((response)=>{
+        console.log(response.data)
+        setTipo(response.data.tipo)
+      }).catch((error)=>{
+        console.error(error)
+      })
+     }
+  },[id])
 
   function voltarParaListagem() {
-    setCadastrando(false)
+    navigate("/")
   }
 
   function validateForm() {
@@ -28,12 +46,8 @@ const CadAcesso = ({ setCadastrando, textoTitle }) => {
 
     return valid
   }
-
-  function listAcesso() {
-    setCadastrando(false)
-  }
-
-  function saveTipoAcesso(e) {
+  
+  function saveOrEditTipo(e) {
     e.preventDefault()
 
     setApiError("")
@@ -42,13 +56,31 @@ const CadAcesso = ({ setCadastrando, textoTitle }) => {
     if (validateForm()) {
       const tipoAcesso = { tipo }
 
-      getSaveAcesso(tipoAcesso)
+      if(id){
+        editAcesso(tipoAcesso, id)
+        .then((response) => {
+          setSuccessMsg("Nível de acesso editado com sucesso!")
+          setTipo("")
+          // opcional: voltar após 2.5s
+          setTimeout(() => {
+            voltarParaListagem()
+          }, 3000)
+        })
+        .catch((error) => {
+          if (error.response?.status === 409) {
+            setApiError(error.response.data.message)
+          } else {
+            setApiError("Erro ao tentar editar o tipo de acesso.")
+          }
+        })
+      }else{
+         createAcesso(tipoAcesso)
         .then((response) => {
           setSuccessMsg("Nível de acesso cadastrado com sucesso!")
           setTipo("")
           // opcional: voltar após 2.5s
           setTimeout(() => {
-            listAcesso()
+            voltarParaListagem()
           }, 3000)
         })
         .catch((error) => {
@@ -58,8 +90,11 @@ const CadAcesso = ({ setCadastrando, textoTitle }) => {
             setApiError("Duplicidade de cadastro [ " + tipo + " ] já esta cadastrado.")
           }
         })
+      }
+
+      
     }
-  }
+  } 
 
   return (
     <div className="cadAcesso">
@@ -102,8 +137,8 @@ const CadAcesso = ({ setCadastrando, textoTitle }) => {
       </form>
 
       <div className="d-flex gap-2">
-        <button className="btn btn-success mt-2 md-2 px-4"   onClick={saveTipoAcesso}>Salvar</button>
-        <button className="btn btn-secondary mt-2 me-2 px-4" onClick={voltarParaListagem}>Cancelar</button>
+        <button className="btn btn-success mt-2 md-2 px-4" onClick={ saveOrEditTipo }>Salvar</button>
+        <button className="btn btn-secondary mt-2 me-2 px-4" onClick={voltarParaListagem}>Voltar</button>
       </div>
 
     </div>

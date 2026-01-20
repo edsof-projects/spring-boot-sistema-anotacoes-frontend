@@ -1,16 +1,18 @@
-import { useEffect, useState }  from "react"
-import { getAllAcessos }        from "../../../services/ServiceAcessos"
-import Title                    from "../../Title"
+import { useEffect, useState }           from "react"
+import { getAllAcessos }                 from "../../../services/ServiceAcessos"
+import Title                             from "../../Title"
+import { useOutletContext, useNavigate } from "react-router-dom"
 import './ListAcessos.css'
 
-const ListAcessos = ({ setCadastrando, setTextoTitle }) => {
+const ListAcessos = () => {
 
     const [acessos, setAcessos] = useState([])
+    const { setTextoTitle }     = useOutletContext()
+    const navigate              = useNavigate()
 
     function listOfAcessos() {
         getAllAcessos()
             .then((response) => {
-                // console.log(response.data)
                 setAcessos(response.data)
             })
             .catch((error) => {
@@ -21,16 +23,11 @@ const ListAcessos = ({ setCadastrando, setTextoTitle }) => {
     useEffect(() => {
         listOfAcessos()
     }, [])
- 
+
     function cadastrar() {
         setTextoTitle("Cadastrar Acesso")
-        setCadastrando(true)
-    }
-
-    function editar() {
-        setTextoTitle("Editar Acesso")
-        setCadastrando(true)
-    }
+        navigate("/acessos/cadastrar")
+    }    
 
     return (
         <div className="ListAcessos">
@@ -53,7 +50,12 @@ const ListAcessos = ({ setCadastrando, setTextoTitle }) => {
                             <td className="align-middle">{acesso.tipo}</td>
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
-                                    <button className="btn btn-warning" onClick={editar}>Editar</button>
+                                    <button 
+                                        className="btn btn-warning" 
+                                        onClick={() => {
+                                        setTextoTitle("Editar Acesso")
+                                        navigate(`/acessos/editar/${acesso.id}`)
+                                    }}>Editar</button>
                                     <button className="btn btn-danger">Excluir</button>
                                 </div>
                             </td>
