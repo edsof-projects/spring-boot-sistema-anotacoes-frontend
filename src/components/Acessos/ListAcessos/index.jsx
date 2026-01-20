@@ -10,7 +10,7 @@ const ListAcessos = ({ setCadastrando }) => {
     function listOfAcessos(){
         getAllAcessos()
         .then((response) =>{
-            console.log(response.data)
+            // console.log(response.data)
             setAcessos(response.data)
         })
         .catch((error) => {
@@ -47,7 +47,7 @@ const ListAcessos = ({ setCadastrando }) => {
                         <td className="align-middle">{acesso.tipo}</td>
                         <td className="align-middle">
                             <div className="d-flex justify-content-end gap-2">
-                                <button className="btn btn-warning">Editar</button>
+                                <button className="btn btn-warning" onClick={cadAcesso}>Editar</button>
                                 <button className="btn btn-danger">Excluir</button>
                             </div>
                         </td>

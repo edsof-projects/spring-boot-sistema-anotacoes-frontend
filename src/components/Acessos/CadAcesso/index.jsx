@@ -10,7 +10,7 @@ const CadAcesso = ({ setCadastrando }) => {
   const [apiError, setApiError]     = useState("")
   const [successMsg, setSuccessMsg] = useState("")
 
-  function voltarListagem() {
+  function voltarParaListagem() {
     setCadastrando(false)
   }
 
@@ -24,8 +24,7 @@ const CadAcesso = ({ setCadastrando }) => {
       errorsCopy.tipo = "Entre com o tipo de acessso para continuar..."
       valid = false
     }
-    setErrors(errorsCopy)
-    console.log(errorsCopy)
+    setErrors(errorsCopy)    
 
     return valid
   }
@@ -103,8 +102,8 @@ const CadAcesso = ({ setCadastrando }) => {
       </form>
 
       <div className="d-flex gap-2">
-        <button className="btn btn-success mt-2 md-2 px-4" onClick={saveTipoAcesso}>Salvar</button>
-        <button className="btn btn-secondary mt-2 me-2 px-4" onClick={voltarListagem}>Cancelar</button>
+        <button className="btn btn-success mt-2 md-2 px-4"   onClick={saveTipoAcesso}>Salvar</button>
+        <button className="btn btn-secondary mt-2 me-2 px-4" onClick={voltarParaListagem}>Cancelar</button>
       </div>
 
     </div>
