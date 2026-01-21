@@ -23,17 +23,19 @@ const ListAcessos = () => {
     useEffect(() => {
         listOfAcessos()
     }, [])
-
-    function cadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate("/acessos/cadastrar")
-    }    
-
+   
     return (
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <Title title="Acessos" isPrimario={true} />
-                <button className="btn btn-success" onClick={cadastrar}>Cadastrar</button>
+                <button 
+                    className="btn btn-success" 
+                    onClick={() => {
+                    setTextoTitle("Cadastrar Acesso")
+                    navigate(`/acessos/cadastrar`)
+                    }}>
+                    Cadastrar
+                </button>
             </div>
             <table className="table table-striped">
                 <thead>
@@ -55,8 +57,17 @@ const ListAcessos = () => {
                                         onClick={() => {
                                         setTextoTitle("Editar Acesso")
                                         navigate(`/acessos/editar/${acesso.id}`)
-                                    }}>Editar</button>
-                                    <button className="btn btn-danger">Excluir</button>
+                                        }}>
+                                        Editar
+                                    </button>
+                                    <button 
+                                        className="btn btn-danger"
+                                        onClick={() => {
+                                        setTextoTitle("Excluir Acesso")
+                                        navigate(`/acessos/deletar/${acesso.id}`)
+                                        }}>
+                                        Excluir
+                                    </button>
                                 </div>
                             </td>
                         </tr>
