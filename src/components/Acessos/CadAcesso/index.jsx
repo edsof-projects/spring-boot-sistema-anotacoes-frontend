@@ -70,8 +70,11 @@ const CadAcesso = () => {
           if (error.response?.status === 409) {
             setApiError(error.response.data.message)
           } else {
-            setApiError("Erro ao tentar editar o tipo de acesso.")
+            setApiError("Erro ao tentar editar, talvez o acesso já esteja cadastrado.")
           }
+          setTimeout(() => {
+            voltarParaListagem()
+          }, 3000)
         })
       }else{
          createAcesso(tipoAcesso)
