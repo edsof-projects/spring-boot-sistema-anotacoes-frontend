@@ -1,38 +1,40 @@
-import { useEffect, useState }  from "react"
-import { getAllAcessos }        from "../../../services/ServiceAcessos"
-import Title                    from "../../Title"
+import { useEffect, useState }           from "react"
+import { getAllAcessos }                 from "../../../services/ServiceAcessos"
+import Title                             from "../../Title"
+import { useOutletContext, useNavigate } from "react-router-dom"
 import './ListAcessos.css'
 
-const ListAcessos = ({ setCadastrando }) => {
+const ListAcessos = () => {
 
-    const [acessos, setAcessos] = useState([])    
-    
-    function listOfAcessos(){
+    const [acessos, setAcessos] = useState([])
+    const { setTextoTitle }     = useOutletContext()
+    const navigate              = useNavigate()
+
+    function listOfAcessos() {
         getAllAcessos()
-        .then((response) =>{
-            console.log(response.data)
-            setAcessos(response.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
+            .then((response) => {
+                setAcessos(response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 
     useEffect(() => {
         listOfAcessos()
-    },[])
+    }, [])
 
-    function cadAcesso(){
-        setCadastrando(true)
-    }
+    function cadastrar() {
+        setTextoTitle("Cadastrar Acesso")
+        navigate("/acessos/cadastrar")
+    }    
 
     return (
         <div className="ListAcessos">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <Title title="Acessos" isPrimario={true} />
-                <button className="btn btn-success" onClick={cadAcesso}>Cadastrar</button>
+                <button className="btn btn-success" onClick={cadastrar}>Cadastrar</button>
             </div>
-            <hr />
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -42,17 +44,22 @@ const ListAcessos = ({ setCadastrando }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {acessos.map((acesso) =>(
-                    <tr key={acesso.id}>
-                        <td className="align-middle">{acesso.id}</td>
-                        <td className="align-middle">{acesso.tipo}</td>
-                        <td className="align-middle">
-                            <div className="d-flex justify-content-end gap-2">
-                                <button className="btn btn-warning">Editar</button>
-                                <button className="btn btn-danger">Excluir</button>
-                            </div>
-                        </td>
-                    </tr>
+                    {acessos.map((acesso) => (
+                        <tr key={acesso.id}>
+                            <td className="align-middle">{acesso.id}</td>
+                            <td className="align-middle">{acesso.tipo}</td>
+                            <td className="align-middle">
+                                <div className="d-flex justify-content-end gap-2">
+                                    <button 
+                                        className="btn btn-warning" 
+                                        onClick={() => {
+                                        setTextoTitle("Editar Acesso")
+                                        navigate(`/acessos/editar/${acesso.id}`)
+                                    }}>Editar</button>
+                                    <button className="btn btn-danger">Excluir</button>
+                                </div>
+                            </td>
+                        </tr>
                     ))}
                 </tbody>
             </table>

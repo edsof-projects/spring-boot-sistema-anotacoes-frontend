@@ -1,11 +1,10 @@
 import { useState } from "react"
 import  Foto        from "../../assets/usuario.png"
-import  ListAcessos from "../Acessos/ListAcessos"
-import  CadAcesso   from "../Acessos/CadAcesso"
+import { Outlet }   from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
-  const [cadastrando, setCadastrando] = useState(false)
+  const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso")
 
   function abrirListagem(e){
     e.preventDefault()
@@ -31,10 +30,7 @@ const Admin = () => {
         </aside>
 
         <main className="content">     
-          {cadastrando
-            ? <CadAcesso setCadastrando={setCadastrando} />
-            : <ListAcessos setCadastrando={setCadastrando} />
-          }
+            <Outlet context={{ textoTitle, setTextoTitle }} />
         </main>        
 
       </div>

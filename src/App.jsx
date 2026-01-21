@@ -1,25 +1,25 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Admin from './components/Admin'
-import Title from './components/Title'
+import Admin                            from './components/Admin'
+import CadAcesso                        from './components/Acessos/CadAcesso'
+import ListAcessos                      from './components/Acessos/ListAcessos'
 import './Global.css'
-import CadAcesso from './components/Acessos/CadAcesso'
 
 function App() {
 
-  return (   
-      <BrowserRouter>    
+  return (                   
+
+      <BrowserRouter>
         <Routes>
 
-          {/* <Title title="Administração" isPrimario={false}/> */}
-          {/* http://localhost/5173/admin */}
-          {/* <Route path='/admin' element={<Admin />}></Route> */}
-          <Route path='/' element={<Admin />}></Route>
+            <Route element={<Admin />}>
+              <Route index element={<ListAcessos />} />
+              <Route path="acessos/cadastrar"  element={<CadAcesso />} />
+              <Route path="acessos/editar/:id" element={<CadAcesso />} />   
+            </Route>   
 
-          {/* http://localhost/5173/cadacesso */}
-          <Route path='/cadacesso' element={<CadAcesso />}></Route>
-          
         </Routes>
-      </BrowserRouter>
+    </BrowserRouter>
+
   )
 }
 
