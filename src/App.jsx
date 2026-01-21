@@ -13,8 +13,9 @@ function App() {
 
             <Route element={<Admin />}>
               <Route index element={<ListAcessos />} />
-              <Route path="acessos/cadastrar"  element={<CadAcesso />} />
-              <Route path="acessos/editar/:id" element={<CadAcesso />} />   
+              <Route path="acessos/cadastrar"   element={<CadAcesso />} />
+              <Route path="acessos/editar/:id"  element={<CadAcesso />} />   
+              <Route path="acessos/deletar/:id" element={<CadAcesso />} />   
             </Route>   
 
         </Routes>
