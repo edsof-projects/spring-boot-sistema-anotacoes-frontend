@@ -194,7 +194,7 @@ const CadAcesso = () => {
 
                 <div className="modal-body">
                   <p>Deseja realmente excluir o acesso?</p>
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-space-beetwen">
                       <p>id   : <strong className="text-danger ">{id}</strong></p>
                       <p>Tipo : <strong className="text-danger ">{tipo}</strong></p>                      
                   </div>
@@ -211,7 +211,7 @@ const CadAcesso = () => {
 
                     <button
                       className="btn btn-secondary"
-                      onClick={() => setShowConfirmDelete(false)}
+                      onClick={() => voltarParaListagem()}
                     >
                       Cancelar
                     </button>

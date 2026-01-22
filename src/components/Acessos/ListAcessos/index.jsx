@@ -1,7 +1,8 @@
-import { useEffect, useState }           from "react"
-import { getAllAcessos }                 from "../../../services/ServiceAcessos"
-import Title                             from "../../Title"
-import { useOutletContext, useNavigate } from "react-router-dom"
+import { useEffect, useState }              from "react"
+import { getAllAcessos }                    from "../../../services/ServiceAcessos"
+import { useSearch }                        from "../../../hooks/useSearch"
+import Title                                from "../../Title"
+import { useOutletContext, useNavigate }    from "react-router-dom"
 import './ListAcessos.css'
 
 const ListAcessos = () => {
@@ -9,7 +10,14 @@ const ListAcessos = () => {
     const [acessos, setAcessos] = useState([])
     const { setTextoTitle }     = useOutletContext()
     const navigate              = useNavigate()
-
+    const {
+        search,
+        filteredList,
+        handleChange,
+        handleKeyDown,
+        isSearching
+    } = useSearch(acessos, "tipo")
+       
     function listOfAcessos() {
         getAllAcessos()
             .then((response) => {
@@ -23,19 +31,35 @@ const ListAcessos = () => {
     useEffect(() => {
         listOfAcessos()
     }, [])
-   
+  
     return (
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <Title title="Acessos" isPrimario={true} />
-                <button 
-                    className="btn btn-success" 
-                    onClick={() => {
-                    setTextoTitle("Cadastrar Acesso")
-                    navigate(`/acessos/cadastrar`)
-                    }}>
-                    Cadastrar
-                </button>
+                <div class="col-md-4">
+                    <input
+                        type="text"
+                        className="search form-control py-2 px-3 rounded-5 fs-6 "
+                        placeholder="Pesquisar..."
+                        value={search}
+                        onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                    />
+                </div>
+                <div class="col-md-4 text-center">
+                    <Title title="Acessos" isPrimario={true} />
+                </div>
+                <div class="col-md-4  p-2 d-flex justify-content-end">
+                    <button
+                        className="btn btn-success"  
+                        disabled={isSearching}                     
+                        onClick={() => {
+                            setTextoTitle("Cadastrar Acesso")
+                            navigate(`/acessos/cadastrar`)
+                        }}>
+                        Cadastrar
+                    </button>
+                </div>
+
             </div>
             <table className="table table-striped">
                 <thead>
@@ -46,25 +70,25 @@ const ListAcessos = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {acessos.map((acesso) => (
+                    {filteredList.map((acesso) => (
                         <tr key={acesso.id}>
                             <td className="align-middle">{acesso.id}</td>
                             <td className="align-middle">{acesso.tipo}</td>
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
-                                    <button 
-                                        className="btn btn-warning" 
+                                    <button
+                                        className="btn btn-warning"
                                         onClick={() => {
-                                        setTextoTitle("Editar Acesso")
-                                        navigate(`/acessos/editar/${acesso.id}`)
+                                            setTextoTitle("Editar Acesso")
+                                            navigate(`/acessos/editar/${acesso.id}`)
                                         }}>
                                         Editar
                                     </button>
-                                    <button 
+                                    <button
                                         className="btn btn-danger"
                                         onClick={() => {
-                                        setTextoTitle("Excluir Acesso")
-                                        navigate(`/acessos/deletar/${acesso.id}`)
+                                            setTextoTitle("Excluir Acesso")
+                                            navigate(`/acessos/deletar/${acesso.id}`)
                                         }}>
                                         Excluir
                                     </button>
