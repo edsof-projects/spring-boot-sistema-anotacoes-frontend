@@ -27,8 +27,15 @@ const ListAcessos = () => {
     return (
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <Title title="Acessos" isPrimario={true} />
-                <button 
+                {/* <input type="text" className="search p-1 rounded-1 border-0 shadow-none form-control" placeholder="Pesquisar..."/> */}
+                <div class="col-md-4">
+                    <input type="text" className="search form-control py-2 px-3 rounded-5 fs-6 " placeholder="Pesquisar..."/>
+                </div>
+                <div class="col-md-4 text-center">
+                    <Title title="Acessos" isPrimario={true} />
+                </div>
+                <div class="col-md-4  p-2 d-flex justify-content-end">
+                    <button 
                     className="btn btn-success" 
                     onClick={() => {
                     setTextoTitle("Cadastrar Acesso")
@@ -36,6 +43,8 @@ const ListAcessos = () => {
                     }}>
                     Cadastrar
                 </button>
+                </div>
+                
             </div>
             <table className="table table-striped">
                 <thead>
