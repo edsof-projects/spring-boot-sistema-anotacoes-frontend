@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react"
-import { getAllAcessos } from "../../../services/ServiceAcessos"
-import Title from "../../Title"
-import { useOutletContext, useNavigate } from "react-router-dom"
+import { useEffect, useState }              from "react"
+import { getAllAcessos }                    from "../../../services/ServiceAcessos"
+import { useSearch }                        from "../../../hooks/useSearch"
+import Title                                from "../../Title"
+import { useOutletContext, useNavigate }    from "react-router-dom"
 import './ListAcessos.css'
 
 const ListAcessos = () => {
 
     const [acessos, setAcessos] = useState([])
     const { setTextoTitle }     = useOutletContext()
-    const [search, setSearch]   = useState("")
     const navigate              = useNavigate()
-    
+    const {
+        search,
+        filteredList,
+        handleChange,
+        handleKeyDown,
+        isSearching
+    } = useSearch(acessos, "tipo")
+       
     function listOfAcessos() {
         getAllAcessos()
             .then((response) => {
@@ -24,11 +31,7 @@ const ListAcessos = () => {
     useEffect(() => {
         listOfAcessos()
     }, [])
-
-    const acessosFiltrados = acessos.filter(acesso =>
-        acesso.tipo.toLowerCase().includes(search.toLowerCase())
-    )
-
+  
     return (
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
@@ -38,13 +41,8 @@ const ListAcessos = () => {
                         className="search form-control py-2 px-3 rounded-5 fs-6 "
                         placeholder="Pesquisar..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault()
-                                setSearch("")
-                            }
-                        }}
+                        onChange={handleChange}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
                 <div class="col-md-4 text-center">
@@ -53,7 +51,7 @@ const ListAcessos = () => {
                 <div class="col-md-4  p-2 d-flex justify-content-end">
                     <button
                         className="btn btn-success"  
-                        disabled={search.trim().length > 0}                      
+                        disabled={isSearching}                     
                         onClick={() => {
                             setTextoTitle("Cadastrar Acesso")
                             navigate(`/acessos/cadastrar`)
@@ -72,7 +70,7 @@ const ListAcessos = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {acessosFiltrados.map((acesso) => (
+                    {filteredList.map((acesso) => (
                         <tr key={acesso.id}>
                             <td className="align-middle">{acesso.id}</td>
                             <td className="align-middle">{acesso.tipo}</td>
