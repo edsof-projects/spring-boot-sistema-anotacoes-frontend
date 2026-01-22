@@ -1,143 +1,144 @@
 import { useEffect, useState } from "react"
 import {
   createAcesso,
-  editAcesso,
   deleteAcesso,
+  editAcesso,
   getTipoById
 } from "../../../services/ServiceAcessos"
+
 import {
   useNavigate,
   useParams,
-  useLocation
+  useMatch
 } from "react-router-dom"
+
 import Title from "../../Title"
 import "./CadAcesso.css"
 
 const CadAcesso = () => {
-  const [tipo, setTipo] = useState("")
-  const [errors, setErrors] = useState({ tipo: "" })
-  const [apiError, setApiError] = useState("")
-  const [successMsg, setSuccessMsg] = useState("")
 
-  const { id } = useParams()
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
+  const [tipo, setTipo]                           = useState("")
+  const [errors, setErrors]                       = useState({ tipo: "" })
+  const [apiError, setApiError]                   = useState("")
+  const [successMsg, setSuccessMsg]               = useState("")
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 
-  /* =============================
-     DEFINE O MODO PELO PATH
-  ============================== */
-  let mode = "create"
-  if (pathname.includes("/editar")) mode = "edit"
-  if (pathname.includes("/deletar")) mode = "delete"
+  const { id }      = useParams()
+  const navigate    = useNavigate()
 
-  /* =============================
-     BUSCA REGISTRO PARA EDIT/DEL
-  ============================== */
+  const isCadastrar = useMatch("/acessos/cadastrar")
+  const isEditar    = useMatch("/acessos/editar/:id")
+  const isDeletar   = useMatch("/acessos/deletar/:id")
+
+  /* ========================
+     BUSCA REGISTRO POR ID
+  ======================== */
   useEffect(() => {
-    if ((mode === "edit" || mode === "delete") && id) {
+    if (id) {
       getTipoById(id)
-        .then((res) => setTipo(res.data.tipo))
-        .catch(() =>
+        .then((response) => {
+          setTipo(response.data.tipo)
+        })
+        .catch(() => {
           setApiError("Erro ao carregar o registro.")
-        )
+        })
     }
-  }, [id, mode])
+  }, [id])
 
-  /* =============================
-     VALIDAÇÃO
-  ============================== */
-  function validateForm() {
-    let valid = true
-    const copy = { ...errors }
-
-    if (!tipo.trim()) {
-      copy.tipo = "Informe o tipo de acesso."
-      valid = false
-    } else {
-      copy.tipo = ""
-    }
-
-    setErrors(copy)
-    return valid
+  function voltarParaListagem() {
+    navigate("/")
   }
 
-  /* =============================
-     SUBMIT ÚNICO
-  ============================== */
+  function validateForm() {
+    if (isDeletar) return true
+
+    if (!tipo.trim()) {
+      setErrors({ tipo: "Informe o tipo de acesso." })
+      return false
+    }
+
+    setErrors({ tipo: "" })
+    return true
+  }
+
+  /* ========================
+     SUBMIT PRINCIPAL
+  ======================== */
   function handleSubmit(e) {
     e.preventDefault()
     setApiError("")
     setSuccessMsg("")
 
-    // DELETE NÃO VALIDA
-    if (mode === "delete") {
-      const confirmacao = window.confirm(
-        "Tem certeza que deseja EXCLUIR este acesso?\nEssa ação não pode ser desfeita."
-      )
-
-      if (!confirmacao) return
-
-      deleteAcesso(id)
-        .then(() => {
-          setSuccessMsg("Acesso excluído com sucesso!")
-          setTimeout(() => navigate("/"), 2000)
-        })
-        .catch(() => {
-          setApiError("Erro ao excluir o registro.")
-        })
-
-      return
-    }
-
-
-    // CREATE / EDIT VALIDAM
     if (!validateForm()) return
 
     const payload = { tipo }
 
-    if (mode === "edit") {
-      editAcesso(payload, id)
-        .then(() => {
-          setSuccessMsg("Acesso atualizado com sucesso!")
-          setTimeout(() => navigate("/"), 2000)
-        })
-        .catch(() =>
-          setApiError("Erro ao editar o registro.")
-        )
-    }
-
-    if (mode === "create") {
+    if (isCadastrar) {
       createAcesso(payload)
         .then(() => {
-          setSuccessMsg("Acesso cadastrado com sucesso!")
-          setTipo("")
-          setTimeout(() => navigate("/"), 2000)
+          setSuccessMsg("Nível de acesso cadastrado com sucesso!")
+          setTimeout(voltarParaListagem, 2500)
         })
-        .catch((err) => {
-          if (err.response?.status === 409) {
-            setApiError("Registro duplicado.")
-          } else {
-            setApiError("Erro ao cadastrar.")
-          }
+        .catch(() => {
+          setApiError("Erro ao cadastrar. Registro já existente.")
         })
+    }
+
+    if (isEditar && id) {
+      editAcesso(payload, id)
+        .then(() => {
+          setSuccessMsg("Nível de acesso atualizado com sucesso!")
+          setTimeout(voltarParaListagem, 2500)
+        })
+        .catch(() => {
+          setApiError("Erro ao editar o registro.")
+        })
+    }
+
+    if (isDeletar) {
+      setShowConfirmDelete(true)
     }
   }
 
-  /* =============================
+  /* ========================
+     CONFIRMA DELETE
+  ======================== */
+  function confirmDelete() {
+    deleteAcesso(id)
+      .then(() => {
+        setShowConfirmDelete(false)
+        setSuccessMsg("Registro excluído com sucesso!")
+        setTimeout(voltarParaListagem, 2500)
+      })
+      .catch(() => {
+        setApiError("Erro ao excluir o registro.")
+        setShowConfirmDelete(false)
+      })
+  }
+
+  /* ============================
+     TEXTOS DINÂMICOS DOS TÍTULOS
+  =============================== */
+  const tituloPagina = isCadastrar
+    ? "Cadastrar Acesso"
+    : isEditar
+    ? `Editar Acesso  - Id : ${id}`
+    : `Excluir Acesso - Id : ${id}`
+
+  const textoBotao = 
+      isCadastrar ? "Salvar"
+      :  isEditar ? "Atualizar"
+    : "Excluir"
+
+  const classeBotao = isDeletar ? "btn-danger" : "btn-success"
+
+  /* ========================
      RENDER
-  ============================== */
+  ======================== */
   return (
     <div className="cadAcesso">
-      <Title
-        title={
-          mode === "delete"
-            ? "Excluir Acesso"
-            : mode === "edit"
-            ? "Editar Acesso"
-            : "Cadastrar Acesso"
-        }
-        isPrimario
-      />
+
+      <Title title={tituloPagina} isPrimario />
 
       {successMsg && (
         <div className="alert alert-success">{successMsg}</div>
@@ -150,42 +151,81 @@ const CadAcesso = () => {
       <form onSubmit={handleSubmit}>
         <input
           className={`form-control ${errors.tipo ? "is-invalid" : ""}`}
+          type="text"
           value={tipo}
           placeholder="Tipo de acesso"
-          disabled={mode === "delete"}
+          disabled={isDeletar}
           onChange={(e) => setTipo(e.target.value)}
         />
+
         {errors.tipo && (
           <div className="invalid-feedback">{errors.tipo}</div>
         )}
 
-        <div className="d-flex gap-2 mt-2">
-          <button
-            type="submit"
-            className={`btn ${
-              mode === "delete"
-                ? "btn-danger"
-                : mode === "edit"
-                ? "btn-warning"
-                : "btn-success"
-            }`}
-          >
-            {mode === "delete"
-              ? "Excluir"
-              : mode === "edit"
-              ? "Salvar Alterações"
-              : "Salvar"}
+        <div className="d-flex gap-2 mt-3">
+          <button type="submit" className={`btn ${classeBotao}`}>
+            {textoBotao}
           </button>
 
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate("/")}
+            onClick={voltarParaListagem}
           >
             Voltar
           </button>
         </div>
       </form>
+
+      {/* ========================
+          MODAL CONFIRMAÇÃO DELETE
+      ============================ */}
+      {showConfirmDelete && (
+        <>
+          <div className="modal fade show d-block modal-fullscreen" tabIndex="-1">
+            <div className="modal-dialog modal-dialog-centered ">
+              <div className="modal-content p-4 rounded-2 md-5">
+
+                <div className="modal-header">
+                  <h5 className="modal-title text-danger">
+                    Confirmar exclusão
+                  </h5>                 
+                </div>
+
+                <div className="modal-body">
+                  <p>Deseja realmente excluir o acesso?</p>
+                  <div className="d-flex align-items-center">
+                      <p>id   : <strong className="text-danger ">{id}</strong></p>
+                      <p>Tipo : <strong className="text-danger ">{tipo}</strong></p>                      
+                  </div>
+                </div>
+
+                <div className="modal-footer">                  
+
+                    <button
+                      className="btn btn-danger px-4"
+                      onClick={confirmDelete}
+                    >
+                      Excluir
+                    </button>
+
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setShowConfirmDelete(false)}
+                    >
+                      Cancelar
+                    </button>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-backdrop fade show modal-fullscreen"></div>
+        </>
+      )}
+
     </div>
   )
 }

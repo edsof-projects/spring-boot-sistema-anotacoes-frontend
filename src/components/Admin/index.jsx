@@ -1,15 +1,11 @@
 import { useState } from "react"
 import  Foto        from "../../assets/usuario.png"
-import { Outlet }   from "react-router-dom"
+import { Outlet, useNavigate }   from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
-  const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso")
-
-  function abrirListagem(e){
-    e.preventDefault()
-     setCadastrando(false)
-  }
+  const navigate                    = useNavigate()
+  const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso") 
 
   return (
     <div className="layout">  
@@ -21,7 +17,7 @@ const Admin = () => {
                     
             <nav className="nav">              
               <ul>
-                  <li><a href="/" onClick={abrirListagem}>Acessos</a></li>
+                  <li><a href="#" onClick={(e)=>{e.preventDefault(); navigate("/")}}>Acessos</a></li>
                   <li><a href="#">Usuários</a></li>
                   <li><a href="#">Anotações</a></li>
               </ul>
