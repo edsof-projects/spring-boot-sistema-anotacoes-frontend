@@ -46,7 +46,7 @@
    padding: 0;
 }
 
-.sidebar .nav ul li a{
+.sidebar .nav ul li .nav-link{
    background-color: transparent;
    color: #ffffff;
    display: block;
@@ -57,8 +57,9 @@
    transition: all .5s;
 }
 
-.sidebar .nav ul li a:hover{
-   background-color: #b3b3b32c;
+.sidebar .nav ul li .nav-link:hover,
+.sidebar .nav ul li .nav-link.active {
+   background-color: #cfcfda2c;
    font-weight: 600;
 }
 
