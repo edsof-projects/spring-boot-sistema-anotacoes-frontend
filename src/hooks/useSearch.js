@@ -1,18 +1,19 @@
 import { useState, useMemo } from "react"
 
-export function useSearch(list, field) {
-  const [search, setSearch] = useState("")
+export function useSearch(list = [], fields = []) {
+  const [search, setSearch] = useState("");
 
-  const filteredList = useMemo(() => {
-    if (!search) return list
+  const filtrados = useMemo(() => {
+    if (!search.trim()) return list;
+
+    const termo = search.toLowerCase();
 
     return list.filter(item =>
-      item[field]
-        ?.toString()
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    )
-  }, [search, list, field])
+      fields.some(field =>
+        item[field]?.toString().toLowerCase().includes(termo)
+      )
+    );
+  }, [search, list, fields]);
 
   function handleChange(e) {
     setSearch(e.target.value)
@@ -28,7 +29,7 @@ export function useSearch(list, field) {
   return {
     search,
     setSearch,
-    filteredList,
+    filtrados,
     handleChange,
     handleKeyDown,
     isSearching: search.trim().length > 0

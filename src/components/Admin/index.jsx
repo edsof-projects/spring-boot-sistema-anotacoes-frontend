@@ -1,10 +1,9 @@
 import { useState }                      from "react"
 import  Foto                             from "../../assets/usuario.png"
-import { NavLink, Outlet, useNavigate }  from "react-router-dom"
+import { NavLink, Outlet }               from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
-  const navigate                    = useNavigate()
   const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso") 
 
   return (
@@ -28,7 +27,7 @@ const Admin = () => {
                   </li>
                   <li>
                     <NavLink
-                      to="/acessos/cadastrar"
+                      to="/usuarios"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
                     >    
                       Usuários
