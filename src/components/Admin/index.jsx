@@ -22,7 +22,7 @@ const Admin = () => {
                       to="/"
                       end
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
-                      >
+                    >
                       Acessos
                     </NavLink>
                   </li>
@@ -30,7 +30,7 @@ const Admin = () => {
                     <NavLink
                       to="/acessos/cadastrar"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
-                      >    
+                    >    
                       Usuários
                     </NavLink>
                   </li>
@@ -38,7 +38,7 @@ const Admin = () => {
                     <NavLink
                       to="/anotacoes"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
-                      >
+                    >
                       Anotações
                     </NavLink>
                   </li>
