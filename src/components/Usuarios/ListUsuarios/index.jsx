@@ -1,54 +1,56 @@
 import { useEffect, useState }              from "react"
-import { getAllAcessos }                    from "../../../services/ServiceAcessos"
+import { getAllUsuarios }                   from "../../../services/ServiceUsuarios"
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
-import './ListAcessos.css'
+import './ListUsuarios.css'
 
-const ListAcessos = () => {
+const ListUsuarios = () => {
 
-    const [acessos, setAcessos] = useState([])
-    const { setTextoTitle }     = useOutletContext()
-    const navigate              = useNavigate()
+    const [usuarios, setUsuarios] = useState([])
+    const { setTextoTitle }       = useOutletContext()
+    const navigate                = useNavigate()
     const {
         search,
         filtrados,
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(acessos, "tipo")
-           
-   useEffect(() => {
-        getAllAcessos()
-        .then(res => setAcessos(res.data))
+    } = useSearch(usuarios, ["nome", "email"])
+       
+    useEffect(() => {
+        getAllUsuarios()
+        .then(res => setUsuarios(res.data))
         .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate(`/acesso/cadastrar`)
-    }  
+        setTextoTitle("Cadastrar usuario")
+        navigate("/usuarios/cadastrar")
+    }    
   
     return (
-        <div className="ListAcessos">
+        <div className="ListUsuarios">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <input
                         type="text"
-                        className="search form-control py-2 px-3 rounded-5 fs-6 "
+                        className="search form-control py-2 px-3 rounded-5 fs-6"
+                        aria-label="Pesquisar usuários"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                     />
                 </div>
-                <div class="col-md-4 text-center">
-                    <Title title="Acessos" isPrimario={true} />
+                <div className="col-md-4 text-center">
+                    <Title title="usuarios" isPrimario={true} />
                 </div>
-                <div class="col-md-4  d-flex justify-content-end">
+                <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}                     
+                        disabled={isSearching}     
+                        type="button"                
                         onClick={goCadastrar}>
                         Cadastrar
                     </button>
@@ -59,7 +61,9 @@ const ListAcessos = () => {
                 <thead>
                     <tr>
                         <th className="align-middle">Id</th>
-                        <th className="align-middle">Tipo de Acesso</th>
+                        <th className="align-middle">Nome</th>
+                        <th className="align-middle">Email</th>
+                        <th className="align-middle">Acesso</th>
                         <th className="d-flex justify-content-end pe-5">Ações</th>
                     </tr>
                 </thead>
@@ -69,29 +73,33 @@ const ListAcessos = () => {
                             <td colSpan="5" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhum tipo de acesso cadastrado"}
+                                : "Nenhum usuário cadastrado"}
                             </td>
                         </tr>
                     )}
-                    {filtrados.map((acesso) => (
-                        <tr key={acesso.id}>
-                            <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo}</td>
+
+                    {filtrados.map((usuario) => (
+                        <tr key={usuario.id}>
+                            <td className="align-middle">{usuario.id}</td>
+                            <td className="align-middle">{usuario.nome}</td>
+                            <td className="align-middle">{usuario.email}</td>
+                            <td className="align-middle">{usuario.acesso}</td>
+
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
                                         className="btn btn-warning px-3"
                                         onClick={() => {
-                                            setTextoTitle("Editar Acesso")
-                                            navigate(`/acessos/editar/${acesso.id}`)
+                                            setTextoTitle("Editar usuario")
+                                            navigate(`/usuarios/editar/${usuario.id}`)
                                         }}>
                                         Editar
                                     </button>
                                     <button
                                         className="btn btn-danger px-3"
                                         onClick={() => {
-                                            setTextoTitle("Excluir Acesso")
-                                            navigate(`/acessos/deletar/${acesso.id}`)
+                                            setTextoTitle("Excluir usuario")
+                                            navigate(`/usuarios/deletar/${usuario.id}`)
                                         }}>
                                         Excluir
                                     </button>
@@ -105,4 +113,4 @@ const ListAcessos = () => {
     )
 }
 
-export default ListAcessos
+export default ListUsuarios
