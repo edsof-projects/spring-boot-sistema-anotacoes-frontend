@@ -48,9 +48,9 @@ const ListAcessos = () => {
                 <div class="col-md-4 text-center">
                     <Title title="Acessos" isPrimario={true} />
                 </div>
-                <div class="col-md-4  p-2 d-flex justify-content-end">
+                <div class="col-md-4  d-flex justify-content-end">
                     <button
-                        className="btn btn-success"  
+                        className="btn btn-success px-5 md-3"  
                         disabled={isSearching}                     
                         onClick={() => {
                             setTextoTitle("Cadastrar Acesso")
@@ -77,7 +77,7 @@ const ListAcessos = () => {
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
-                                        className="btn btn-warning"
+                                        className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar Acesso")
                                             navigate(`/acessos/editar/${acesso.id}`)
@@ -85,7 +85,7 @@ const ListAcessos = () => {
                                         Editar
                                     </button>
                                     <button
-                                        className="btn btn-danger"
+                                        className="btn btn-danger px-3"
                                         onClick={() => {
                                             setTextoTitle("Excluir Acesso")
                                             navigate(`/acessos/deletar/${acesso.id}`)

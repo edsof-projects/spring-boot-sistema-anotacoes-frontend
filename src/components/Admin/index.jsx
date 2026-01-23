@@ -1,6 +1,6 @@
-import { useState } from "react"
-import  Foto        from "../../assets/usuario.png"
-import { Outlet, useNavigate }   from "react-router-dom"
+import { useState }                      from "react"
+import  Foto                             from "../../assets/usuario.png"
+import { NavLink, Outlet, useNavigate }  from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
@@ -17,9 +17,31 @@ const Admin = () => {
                     
             <nav className="nav">              
               <ul>
-                  <li><a href="#" onClick={(e)=>{e.preventDefault(); navigate("/")}}>Acessos</a></li>
-                  <li><a href="#">Usuários</a></li>
-                  <li><a href="#">Anotações</a></li>
+                  <li>
+                    <NavLink
+                      to="/"
+                      end
+                      className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      >
+                      Acessos
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/acessos/cadastrar"
+                      className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      >    
+                      Usuários
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/anotacoes"
+                      className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      >
+                      Anotações
+                    </NavLink>
+                  </li>
               </ul>
             </nav>   
                 
