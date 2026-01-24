@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import {
-  createUsuario,
-  deleteUsuario,
-  editUsuario,
-  getUsuarioById
-} from "../../../services/ServiceUsuarios"
+  createAnotacao,
+  deleteAnotacao,
+  editAnotacao,
+  getAnotacaoById
+} from "../../../services/ServiceAnotacoes"
 
 
 import {
@@ -13,65 +13,48 @@ import {
   useMatch
 } from "react-router-dom"
 
-import { getAllAcessos }    from "../../../services/ServiceAcessos"
-import { formatarNome }     from "../../../utils/formatters"
-import Title                from "../../Title"
-import "./CadUsuario.css"
+import { primeiraLetraMaiuscula }       from "../../../utils/formatters"
+import Title                            from "../../Title"
+import "./CadAnotacao.css"
 
-const CadUsuario = () => {
+const CadAnotacao = () => {
 
-  const [nome,  setNome]                           = useState("")
-  const [email, setEmail]                          = useState("")
-  const [nivelAcesso, setNivelAcesso]              = useState("")
-  const [niveisAcesso, setNiveisAcesso]            = useState([])
-
+  const [titulo,  setTitulo]                       = useState("")
+  const [descricao, setDescricao]                  = useState("")
 
   const [errors, setErrors]                        = useState({})
   const [apiError, setApiError]                    = useState("")
   const [successMsg, setSuccessMsg]                = useState("")
   const [showConfirmDelete, setShowConfirmDelete]  = useState(false)
 
-  const { id }      = useParams()
-  const navigate    = useNavigate()
+  const { id }                                     = useParams()
+  const navigate                                   = useNavigate()
 
-  const isCadastrar = useMatch("/usuarios/cadastrar")
-  const isEditar    = useMatch("/usuarios/editar/:id")
-  const isDeletar   = useMatch("/usuarios/deletar/:id")
+  const isCadastrar                                = useMatch("/anotacoes/cadastrar")
+  const isEditar                                   = useMatch("/anotacoes/editar/:id")
+  const isDeletar                                  = useMatch("/anotacoes/deletar/:id")
 
   /* ========================
      BUSCA REGISTRO POR ID
   ======================== */
+ 
+ useEffect(() => {
+    if (!id) return
 
-  const allNiveisAcesso =()=>{
-    getAllAcessos()
-    .then(res => {
-      setNiveisAcesso(res.data)
-    })
-    .catch(() => {
-      setApiError("Erro ao carregar níveis de acesso.")
-    })
-  }
+    setApiError("")
 
-  useEffect(() => {
-    if(!isDeletar){
-      allNiveisAcesso()
-    }
-    if (id) {      
-      getUsuarioById(id)
-        .then((response) => {
-          setNome(response.data.nome)
-          setEmail(response.data.email)
-          setNivelAcesso(response.data.nivelAcessoId || "")
-        })
-        .catch(() => {
-          setApiError("Erro ao carregar o usuário.")
-        })
-
-    }
+    getAnotacaoById(id)
+      .then((response) => {
+        setTitulo(response.data.titulo)
+        setDescricao(response.data.descricao)
+      })
+      .catch(() => {
+        setApiError("Erro ao carregar a anotação.")
+      })
   }, [id])
 
   function voltarParaListagem() {
-    navigate("/usuarios")
+    navigate("/anotacoes")
   }
 
   function validateForm() {
@@ -79,9 +62,8 @@ const CadUsuario = () => {
 
       const newErrors = {}
 
-      if (!nome.trim())  newErrors.nome        = "Informe o nome"
-      if (!email.trim()) newErrors.email       = "Informe o email"
-      if (!nivelAcesso)  newErrors.nivelAcesso = "Selecione o nível de acesso"
+      if (!titulo.trim())    newErrors.titulo      = "Informe o titulo"
+      if (!descricao.trim()) newErrors.descricao   = "Informe a descrição"
 
       setErrors(newErrors)
       return Object.keys(newErrors).length === 0
@@ -96,29 +78,29 @@ const CadUsuario = () => {
     setSuccessMsg("")
 
     if (!validateForm()) return
-
-    const payload = { nome, email, senha : "eas1708", nivelAcessoId: nivelAcesso }
+    
+    const payload = { titulo, descricao, usuarioId : 13 }
 
     if (isCadastrar) {
-      createUsuario(payload)
+      createAnotacao(payload)
         .then(() => {
-          setSuccessMsg("Usuario cadastrado com sucesso!")
+          setSuccessMsg("Anotação cadastrada com sucesso!")
           setTimeout(voltarParaListagem, 2500)
         })
         .catch(() => {
-          setApiError("Este email já esta cadastrado!")
+          setApiError("Erro ao cadastrar a anotação!")
           setTimeout(voltarParaListagem, 2500)
         })
     }
 
     if (isEditar && id) {
-      editUsuario(payload, id)
+      editAnotacao(payload, id)
         .then(() => {
-          setSuccessMsg("Usuario atualizado com sucesso!")
+          setSuccessMsg("Anotação atualizada com sucesso!")
           setTimeout(voltarParaListagem, 2500)
         })
         .catch(() => {
-          setApiError("Erro ao atualizar usuário.")
+          setApiError("Erro ao atualizar anotação.")
           setTimeout(voltarParaListagem, 2500)
         })
     }
@@ -132,14 +114,14 @@ const CadUsuario = () => {
      CONFIRMA DELETE
   ======================== */
   function confirmDelete() {
-    deleteUsuario(id)
+    deleteAnotacao(id)
       .then(() => {
         setShowConfirmDelete(false)
-        setSuccessMsg("Usuário excluído com sucesso!")       
+        setSuccessMsg("Anotação excluída com sucesso!")       
         setTimeout(voltarParaListagem, 2500)
       })
       .catch(() => {
-        setApiError("Erro ao excluir o usuário.")
+        setApiError("Erro ao excluir a anotação.")
         setShowConfirmDelete(false)
       })
   }
@@ -148,10 +130,10 @@ const CadUsuario = () => {
      TEXTOS DINÂMICOS DOS TÍTULOS
   =============================== */
   const tituloPagina = isCadastrar
-    ? "Cadastrar Usuario"
+    ? "Cadastrar Anotacao"
     : isEditar
-    ? `Editar Usuario  - Id : ${id}`
-    : `Excluir Usuario - Id : ${id}`
+    ? `Editar Anotacao  - Id : ${id}`
+    : `Excluir Anotacao - Id : ${id}`
 
   const textoBotao = isCadastrar 
       ? "Salvar"
@@ -165,7 +147,7 @@ const CadUsuario = () => {
      RENDER
   ======================== */
   return (
-    <div className="cadUsuario">
+    <div className="cadAnotacao">
 
       <Title title={tituloPagina} isPrimario />
 
@@ -175,46 +157,27 @@ const CadUsuario = () => {
 
       <form onSubmit={handleSubmit}>
         <input
-          className={`form-control mb-2 ${errors.nome ? "is-invalid" : ""}`}
+          className={`form-control mb-2 ${errors.titulo ? "is-invalid" : ""}`}
           type="text"
-          value={nome}
-          placeholder="Nome"
+          value={titulo}
+          placeholder="Titulo"
           disabled={isDeletar}
-          onChange={(e) => setNome(e.target.value)}
-          onBlur={(e)   => setNome(formatarNome(e.target.value))}
+          onChange={(e) => setTitulo(e.target.value)}
+          onBlur={(e)   => setTitulo(primeiraLetraMaiuscula(e.target.value))}
         />
-         {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
+         {errors.titulo && (<div className="invalid-feedback">{errors.titulo}</div>)}
 
-        <input
-          className={`form-control mb-2 ${errors.email ? "is-invalid" : ""}`}
-          type="email" 
-          value={email}
-          placeholder="Email"
+        <textarea
+          className={`form-control mb-2 ${errors.descricao ? "is-invalid" : ""}`}          
+          rows={20}
+          value={descricao}
+          placeholder="Descricao"
           disabled={isDeletar}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setDescricao(e.target.value)}
+          onBlur={(e)   => setDescricao(primeiraLetraMaiuscula(e.target.value))}
         />
-        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-        
-        {!isDeletar && (
-          <>
-          <select
-            className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
-            value={nivelAcesso}
-            disabled={isDeletar}
-            onChange={(e) => setNivelAcesso(e.target.value)}
-          >
-            <option value="">Selecione o nível de acesso</option>
-            {niveisAcesso.map(nivel => (
-              <option key={nivel.id} value={nivel.id}>
-                {nivel.tipo}
-              </option>
-            ))}
-          </select>
-          {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
-
-          </>
-        )}
-
+        {errors.descricao && (<div className="invalid-feedback">{errors.descricao}</div>)}
+               
         <div className="d-flex gap-2 mt-3">
           <button type="submit" className={`btn ${classeBotao}`}>
             {textoBotao}
@@ -229,7 +192,7 @@ const CadUsuario = () => {
           </button>
         </div>
       </form>
-
+      
       {/* ========================
           MODAL CONFIRMAÇÃO DELETE
       ============================ */}
@@ -246,10 +209,10 @@ const CadUsuario = () => {
                 </div>
 
                 <div className="modal-body">
-                  <p>Deseja realmente excluir o Usuario?</p>
+                  <p>Deseja realmente excluir a Anotacao?</p>
                   <div className="d-flex align-items-space-beetwen">
                       <p>id   : <strong className="text-danger ">{id}</strong></p>&nbsp;&nbsp;
-                      <p>usuario : <strong className="text-danger ">{nome}</strong></p>                      
+                      <p>Anotacao : <strong className="text-danger ">{titulo}</strong></p>                      
                   </div>
                 </div>
 
@@ -283,4 +246,4 @@ const CadUsuario = () => {
   )
 }
 
-export default CadUsuario
+export default CadAnotacao

@@ -1,55 +1,56 @@
 import { useEffect, useState }              from "react"
-import { getAllAcessos }                    from "../../../services/ServiceAcessos"
+import { getAllAnotacoes }                  from "../../../services/ServiceAnotacoes"
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
-import './ListAcessos.css'
+import './ListAnotacoes.css'
 
-const ListAcessos = () => {
+const ListAnotacoes = () => {
 
-    const [acessos, setAcessos] = useState([])
-    const { setTextoTitle }     = useOutletContext()
-    const navigate              = useNavigate()
+    const [anotacoes, setAnotacoes] = useState([])
+    const { setTextoTitle }         = useOutletContext()
+    const navigate                  = useNavigate()
     const {
         search,
         filtrados,
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(acessos, "tipo")
-           
-   useEffect(() => {
-        getAllAcessos()
-        .then(res => setAcessos(res.data))
+    } = useSearch(anotacoes, ["titulo", "descricao"])
+       
+    useEffect(() => {
+        getAllAnotacoes()     
+        .then(res => setAnotacoes(res.data))
         .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate(`/acessos/cadastrar`)
-    }  
+        setTextoTitle("Cadastrar anotação")
+        navigate("/anotacoes/cadastrar")
+    }    
   
     return (
-        <div className="ListAcessos">
+        <div className="ListAnotacoes">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <input
                         type="text"
                         className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar acessos"
+                        aria-label="Pesquisar anotações"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                     />
                 </div>
-                <div class="col-md-4 text-center">
-                    <Title title="Acessos" isPrimario={true} />
+                <div className="col-md-4 text-center">
+                    <Title title="Anotações" isPrimario={true} />
                 </div>
-                <div class="col-md-4  d-flex justify-content-end">
+                <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}                     
+                        disabled={isSearching}     
+                        type="button"                
                         onClick={goCadastrar}>
                         Cadastrar
                     </button>
@@ -60,7 +61,9 @@ const ListAcessos = () => {
                 <thead>
                     <tr>
                         <th className="align-middle">Id</th>
-                        <th className="align-middle">Tipo de Acesso</th>
+                        <th className="align-middle">Título</th>
+                        <th className="align-middle">Descrição</th>
+                        <th className="align-middle">Cadastrado Por:</th>
                         <th className="d-flex justify-content-end pe-5">Ações</th>
                     </tr>
                 </thead>
@@ -70,29 +73,44 @@ const ListAcessos = () => {
                             <td colSpan="5" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhum tipo de acesso cadastrado"}
+                                : "Nenhuma anotação cadastrada"}
                             </td>
                         </tr>
                     )}
-                    {filtrados.map((acesso) => (
-                        <tr key={acesso.id}>
-                            <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo}</td>
+
+                    {filtrados.map((anotacao) => (
+                        <tr key={anotacao.id}>
+                            <td className="align-middle">{anotacao.id}</td>
+                            <td className="align-middle">
+                                {anotacao.titulo.length > 50
+                                    ? anotacao.titulo.slice(0,50)+"..."
+                                    : anotacao.titulo
+                                }
+                            </td>                                                        
+                            
+                            <td className="align-middle">
+                                {anotacao.descricao.length > 70
+                                    ? anotacao.descricao.slice(0,70)+"..."
+                                    : anotacao.descricao
+                                }
+                            </td>
+                            <td className="align-middle">{anotacao.nomeUsuario}</td>
+
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
                                         className="btn btn-warning px-3"
                                         onClick={() => {
-                                            setTextoTitle("Editar Acesso")
-                                            navigate(`/acessos/editar/${acesso.id}`)
+                                            setTextoTitle("Editar anotação")
+                                            navigate(`/anotacoes/editar/${anotacao.id}`)
                                         }}>
                                         Editar
                                     </button>
                                     <button
                                         className="btn btn-danger px-3"
                                         onClick={() => {
-                                            setTextoTitle("Excluir Acesso")
-                                            navigate(`/acessos/deletar/${acesso.id}`)
+                                            setTextoTitle("Excluir anotação")
+                                            navigate(`/anotacoes/deletar/${anotacao.id}`)
                                         }}>
                                         Excluir
                                     </button>
@@ -106,4 +124,4 @@ const ListAcessos = () => {
     )
 }
 
-export default ListAcessos
+export default ListAnotacoes
