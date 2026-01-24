@@ -82,16 +82,18 @@ const ListAnotacoes = () => {
                     {filtrados.map((anotacao) => (
                         <tr key={anotacao.id}>
                             <td className="align-middle">{anotacao.id}</td>
-                            
+
                             <td className="align-middle">
-                                {limitarTexto(anotacao.titulo, 50)}
+                                {limitarTexto(anotacao.titulo, 45)}
                             </td>                                                        
                             
                             <td className="align-middle">                               
                                 {limitarTexto(anotacao.descricao, 70)}
                             </td>
 
-                            <td className="align-middle">{anotacao.nomeUsuario}</td>
+                            <td className="align-middle">
+                                {limitarTexto(anotacao.nomeUsuario, 20)}
+                            </td>
 
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
