@@ -3,6 +3,7 @@ import { getAllAnotacoes }                  from "../../../services/ServiceAnota
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
+import { limitarTexto }                     from "../../../utils/formatters"
 import './ListAnotacoes.css'
 
 const ListAnotacoes = () => {
@@ -81,19 +82,15 @@ const ListAnotacoes = () => {
                     {filtrados.map((anotacao) => (
                         <tr key={anotacao.id}>
                             <td className="align-middle">{anotacao.id}</td>
-                            <td className="align-middle">
-                                {anotacao.titulo.length > 50
-                                    ? anotacao.titulo.slice(0,50)+"..."
-                                    : anotacao.titulo
-                                }
-                            </td>                                                        
                             
                             <td className="align-middle">
-                                {anotacao.descricao.length > 70
-                                    ? anotacao.descricao.slice(0,70)+"..."
-                                    : anotacao.descricao
-                                }
+                                {limitarTexto(anotacao.titulo, 50)}
+                            </td>                                                        
+                            
+                            <td className="align-middle">                               
+                                {limitarTexto(anotacao.descricao, 70)}
                             </td>
+
                             <td className="align-middle">{anotacao.nomeUsuario}</td>
 
                             <td className="align-middle">
