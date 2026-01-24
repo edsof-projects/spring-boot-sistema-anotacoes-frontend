@@ -163,13 +163,13 @@ const CadAcesso = () => {
         )}
 
         <div className="d-flex gap-2 mt-3">
-          <button type="submit" className={`btn ${classeBotao}`}>
+          <button type="submit" className={`px-4 btn ${classeBotao}`}>
             {textoBotao}
           </button>
 
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-secondary px-4"
             onClick={voltarParaListagem}
           >
             Voltar
@@ -195,7 +195,7 @@ const CadAcesso = () => {
                 <div className="modal-body">
                   <p>Deseja realmente excluir o acesso?</p>
                   <div className="d-flex align-items-space-beetwen">
-                      <p>id   : <strong className="text-danger ">{id}</strong></p>
+                      <p>id   : <strong className="text-danger ">{id}</strong></p>&nbsp;&nbsp;
                       <p>Tipo : <strong className="text-danger ">{tipo}</strong></p>                      
                   </div>
                 </div>
@@ -210,8 +210,9 @@ const CadAcesso = () => {
                     </button>
 
                     <button
-                      className="btn btn-secondary"
-                      onClick={() => voltarParaListagem()}
+                      type="button"
+                      className="btn btn-secondary px-4"
+                      onClick={voltarParaListagem}
                     >
                       Cancelar
                     </button>

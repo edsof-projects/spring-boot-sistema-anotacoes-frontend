@@ -26,7 +26,7 @@ const ListAcessos = () => {
 
     function goCadastrar() {
         setTextoTitle("Cadastrar Acesso")
-        navigate(`/acesso/cadastrar`)
+        navigate(`/acessos/cadastrar`)
     }  
   
     return (

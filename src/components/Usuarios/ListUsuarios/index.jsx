@@ -19,7 +19,7 @@ const ListUsuarios = () => {
     } = useSearch(usuarios, ["nome", "email"])
        
     useEffect(() => {
-        getAllUsuarios()
+        getAllUsuarios()     
         .then(res => setUsuarios(res.data))
         .catch(console.error)
     }, [])

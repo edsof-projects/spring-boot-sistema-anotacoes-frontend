@@ -6,21 +6,25 @@ import {
   getUsuarioById
 } from "../../../services/ServiceUsuarios"
 
+
 import {
   useNavigate,
   useParams,
   useMatch
 } from "react-router-dom"
 
-import Title from "../../Title"
+import { getAllAcessos }    from "../../../services/ServiceAcessos"
+import { formatarNome }     from "../../../utils/formatters"
+import Title                from "../../Title"
 import "./CadUsuario.css"
 
 const CadUsuario = () => {
 
   const [nome,  setNome]                           = useState("")
   const [email, setEmail]                          = useState("")
-  const [senha, setSenha]                          = useState("")
   const [nivelAcesso, setNivelAcesso]              = useState("")
+  const [niveisAcesso, setNiveisAcesso]            = useState([])
+
 
   const [errors, setErrors]                        = useState({})
   const [apiError, setApiError]                    = useState("")
@@ -37,18 +41,33 @@ const CadUsuario = () => {
   /* ========================
      BUSCA REGISTRO POR ID
   ======================== */
+
+  const allNiveisAcesso =()=>{
+    getAllAcessos()
+    .then(res => {
+      setNiveisAcesso(res.data)
+    })
+    .catch(() => {
+      setApiError("Erro ao carregar níveis de acesso.")
+    })
+  }
+
   useEffect(() => {
-    if (id) {
+    if(!isDeletar){
+      allNiveisAcesso()
+    }
+    if (id) {      
       getUsuarioById(id)
         .then((response) => {
           setNome(response.data.nome)
           setEmail(response.data.email)
-          setSenha(response.data.senha)
-           setNivelAcesso(res.data.nivelAcessoId || "")
+          // setSenha(response.data.senha)
+          setNivelAcesso(response.data.nivelAcessoId || "")
         })
         .catch(() => {
           setApiError("Erro ao carregar o usuário.")
         })
+
     }
   }, [id])
 
@@ -61,10 +80,9 @@ const CadUsuario = () => {
 
       const newErrors = {}
 
-      if (!nome.trim()) newErrors.nome        = "Informe o nome"
-      if (!email.trim()) newErrors.email      = "Informe o email"
-      if (!senha.trim()) newErrors.senha      = "Informe a senha"
-      if (!nivelAcesso) newErrors.nivelAcesso = "Selecione o nível de acesso"
+      if (!nome.trim())  newErrors.nome        = "Informe o nome"
+      if (!email.trim()) newErrors.email       = "Informe o email"
+      if (!nivelAcesso)  newErrors.nivelAcesso = "Selecione o nível de acesso"
 
       setErrors(newErrors)
       return Object.keys(newErrors).length === 0
@@ -80,7 +98,7 @@ const CadUsuario = () => {
 
     if (!validateForm()) return
 
-    const payload = { nome, email, senha, nivelAcessoId: nivelAcesso }
+    const payload = { nome, email, senha : "eas1708", nivelAcessoId: nivelAcesso }
 
     if (isCadastrar) {
       createUsuario(payload)
@@ -89,7 +107,8 @@ const CadUsuario = () => {
           setTimeout(voltarParaListagem, 2500)
         })
         .catch(() => {
-          setApiError("Erro ao cadastrar usuário.")
+          setApiError("Este email já esta cadastrado!")
+          setTimeout(voltarParaListagem, 2500)
         })
     }
 
@@ -101,6 +120,7 @@ const CadUsuario = () => {
         })
         .catch(() => {
           setApiError("Erro ao atualizar usuário.")
+          setTimeout(voltarParaListagem, 2500)
         })
     }
 
@@ -116,7 +136,7 @@ const CadUsuario = () => {
     deleteUsuario(id)
       .then(() => {
         setShowConfirmDelete(false)
-        setSuccessMsg("Usuário excluído com sucesso!")
+        setSuccessMsg("Usuário excluído com sucesso!")       
         setTimeout(voltarParaListagem, 2500)
       })
       .catch(() => {
@@ -162,6 +182,7 @@ const CadUsuario = () => {
           placeholder="Nome"
           disabled={isDeletar}
           onChange={(e) => setNome(e.target.value)}
+          onBlur={(e)   => setNome(formatarNome(e.target.value))}
         />
          {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
 
@@ -174,28 +195,26 @@ const CadUsuario = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
+        
+        {!isDeletar && (
+          <>
+          <select
+            className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
+            value={nivelAcesso}
+            disabled={isDeletar}
+            onChange={(e) => setNivelAcesso(e.target.value)}
+          >
+            <option value="">Selecione o nível de acesso</option>
+            {niveisAcesso.map(nivel => (
+              <option key={nivel.id} value={nivel.id}>
+                {nivel.tipo}
+              </option>
+            ))}
+          </select>
+          {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
 
-        <input
-          className={`form-control mb-2 ${errors.senha ? "is-invalid" : ""}`}
-          type="password" //deve ser alterado para password
-          value={senha}
-          placeholder="Senha"
-          disabled={isDeletar}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-        {errors.senha && (<div className="invalid-feedback">{errors.senha}</div>)}
-
-        <select
-          className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
-          value={nivelAcesso}
-          disabled={isDeletar}
-          onChange={(e) => setNivelAcesso(e.target.value)}
-        >
-          <option value="">Selecione o nível de acesso</option>
-          <option value="1">ADMINISTRADOR</option>
-          <option value="2">USUÁRIO</option>
-        </select>
-         {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
+          </>
+        )}
 
         <div className="d-flex gap-2 mt-3">
           <button type="submit" className={`btn ${classeBotao}`}>
@@ -204,7 +223,7 @@ const CadUsuario = () => {
 
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-secondary px-4"
             onClick={voltarParaListagem}
           >
             Voltar
@@ -230,7 +249,7 @@ const CadUsuario = () => {
                 <div className="modal-body">
                   <p>Deseja realmente excluir o Usuario?</p>
                   <div className="d-flex align-items-space-beetwen">
-                      <p>id   : <strong className="text-danger ">{id}</strong></p>
+                      <p>id   : <strong className="text-danger ">{id}</strong></p>&nbsp;&nbsp;
                       <p>usuario : <strong className="text-danger ">{nome}</strong></p>                      
                   </div>
                 </div>
