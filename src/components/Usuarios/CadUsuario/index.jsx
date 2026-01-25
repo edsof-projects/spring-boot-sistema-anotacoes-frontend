@@ -9,12 +9,12 @@ import {
 import {
   useNavigate,
   useParams,
-  useMatch
 } from "react-router-dom"
 
 import { getAllAcessos }    from "../../../services/ServiceAcessos"
 import { formatarNome }     from "../../../utils/formatters"
 import { useModalExclusao } from "../../../hooks/useModalExclusao"
+import { useCrudMode }      from "../../../hooks/useCrudMode"
 import ModalExclusao        from "../../Modals/ModalExclusao"
 import Title                from "../../Title"
 import "./CadUsuario.css"
@@ -30,14 +30,11 @@ const CadUsuario = () => {
   const [errors, setErrors]                         = useState({})
   const [apiError, setApiError]                     = useState("")
   const [successMsg, setSuccessMsg]                 = useState("")
-  const [showConfirmDelete, setShowConfirmDelete]   = useState(false)
 
   const { id }                                      = useParams()
   const navigate                                    = useNavigate()
 
-  const isCadastrar                                 = useMatch("/usuarios/cadastrar")
-  const isEditar                                    = useMatch("/usuarios/editar/:id")
-  const isDeletar                                   = useMatch("/usuarios/deletar/:id")
+const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
 
     const {
     isOpen,
@@ -151,20 +148,20 @@ const CadUsuario = () => {
       })
   }
 
-  /* ============================
+ /* ============================
      TEXTOS DINÂMICOS DOS TÍTULOS
   =============================== */
-  const tituloPagina = isCadastrar
-    ? "Cadastrar Usuario"
-    : isEditar
-    ? `Editar Usuario  - Id : ${id}`
-    : `Excluir Usuario - Id : ${id}`
+  const tituloPagina = {
+    CADASTRAR : "Cadastrar Usuário",
+    EDITAR    : `Editar Usuário - Id: ${id}`,
+    DELETAR   : `Excluir Usuário - Id: ${id}`
+  }[mode]
 
-  const textoBotao = isCadastrar 
-      ? "Salvar"
-      :  isEditar 
-      ? "Atualizar"
-      : "Excluir"
+  const textoBotao = {
+    CADASTRAR : "Salvar",
+    EDITAR    : "Atualizar",
+    DELETAR   : "Excluir"
+  }[mode]
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
 

@@ -9,9 +9,9 @@ import {
 import {
   useNavigate,
   useParams,
-  useMatch
 } from "react-router-dom"
 
+import { useCrudMode }            from "../../../hooks/useCrudMode"
 import { useModalExclusao }       from "../../../hooks/useModalExclusao"
 import ModalExclusao              from "../../Modals/ModalExclusao"
 import Title                      from "../../Title"
@@ -20,6 +20,7 @@ import "./CadAcesso.css"
 const CadAcesso = () => {
 
   const [tipo, setTipo]                           = useState("")
+  
   const [errors, setErrors]                       = useState({ tipo: "" })
   const [apiError, setApiError]                   = useState("")
   const [successMsg, setSuccessMsg]               = useState("")
@@ -27,9 +28,7 @@ const CadAcesso = () => {
   const { id }                                    = useParams()
   const navigate                                  = useNavigate()
 
-  const isCadastrar                               = useMatch("/acessos/cadastrar")
-  const isEditar                                  = useMatch("/acessos/editar/:id")
-  const isDeletar                                 = useMatch("/acessos/deletar/:id")
+  const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("acessos")
 
     const {
       isOpen,
@@ -127,17 +126,17 @@ const CadAcesso = () => {
   /* ============================
      TEXTOS DINÂMICOS DOS TÍTULOS
   =============================== */
-  const tituloPagina = isCadastrar
-    ? "Cadastrar Acesso"
-    : isEditar
-    ? `Editar Acesso  - Id : ${id}`
-    : `Excluir Acesso - Id : ${id}`
+  const tituloPagina = {
+    CADASTRAR : "Cadastrar Acesso",
+    EDITAR    : `Editar Acesso - Id: ${id}`,
+    DELETAR   : `Excluir Acesso - Id: ${id}`
+  }[mode]
 
-  const textoBotao = isCadastrar 
-      ? "Salvar"
-      :  isEditar 
-      ? "Atualizar"
-      : "Excluir"
+  const textoBotao = {
+    CADASTRAR : "Salvar",
+    EDITAR    : "Atualizar",
+    DELETAR   : "Excluir"
+  }[mode]
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
 
