@@ -9,10 +9,10 @@ import {
 import {
   useNavigate,
   useParams,
-  useMatch
 } from "react-router-dom"
 
 import { primeiraLetraMaiuscula } from "../../../utils/formatters"
+import { useCrudMode }            from "../../../hooks/useCrudMode"
 import { useModalExclusao }       from "../../../hooks/useModalExclusao"
 import ModalExclusao              from "../../Modals/ModalExclusao"
 import Title                      from "../../Title"
@@ -30,9 +30,7 @@ const CadAnotacao = () => {
   const { id }                        = useParams()
   const navigate                      = useNavigate()
 
-  const isCadastrar                   = useMatch("/anotacoes/cadastrar")
-  const isEditar                      = useMatch("/anotacoes/editar/:id")
-  const isDeletar                     = useMatch("/anotacoes/deletar/:id")
+  const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("anotacoes")
 
   const {
     isOpen,
@@ -85,11 +83,11 @@ const CadAnotacao = () => {
 
     if (!validateForm()) return
 
-    // provisório até JWT
+    // provisório até JWT onde o usuarioId devera ser o que estiver logado
     const payload = {
       titulo,
       descricao,
-      usuarioId: 1
+      usuarioId: 20
     }
 
     if (isCadastrar) {
@@ -135,20 +133,20 @@ const CadAnotacao = () => {
       })
   }
 
-  /* ========================
-     TEXTOS DINÂMICOS
-  ======================== */
-  const tituloPagina = isCadastrar
-    ? "Cadastrar Anotação"
-    : isEditar
-    ? `Editar Anotação - Id: ${id}`
-    : `Excluir Anotação - Id: ${id}`
+  /* ============================
+     TEXTOS DINÂMICOS DOS TÍTULOS
+  =============================== */
+  const tituloPagina = {
+    CADASTRAR : "Cadastrar Anotação",
+    EDITAR    : `Editar Anotação - Id: ${id}`,
+    DELETAR   : `Excluir Anotação - Id: ${id}`
+  }[mode]
 
-  const textoBotao = isCadastrar
-    ? "Salvar"
-    : isEditar
-    ? "Atualizar"
-    : "Excluir"
+  const textoBotao = {
+    CADASTRAR : "Salvar",
+    EDITAR    : "Atualizar",
+    DELETAR   : "Excluir"
+  }[mode]
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
 
