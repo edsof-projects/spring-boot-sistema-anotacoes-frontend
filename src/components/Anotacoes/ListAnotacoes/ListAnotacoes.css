@@ -15,3 +15,9 @@
   border-color: #ced4da !important;
 }
 
+.link{
+  text-decoration: none;
+  color: #222222;
+  font-weight: 500;
+}
+

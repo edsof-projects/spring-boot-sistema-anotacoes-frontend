@@ -12,7 +12,9 @@ import {
   useMatch
 } from "react-router-dom"
 
-import Title from "../../Title"
+import { useModalExclusao }       from "../../../hooks/useModalExclusao"
+import ModalExclusao              from "../../Modals/ModalExclusao"
+import Title                      from "../../Title"
 import "./CadAcesso.css"
 
 const CadAcesso = () => {
@@ -21,14 +23,19 @@ const CadAcesso = () => {
   const [errors, setErrors]                       = useState({ tipo: "" })
   const [apiError, setApiError]                   = useState("")
   const [successMsg, setSuccessMsg]               = useState("")
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 
-  const { id }      = useParams()
-  const navigate    = useNavigate()
+  const { id }                                    = useParams()
+  const navigate                                  = useNavigate()
 
-  const isCadastrar = useMatch("/acessos/cadastrar")
-  const isEditar    = useMatch("/acessos/editar/:id")
-  const isDeletar   = useMatch("/acessos/deletar/:id")
+  const isCadastrar                               = useMatch("/acessos/cadastrar")
+  const isEditar                                  = useMatch("/acessos/editar/:id")
+  const isDeletar                                 = useMatch("/acessos/deletar/:id")
+
+    const {
+      isOpen,
+      abrirModal,
+      fecharModal
+    } = useModalExclusao()
 
   /* ========================
      BUSCA REGISTRO POR ID
@@ -36,11 +43,11 @@ const CadAcesso = () => {
   useEffect(() => {
     if (id) {
       getTipoById(id)
-        .then((response) => {
-          setTipo(response.data.tipo)
+        .then((res) => {
+          setTipo(res.data.tipo)
         })
         .catch(() => {
-          setApiError("Erro ao carregar o registro.")
+          setApiError("Erro ao carregar o tipo de acesso.")
         })
     }
   }, [id])
@@ -52,13 +59,13 @@ const CadAcesso = () => {
   function validateForm() {
     if (isDeletar) return true
 
-    if (!tipo.trim()) {
-      setErrors({ tipo: "Informe o tipo de acesso." })
-      return false
-    }
+    const newErrors = {}
 
-    setErrors({ tipo: "" })
-    return true
+    if (!tipo.trim()) newErrors.tipo = "Informe o tipo de acesso."
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+
   }
 
   /* ========================
@@ -71,16 +78,17 @@ const CadAcesso = () => {
 
     if (!validateForm()) return
 
+    // provisório até JWT
     const payload = { tipo }
 
     if (isCadastrar) {
       createAcesso(payload)
         .then(() => {
           setSuccessMsg("Nível de acesso cadastrado com sucesso!")
-          setTimeout(voltarParaListagem, 2500)
+          setTimeout(voltarParaListagem, 2000)
         })
         .catch(() => {
-          setApiError("Erro ao cadastrar. Registro já existente.")
+          setApiError("Erro ao cadastrar. Tipo de acesso já cadastrado.")
         })
     }
 
@@ -88,31 +96,31 @@ const CadAcesso = () => {
       editAcesso(payload, id)
         .then(() => {
           setSuccessMsg("Nível de acesso atualizado com sucesso!")
-          setTimeout(voltarParaListagem, 2500)
+          setTimeout(voltarParaListagem, 2000)
         })
         .catch(() => {
-          setApiError("Erro ao editar o registro.")
+          setApiError("Erro ao atualizar tipo de acesso.")
         })
     }
 
-    if (isDeletar) {
-      setShowConfirmDelete(true)
+   if (isDeletar) {
+      abrirModal()
     }
   }
 
   /* ========================
-     CONFIRMA DELETE
+     CONFIRMAR DELETE
   ======================== */
   function confirmDelete() {
     deleteAcesso(id)
       .then(() => {
-        setShowConfirmDelete(false)
-        setSuccessMsg("Registro excluído com sucesso!")
-        setTimeout(voltarParaListagem, 2500)
+        fecharModal()
+        setSuccessMsg("Tipo de acesso excluído com sucesso!")
+        setTimeout(voltarParaListagem, 2000)
       })
       .catch(() => {
-        setApiError("Erro ao excluir o registro.")
-        setShowConfirmDelete(false)
+        setApiError("Erro ao excluir tipo de acesso.")
+        fecharModal()
       })
   }
 
@@ -125,10 +133,11 @@ const CadAcesso = () => {
     ? `Editar Acesso  - Id : ${id}`
     : `Excluir Acesso - Id : ${id}`
 
-  const textoBotao = 
-      isCadastrar ? "Salvar"
-      :  isEditar ? "Atualizar"
-    : "Excluir"
+  const textoBotao = isCadastrar 
+      ? "Salvar"
+      :  isEditar 
+      ? "Atualizar"
+      : "Excluir"
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
 
@@ -176,56 +185,16 @@ const CadAcesso = () => {
           </button>
         </div>
       </form>
-
-      {/* ========================
-          MODAL CONFIRMAÇÃO DELETE
-      ============================ */}
-      {showConfirmDelete && (
-        <>
-          <div className="modal fade show d-block modal-fullscreen" tabIndex="-1">
-            <div className="modal-dialog modal-dialog-centered ">
-              <div className="modal-content p-4 rounded-2 md-5">
-
-                <div className="modal-header">
-                  <h5 className="modal-title text-danger">
-                    Confirmar exclusão
-                  </h5>                 
-                </div>
-
-                <div className="modal-body">
-                  <p>Deseja realmente excluir o acesso?</p>
-                  <div className="d-flex align-items-space-beetwen">
-                      <p>id   : <strong className="text-danger ">{id}</strong></p>&nbsp;&nbsp;
-                      <p>Tipo : <strong className="text-danger ">{tipo}</strong></p>                      
-                  </div>
-                </div>
-
-                <div className="modal-footer">                  
-
-                    <button
-                      className="btn btn-danger px-4"
-                      onClick={confirmDelete}
-                    >
-                      Excluir
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-secondary px-4"
-                      onClick={voltarParaListagem}
-                    >
-                      Cancelar
-                    </button>
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-backdrop fade show modal-fullscreen"></div>
-        </>
-      )}
+     
+       {/* MODAL EXCLUSÃO */}
+      <ModalExclusao
+        isOpen      ={isOpen}
+        mensagem    ="Deseja realmente excluir o tipo de acesso?"
+        id          ={id}
+        nome        ={tipo}
+        onConfirmar ={confirmDelete}
+        onCancelar  ={fecharModal}
+      />
 
     </div>
   )

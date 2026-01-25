@@ -1,9 +1,9 @@
-import { useEffect, useState }              from "react"
-import { getAllAnotacoes }                  from "../../../services/ServiceAnotacoes"
-import { useSearch }                        from "../../../hooks/useSearch"
-import Title                                from "../../Title"
-import { useOutletContext, useNavigate }    from "react-router-dom"
-import { limitarTexto }                     from "../../../utils/formatters"
+import { useEffect, useState }                  from "react"
+import { getAllAnotacoes }                      from "../../../services/ServiceAnotacoes"
+import { useSearch }                            from "../../../hooks/useSearch"
+import Title                                    from "../../Title"
+import { useOutletContext, useNavigate, Link }  from "react-router-dom"
+import { limitarTexto }                         from "../../../utils/formatters"
 import './ListAnotacoes.css'
 
 const ListAnotacoes = () => {
@@ -28,7 +28,7 @@ const ListAnotacoes = () => {
     function goCadastrar() {
         setTextoTitle("Cadastrar anotação")
         navigate("/anotacoes/cadastrar")
-    }    
+    }       
   
     return (
         <div className="ListAnotacoes">
@@ -82,13 +82,13 @@ const ListAnotacoes = () => {
                     {filtrados.map((anotacao) => (
                         <tr key={anotacao.id}>
                             <td className="align-middle">{anotacao.id}</td>
-
+                            
                             <td className="align-middle">
-                                {limitarTexto(anotacao.titulo, 45)}
-                            </td>                                                        
+                                <Link className="link" onClick={()=>{alert('ShowNotation')}}> {limitarTexto(anotacao.titulo, 45)} </Link>    
+                            </td>                                                                               
                             
                             <td className="align-middle">                               
-                                {limitarTexto(anotacao.descricao, 70)}
+                                <Link className="link" onClick={()=>{alert('showNotation')}}> {limitarTexto(anotacao.descricao, 70)} </Link>  
                             </td>
 
                             <td className="align-middle">

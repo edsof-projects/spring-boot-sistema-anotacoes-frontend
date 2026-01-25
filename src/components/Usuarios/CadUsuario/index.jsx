@@ -6,7 +6,6 @@ import {
   getUsuarioById
 } from "../../../services/ServiceUsuarios"
 
-
 import {
   useNavigate,
   useParams,
@@ -15,28 +14,36 @@ import {
 
 import { getAllAcessos }    from "../../../services/ServiceAcessos"
 import { formatarNome }     from "../../../utils/formatters"
+import { useModalExclusao } from "../../../hooks/useModalExclusao"
+import ModalExclusao        from "../../Modals/ModalExclusao"
 import Title                from "../../Title"
 import "./CadUsuario.css"
 
 const CadUsuario = () => {
 
-  const [nome,  setNome]                           = useState("")
-  const [email, setEmail]                          = useState("")
-  const [nivelAcesso, setNivelAcesso]              = useState("")
-  const [niveisAcesso, setNiveisAcesso]            = useState([])
+  const [nome,  setNome]                            = useState("")
+  const [email, setEmail]                           = useState("")
+  const [nivelAcesso, setNivelAcesso]               = useState("")
+  const [niveisAcesso, setNiveisAcesso]             = useState([])
 
 
-  const [errors, setErrors]                        = useState({})
-  const [apiError, setApiError]                    = useState("")
-  const [successMsg, setSuccessMsg]                = useState("")
-  const [showConfirmDelete, setShowConfirmDelete]  = useState(false)
+  const [errors, setErrors]                         = useState({})
+  const [apiError, setApiError]                     = useState("")
+  const [successMsg, setSuccessMsg]                 = useState("")
+  const [showConfirmDelete, setShowConfirmDelete]   = useState(false)
 
-  const { id }      = useParams()
-  const navigate    = useNavigate()
+  const { id }                                      = useParams()
+  const navigate                                    = useNavigate()
 
-  const isCadastrar = useMatch("/usuarios/cadastrar")
-  const isEditar    = useMatch("/usuarios/editar/:id")
-  const isDeletar   = useMatch("/usuarios/deletar/:id")
+  const isCadastrar                                 = useMatch("/usuarios/cadastrar")
+  const isEditar                                    = useMatch("/usuarios/editar/:id")
+  const isDeletar                                   = useMatch("/usuarios/deletar/:id")
+
+    const {
+    isOpen,
+    abrirModal,
+    fecharModal
+  } = useModalExclusao()
 
   /* ========================
      BUSCA REGISTRO POR ID
@@ -58,15 +65,14 @@ const CadUsuario = () => {
     }
     if (id) {      
       getUsuarioById(id)
-        .then((response) => {
-          setNome(response.data.nome)
-          setEmail(response.data.email)
-          setNivelAcesso(response.data.nivelAcessoId || "")
+        .then((res) => {
+          setNome(res.data.nome)
+          setEmail(res.data.email)
+          setNivelAcesso(res.data.nivelAcessoId || "")
         })
         .catch(() => {
           setApiError("Erro ao carregar o usuário.")
         })
-
     }
   }, [id])
 
@@ -85,6 +91,7 @@ const CadUsuario = () => {
 
       setErrors(newErrors)
       return Object.keys(newErrors).length === 0
+
   }
 
   /* ========================
@@ -124,7 +131,7 @@ const CadUsuario = () => {
     }
 
     if (isDeletar) {
-      setShowConfirmDelete(true)
+      abrirModal()
     }
   }
 
@@ -134,13 +141,13 @@ const CadUsuario = () => {
   function confirmDelete() {
     deleteUsuario(id)
       .then(() => {
-        setShowConfirmDelete(false)
+        fecharModal()
         setSuccessMsg("Usuário excluído com sucesso!")       
         setTimeout(voltarParaListagem, 2500)
       })
       .catch(() => {
         setApiError("Erro ao excluir o usuário.")
-        setShowConfirmDelete(false)
+        fecharModal()
       })
   }
 
@@ -230,54 +237,15 @@ const CadUsuario = () => {
         </div>
       </form>
 
-      {/* ========================
-          MODAL CONFIRMAÇÃO DELETE
-      ============================ */}
-      {showConfirmDelete && (
-        <>
-          <div className="modal fade show d-block modal-fullscreen" tabIndex="-1">
-            <div className="modal-dialog modal-dialog-centered ">
-              <div className="modal-content p-4 rounded-2 md-5">
-
-                <div className="modal-header">
-                  <h5 className="modal-title text-danger">
-                    Confirmar exclusão
-                  </h5>                 
-                </div>
-
-                <div className="modal-body">
-                  <p>Deseja realmente excluir o Usuario?</p>
-                  <div className="d-flex align-items-space-beetwen">
-                      <p>id   : <strong className="text-danger ">{id}</strong></p>&nbsp;&nbsp;
-                      <p>usuario : <strong className="text-danger ">{nome}</strong></p>                      
-                  </div>
-                </div>
-
-                <div className="modal-footer">                  
-
-                    <button
-                      className="btn btn-danger px-4"
-                      onClick={confirmDelete}
-                    >
-                      Excluir
-                    </button>
-
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => voltarParaListagem()}
-                    >
-                      Cancelar
-                    </button>
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-backdrop fade show modal-fullscreen"></div>
-        </>
-      )}
+      {/* MODAL EXCLUSÃO */}
+      <ModalExclusao
+        isOpen      ={isOpen}
+        mensagem    ="Deseja realmente excluir o usuário?"
+        id          ={id}
+        nome        ={nome}
+        onConfirmar ={confirmDelete}
+        onCancelar  ={fecharModal}
+      />
 
     </div>
   )
