@@ -237,7 +237,7 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
       {/* MODAL EXCLUSÃO */}
       <ModalExclusao
         isOpen      ={isOpen}
-        mensagem    ="Deseja realmente excluir o usuário?"
+        mensagem    ="Deseja realmente excluir o usuário e suas anotações?"
         id          ={id}
         nome        ={nome}
         onConfirmar ={confirmDelete}
