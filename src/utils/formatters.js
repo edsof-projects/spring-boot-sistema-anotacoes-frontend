@@ -15,3 +15,9 @@ export function primeiraLetraMaiuscula(texto = "") {
 
   return textoLimpo.charAt(0).toUpperCase() + textoLimpo.slice(1);
 }
+
+export function limitarTexto(texto = "", limite = 0) {
+  if (texto.length <= limite) return texto
+  return texto.slice(0, limite) + "..."
+}
+

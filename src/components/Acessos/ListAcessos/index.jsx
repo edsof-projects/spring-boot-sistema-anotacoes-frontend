@@ -32,7 +32,7 @@ const ListAcessos = () => {
     return (
         <div className="ListAcessos">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <input
                         type="text"
                         className="search form-control py-2 px-3 rounded-5 fs-6"
@@ -43,10 +43,10 @@ const ListAcessos = () => {
                         onKeyDown={handleKeyDown}
                     />
                 </div>
-                <div class="col-md-4 text-center">
+                <div className="col-md-4 text-center">
                     <Title title="Acessos" isPrimario={true} />
                 </div>
-                <div class="col-md-4  d-flex justify-content-end">
+                <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
                         disabled={isSearching}                     

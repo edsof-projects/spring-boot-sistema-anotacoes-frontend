@@ -1,0 +1,14 @@
+.areaDados{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.txtTitulo{
+    text-align: justify;
+}
+
+.txtId{
+    text-align: center;
+}
