@@ -1,16 +1,26 @@
 import { useEffect, useState }                  from "react"
+import { useOutletContext, useNavigate }        from "react-router-dom"
 import { getAllAnotacoes }                      from "../../../services/ServiceAnotacoes"
 import { useSearch }                            from "../../../hooks/useSearch"
 import Title                                    from "../../Title"
-import { useOutletContext, useNavigate, Link }  from "react-router-dom"
 import { limitarTexto }                         from "../../../utils/formatters"
+import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                        from "../../Modals/ModalVisualizacao"
 import './ListAnotacoes.css'
 
 const ListAnotacoes = () => {
 
-    const [anotacoes, setAnotacoes] = useState([])
-    const { setTextoTitle }         = useOutletContext()
-    const navigate                  = useNavigate()
+    const navigate                                      = useNavigate()
+    const [anotacoes, setAnotacoes]                     = useState([])
+    const { setTextoTitle }                             = useOutletContext()
+
+    const {
+        isOpen,
+        itemSelecionado,
+        abrirModal,
+        fecharModal
+    } = useModalVisualizacao()
+
     const {
         search,
         filtrados,
@@ -80,15 +90,15 @@ const ListAnotacoes = () => {
                     )}
 
                     {filtrados.map((anotacao) => (
-                        <tr key={anotacao.id}>
+                        <tr key={anotacao.id}  onClick={() => abrirModal(anotacao)} style={{ cursor: "pointer" }}>
                             <td className="align-middle">{anotacao.id}</td>
                             
                             <td className="align-middle">
-                                <Link className="link" onClick={()=>{alert('ShowNotation')}}> {limitarTexto(anotacao.titulo, 45)} </Link>    
-                            </td>                                                                               
+                                {limitarTexto(anotacao.titulo, 45)}                               
+                            </td>                                                                              
                             
                             <td className="align-middle">                               
-                                <Link className="link" onClick={()=>{alert('showNotation')}}> {limitarTexto(anotacao.descricao, 70)} </Link>  
+                                {limitarTexto(anotacao.descricao, 70)}
                             </td>
 
                             <td className="align-middle">
@@ -119,6 +129,14 @@ const ListAnotacoes = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* MODAL VISUALIZACAO */}
+           <ModalVisualizacao
+                isOpen  ={isOpen}
+                item    ={itemSelecionado}
+                onClose ={fecharModal}
+           />
+
         </div>
     )
 }

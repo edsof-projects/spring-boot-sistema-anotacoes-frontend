@@ -16,7 +16,7 @@ const ListAcessos = () => {
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(acessos, "tipo")
+    } = useSearch(acessos, ["tipo"])
            
    useEffect(() => {
         getAllAcessos()
@@ -49,7 +49,8 @@ const ListAcessos = () => {
                 <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}                     
+                        disabled={isSearching}   
+                        type="button"                  
                         onClick={goCadastrar}>
                         Cadastrar
                     </button>
