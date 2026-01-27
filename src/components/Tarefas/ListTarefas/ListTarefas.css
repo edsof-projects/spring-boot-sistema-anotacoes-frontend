@@ -1,0 +1,18 @@
+.ListTarefas {
+  flex: 1;
+  overflow-y: auto;   /* ✅ scroll vertical aqui */
+  padding: 0 1rem;
+  width: 100%;
+  height: 10rem;
+}
+
+.search:focus,
+.search:focus-visible,
+.search.form-control:focus,
+.search.form-control:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #ced4da !important;
+}
+
+

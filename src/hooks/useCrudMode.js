@@ -5,18 +5,16 @@ export function useCrudMode(basePath) {
   const isEditar    = useMatch(`/${basePath}/editar/:id`)
   const isDeletar   = useMatch(`/${basePath}/deletar/:id`)
 
-  const mode = isCadastrar
-    ? "CADASTRAR"
-    : isEditar
-    ? "EDITAR"
-    : isDeletar
-    ? "DELETAR"
-    : null
+  let mode = "CADASTRAR"
+
+  if (isEditar)  mode = "EDITAR"
+  if (isDeletar) mode = "DELETAR"
 
   return {
     mode,
-    isCadastrar : !!isCadastrar,
-    isEditar    : !!isEditar,
-    isDeletar   : !!isDeletar
+    isCadastrar: !!isCadastrar,
+    isEditar:    !!isEditar,
+    isDeletar:   !!isDeletar
   }
+
 }
