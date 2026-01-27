@@ -1,0 +1,10 @@
+.cadTarefa {
+  flex: 1;
+  background-color: rgb(240, 240, 240);
+  padding: 16px;
+  width  : 100%;
+}
+
+.botao{
+  min-width: 7.5rem;
+}

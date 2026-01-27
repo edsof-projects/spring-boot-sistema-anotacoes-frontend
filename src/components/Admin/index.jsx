@@ -41,6 +41,14 @@ const Admin = () => {
                       Anotações
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/tarefas"
+                      className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                    >
+                      Tarefas
+                    </NavLink>
+                  </li>
               </ul>
             </nav>   
                 
