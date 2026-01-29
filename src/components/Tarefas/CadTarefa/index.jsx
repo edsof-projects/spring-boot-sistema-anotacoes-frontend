@@ -12,33 +12,36 @@ import {
   useParams,
 } from "react-router-dom"
 
-import { primeiraLetraMaiuscula } from "../../../utils/formatters"
-import { useCrudMode } from "../../../hooks/useCrudMode"
-import { useModalExclusao } from "../../../hooks/useModalExclusao"
-import ModalExclusao from "../../Modals/ModalExclusao"
-import Title from "../../Title"
+import { primeiraLetraMaiuscula }       from "../../../utils/formatters"
+import { useCrudMode }                  from "../../../hooks/useCrudMode"
+import { useModalGeral }                from "../../../hooks/useModalGeral"
+import ModalConfirmacao                 from "../../Modals/ModalConfirmacao"
+import Title                            from "../../Title"
 import "./CadTarefa.css"
 
 const CadTarefa = () => {
 
-  const [titulo, setTitulo]               = useState("")
-  const [historico, setHistorico]         = useState("")
+  const [titulo, setTitulo]                         = useState("")
+  const [historico, setHistorico]                   = useState("")
+  const [errors, setErrors]                         = useState({})
+  const [apiError, setApiError]                     = useState("")
+  const [successMsg, setSuccessMsg]                 = useState("")
+  const [mensagemModal, setMensagemModal]           = useState("")
+  const [dataFechamento, setDataFechamento]         = useState(null)
+  const [acaoConfirmacao, setAcaoConfirmacao]       = useState(null)
+  const [textoConfirmar, setTextoConfirmar]         = useState("Confirmar")
+  
+  const historicoInicialCriado                      = useRef(false)
+  const { id }                                      = useParams()
+  const navigate                                    = useNavigate()
 
-  const [errors, setErrors]               = useState({})
-  const [apiError, setApiError]           = useState("")
-  const [successMsg, setSuccessMsg]       = useState("")
-  const historicoInicialCriado            = useRef(false)
-
-  const { id }                            = useParams()
-  const navigate                          = useNavigate()
-
-  const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("tarefas")
+  const { mode, isCadastrar, isEditar, isDeletar }  = useCrudMode("tarefas")
   
   const {
     isOpen,
     abrirModal,
     fecharModal
-  } = useModalExclusao()
+  } = useModalGeral()
 
   /* ========================
      BUSCAR TAREFA POR ID
@@ -68,7 +71,7 @@ const CadTarefa = () => {
     if (!isCadastrar) return
 
     if (!historicoInicialCriado.current) {
-      setHistorico(`${inserirData()} : Tarefa inicial.`)
+      setHistorico(`${inserirData()} : Tarefa criada com sucesso!`)
       historicoInicialCriado.current = true
     }
   }
@@ -98,7 +101,6 @@ const CadTarefa = () => {
       return prev + `\n${inserirData()} : `
     })
   }
-
 
   function voltarParaListagem() {
     navigate("/tarefas")
@@ -130,7 +132,7 @@ const CadTarefa = () => {
     const payload = {
       titulo,
       historico,
-      data_fechamento : dataFechamento || null,
+      data_fechamento : dataFechamento,
       usuarioId: 14
     }
 
@@ -157,12 +159,12 @@ const CadTarefa = () => {
     }
 
     if (isDeletar) {
-      abrirModal()
+      abrirModalExcluir()
     }
   }
 
-  /* ========================
-     CONFIRMAR DELETE
+  /* =============================
+     CONFIRMAR DELETE / FECHAMENTO
   ======================== */
   function confirmDelete() {
     deleteTarefa(id)
@@ -177,7 +179,15 @@ const CadTarefa = () => {
       })
   }
 
-  function handleFecharTarefa() {    
+  function abrirModalExcluir() {
+    setMensagemModal(`Deseja realmente excluir a tarefa n. ${id}?`)
+    setTextoConfirmar("Excluir")
+    setAcaoConfirmacao(() => confirmDelete)
+    abrirModal()
+  }
+
+
+  function confirmFechar() {    
       fecharTarefa(id)
       .then(() => {
         setSuccessMsg("Tarefa fechada com sucesso!")
@@ -188,7 +198,13 @@ const CadTarefa = () => {
       })
   }
 
-
+ function abrirModalFechar() {
+    setMensagemModal(`Deseja realmente fechar a tarefa n. ${id}?`)
+    setTextoConfirmar("Fechar")
+    setAcaoConfirmacao(() => confirmFechar)
+    abrirModal()
+ }
+  
   /* ============================
      TEXTOS DINÂMICOS DOS TÍTULOS
   =============================== */
@@ -244,38 +260,42 @@ const CadTarefa = () => {
           <div className="invalid-feedback">{errors.historico}</div>
         )}
 
-        <div className="d-flex gap-2 mt-3 ">
-          <button type="submit" className={`btn ${classeBotao} botao`}>
-            {textoBotao}
-          </button>
+        <div className="d-flex gap-2 mt-3 ">          
+            <button 
+              type="submit" 
+              className={`btn ${classeBotao} botao`}
+            >
+              {textoBotao}
+            </button>        
+        
+            {isEditar && !isDeletar && (
+              <button
+                type="button"
+                className="btn btn-warning botao"
+                onClick={abrirModalFechar}
+              >
+                Fechar Tarefa
+              </button>
+            )}     
 
-          <button
-            type="button"
-            className={`btn btn-secondary botao`}
-            onClick={voltarParaListagem}
-          >
-            Voltar
-          </button>
-
-          <button
-            type="button"
-            className={`btn btn-warning botao`}
-            onClick={handleFecharTarefa}    
-          >    
-            Fechar Tarefa
-          </button>
-
+             <button
+              type="button"
+              className={`btn btn-secondary botao `}
+              onClick={voltarParaListagem}
+            >
+              Voltar
+            </button>     
         </div>
       </form>
 
-      {/* MODAL EXCLUSÃO */}
-      <ModalExclusao
-        isOpen={isOpen}
-        mensagem="Deseja realmente excluir a tarefa?"
-        id={id}
-        nome={titulo}
-        onConfirmar={confirmDelete}
-        onCancelar={fecharModal}
+      {/* MODAL */}
+      <ModalConfirmacao
+        isOpen        ={isOpen}
+        mensagem      ={mensagemModal}
+        nome          ={titulo}
+        textoConfirmar={textoConfirmar}
+        onConfirmar   ={acaoConfirmacao}
+        onCancelar    ={fecharModal}
       />
 
     </div>
