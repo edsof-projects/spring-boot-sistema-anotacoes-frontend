@@ -3,6 +3,8 @@ import { getAllAcessos }                    from "../../../services/ServiceAcess
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
+import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                    from "../../Modals/ModalVisualizacao"
 import './ListAcessos.css'
 
 const ListAcessos = () => {
@@ -10,6 +12,14 @@ const ListAcessos = () => {
     const [acessos, setAcessos] = useState([])
     const { setTextoTitle }     = useOutletContext()
     const navigate              = useNavigate()
+
+    const {
+        isOpen,
+        itemSelecionado,
+        abrirModal,
+        fecharModal
+    } = useModalVisualizacao()
+
     const {
         search,
         filtrados,
@@ -76,7 +86,7 @@ const ListAcessos = () => {
                         </tr>
                     )}
                     {filtrados.map((acesso) => (
-                        <tr key={acesso.id}>
+                        <tr key={acesso.id} onClick={() => abrirModal(acesso)} style={{ cursor: "pointer" }}>
                             <td className="align-middle">{acesso.id}</td>
                             <td className="align-middle">{acesso.tipo}</td>
                             <td className="align-middle">
@@ -103,6 +113,15 @@ const ListAcessos = () => {
                     ))}
                 </tbody>
             </table>
+
+           {/* MODAL VISUALIZACAO */}
+           <ModalVisualizacao
+                isOpen  ={isOpen}
+                item    ={itemSelecionado}
+                onClose ={fecharModal}
+           /> 
+
+
         </div>
     )
 }

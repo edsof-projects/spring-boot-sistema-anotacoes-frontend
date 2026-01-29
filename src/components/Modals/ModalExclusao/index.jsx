@@ -41,14 +41,14 @@ const ModalExclusao = ({
 
             <div className="modal-footer">
               <button
-                className="btn btn-danger px-4"
+                className="btn btn-danger botao"
                 onClick={onConfirmar}
               >
                 Excluir
               </button>
 
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary botao"
                 onClick={onCancelar}
               >
                 Cancelar
