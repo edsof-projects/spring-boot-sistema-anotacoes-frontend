@@ -3,6 +3,9 @@ import { getAllUsuarios }                   from "../../../services/ServiceUsuar
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
+import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                        from "../../Modals/ModalVisualizacao"
+
 import './ListUsuarios.css'
 
 const ListUsuarios = () => {
@@ -10,6 +13,14 @@ const ListUsuarios = () => {
     const [usuarios, setUsuarios] = useState([])
     const { setTextoTitle }       = useOutletContext()
     const navigate                = useNavigate()
+
+    const {
+        isOpen,
+        itemSelecionado,
+        abrirModal,
+        fecharModal
+    } = useModalVisualizacao()
+
     const {
         search,
         filtrados,
@@ -79,7 +90,7 @@ const ListUsuarios = () => {
                     )}
 
                     {filtrados.map((usuario) => (
-                        <tr key={usuario.id}>
+                        <tr key={usuario.id} onClick={() => abrirModal(usuario)} style={{ cursor: "pointer" }}>
                             <td className="align-middle">{usuario.id}</td>
                             <td className="align-middle">{usuario.nome}</td>
                             <td className="align-middle">{usuario.email}</td>
@@ -109,6 +120,14 @@ const ListUsuarios = () => {
                     ))}
                 </tbody>
             </table>
+
+           {/* MODAL VISUALIZACAO */}
+           <ModalVisualizacao
+                isOpen  ={isOpen}
+                item    ={itemSelecionado}
+                onClose ={fecharModal}
+           />
+
         </div>
     )
 }

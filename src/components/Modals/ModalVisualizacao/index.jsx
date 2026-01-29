@@ -9,6 +9,8 @@ const ModalVisualizacao = ({
   const textoExibido =
     item.historico ||
     item.descricao ||
+    item.tipo      ||
+    "Nome : "+item.nome  + "\n" + "E-mail : "+item.email  + "\n" + "Acesso : "+item.acesso  ||
     "Nenhuma informação disponível"
 
   return (

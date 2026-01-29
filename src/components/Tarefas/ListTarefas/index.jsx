@@ -1,6 +1,6 @@
 import { useEffect, useState }                  from "react"
 import { useOutletContext, useNavigate }        from "react-router-dom"
-import { getAllTarefas }                      from "../../../services/ServiceTarefas"
+import { getAllTarefas }                        from "../../../services/ServiceTarefas"
 import { useSearch }                            from "../../../hooks/useSearch"
 import Title                                    from "../../Title"
 import { limitarTexto }                         from "../../../utils/formatters"
@@ -130,7 +130,7 @@ const ListTarefas = () => {
                 </tbody>
             </table>
 
-            {/* MODAL VISUALIZACAO */}
+           {/* MODAL VISUALIZACAO */}
            <ModalVisualizacao
                 isOpen  ={isOpen}
                 item    ={itemSelecionado}
