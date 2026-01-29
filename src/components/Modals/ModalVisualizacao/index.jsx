@@ -1,11 +1,15 @@
-import './ModalVisualizacao.css'
-
 const ModalVisualizacao = ({
   isOpen,
   item,
   onClose
 }) => {
   if (!isOpen || !item) return null
+
+  // 🔹 Texto dinâmico (prioridade) - Aqui voce decide qual campo sera mostrado alem do id
+  const textoExibido =
+    item.historico ||
+    item.descricao ||
+    "Nenhuma informação disponível"
 
   return (
     <>
@@ -14,14 +18,17 @@ const ModalVisualizacao = ({
           <div className="modal-content p-4 rounded-2">
 
             <div className="modal-header">
-                <h5 className="modal-title">
-                  {item.titulo}
-                </h5>
+              <h5 className="modal-title">
+                {item.titulo}
+              </h5>
             </div>
 
             <div className="modal-body">
-              <p className="txtDescricao" style={{ whiteSpace: "pre-wrap" }}>
-                {item.descricao}
+              <p
+                className="txtDescricao"
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                {textoExibido}
               </p>
             </div>
 
