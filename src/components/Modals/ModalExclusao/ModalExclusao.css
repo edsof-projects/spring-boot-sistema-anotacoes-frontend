@@ -12,3 +12,8 @@
 .txtId{
     text-align: center;
 }
+
+.botao{
+  min-width: 7.5rem;
+  display: none;
+}
