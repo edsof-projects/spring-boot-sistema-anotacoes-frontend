@@ -219,6 +219,10 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
           </>
         )}
 
+        <div class="mb-3">
+          <input class="form-control mt-2" type="file" id="formFile" accept="image/*"/>
+        </div>
+
         <div className="d-flex gap-2 mt-3">
           <button 
             type="submit" 

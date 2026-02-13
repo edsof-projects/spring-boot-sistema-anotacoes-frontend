@@ -1,17 +1,24 @@
 import { useState }                      from "react"
-import  Foto                             from "../../assets/usuario.png"
+import  Foto                             from "../../assets/usuario_padrao.png"
 import { NavLink, Outlet }               from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
   const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso") 
+  const usuario                     = null // futuramente virá do contexto ou auth
 
   return (
     <div className="layout">  
     
         <aside className="sidebar">     
             <div className="areaFoto">
-              <img src={Foto} alt="Foto" className="foto_user"/>
+
+              <img
+                src={usuario?.foto || Foto}
+                alt="Foto"
+                className="foto_user"
+              />
+              
             </div>   
                     
             <nav className="nav">              

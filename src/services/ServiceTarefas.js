@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const RES_API_BASE_URL = "http://localhost:8081/tarefa"
+const RES_API_BASE_URL     = "http://localhost:8081/tarefa"
 
 export const getAllTarefas = ()             => axios.get(RES_API_BASE_URL)
 export const getTarefaById = (id)           => axios.get(`${RES_API_BASE_URL}/${id}`)
