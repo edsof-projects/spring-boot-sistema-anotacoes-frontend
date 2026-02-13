@@ -1,17 +1,18 @@
 import { useEffect, useState }              from "react"
-import { getAllAcessos }                    from "../../../services/ServiceAcessos"
+import { getAllUsuarios }                   from "../../../services/ServiceUsuarios"
 import { useSearch }                        from "../../../hooks/useSearch"
 import Title                                from "../../Title"
 import { useOutletContext, useNavigate }    from "react-router-dom"
-import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
-import ModalVisualizacao                    from "../../Modals/ModalVisualizacao"
-import './ListAcessos.css'
+import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                        from "../../Modals/ModalVisualizacao"
 
-const ListAcessos = () => {
+import './ListUsuarios.css'
 
-    const [acessos, setAcessos] = useState([])
-    const { setTextoTitle }     = useOutletContext()
-    const navigate              = useNavigate()
+const ListUsuarios = () => {
+
+    const [usuarios, setUsuarios] = useState([])
+    const { setTextoTitle }       = useOutletContext()
+    const navigate                = useNavigate()
 
     const {
         isOpen,
@@ -26,27 +27,27 @@ const ListAcessos = () => {
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(acessos, ["tipo"])
-           
-   useEffect(() => {
-        getAllAcessos()
-        .then(res => setAcessos(res.data))
+    } = useSearch(usuarios, ["nome", "email"])
+       
+    useEffect(() => {
+        getAllUsuarios()     
+        .then(res => setUsuarios(res.data))
         .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate(`/acessos/cadastrar`)
-    }  
+        setTextoTitle("Cadastrar usuario")
+        navigate("/usuarios/cadastrar")
+    }    
   
     return (
-        <div className="ListAcessos">
+        <div className="ListUsuarios">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <div className="col-md-4">
                     <input
                         type="text"
                         className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar acessos"
+                        aria-label="Pesquisar usuários"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={handleChange}
@@ -54,13 +55,13 @@ const ListAcessos = () => {
                     />
                 </div>
                 <div className="col-md-4 text-center">
-                    <Title title="Acessos" isPrimario={true} />
+                    <Title title="usuarios" isPrimario={true} />
                 </div>
                 <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}   
-                        type="button"                  
+                        disabled={isSearching}     
+                        type="button"                
                         onClick={goCadastrar}>
                         Cadastrar
                     </button>
@@ -71,7 +72,9 @@ const ListAcessos = () => {
                 <thead>
                     <tr>
                         <th className="align-middle">Id</th>
-                        <th className="align-middle">Tipo de Acesso</th>
+                        <th className="align-middle">Nome</th>
+                        <th className="align-middle">Email</th>
+                        <th className="align-middle">Acesso</th>
                         <th className="d-flex justify-content-end pe-5">Ações</th>
                     </tr>
                 </thead>
@@ -81,29 +84,33 @@ const ListAcessos = () => {
                             <td colSpan="5" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhum tipo de acesso cadastrado"}
+                                : "Nenhum usuário cadastrado"}
                             </td>
                         </tr>
                     )}
-                    {filtrados.map((acesso) => (
-                        <tr key={acesso.id} onClick={() => abrirModal(acesso)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo}</td>
+
+                    {filtrados.map((usuario) => (
+                        <tr key={usuario.id} onClick={() => abrirModal(usuario)} style={{ cursor: "pointer" }}>
+                            <td className="align-middle">{usuario.id}</td>
+                            <td className="align-middle">{usuario.nome}</td>
+                            <td className="align-middle">{usuario.email}</td>
+                            <td className="align-middle">{usuario.acesso}</td>
+
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
                                         className="btn btn-warning px-3"
                                         onClick={() => {
-                                            setTextoTitle("Editar Acesso")
-                                            navigate(`/acessos/editar/${acesso.id}`)
+                                            setTextoTitle("Editar usuario")
+                                            navigate(`/usuarios/editar/${usuario.id}`)
                                         }}>
                                         Editar
                                     </button>
                                     <button
                                         className="btn btn-danger px-3"
                                         onClick={() => {
-                                            setTextoTitle("Excluir Acesso")
-                                            navigate(`/acessos/deletar/${acesso.id}`)
+                                            setTextoTitle("Excluir usuario")
+                                            navigate(`/usuarios/deletar/${usuario.id}`)
                                         }}>
                                         Excluir
                                     </button>
@@ -119,11 +126,10 @@ const ListAcessos = () => {
                 isOpen  ={isOpen}
                 item    ={itemSelecionado}
                 onClose ={fecharModal}
-           /> 
-
+           />
 
         </div>
     )
 }
 
-export default ListAcessos
+export default ListUsuarios

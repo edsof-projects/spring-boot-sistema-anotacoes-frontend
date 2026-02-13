@@ -1,4 +1,4 @@
-.ListAcessos {
+.ListUsuarios {
   flex: 1;
   overflow-y: auto;   /* ✅ scroll vertical aqui */
   padding: 0 1rem;

@@ -5,13 +5,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  margin-top: .5rem;
 }
 
 .sidebar{
    display: flex;
    flex-direction: column;
    width: 240px;
-   height: 100vh;
+   height: 95vh;
    background-color: #333333;
 }
 
@@ -43,7 +46,7 @@
    padding: 0;
 }
 
-.sidebar .nav ul li a{
+.sidebar .nav ul li .nav-link{
    background-color: transparent;
    color: #ffffff;
    display: block;
@@ -54,8 +57,9 @@
    transition: all .5s;
 }
 
-.sidebar .nav ul li a:hover{
-   background-color: #b3b3b32c;
+.sidebar .nav ul li .nav-link:hover,
+.sidebar .nav ul li .nav-link.active {
+   background-color: #cfcfda2c;
    font-weight: 600;
 }
 
@@ -63,6 +67,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 95vh;
 }
 
