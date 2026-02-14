@@ -11,32 +11,33 @@ import {
   useParams,
 } from "react-router-dom"
 
-import { getAllAcessos }    from "../../../services/ServiceAcessos"
-import { formatarNome }     from "../../../utils/formatters"
+import { getAllAcessos } from "../../../services/ServiceAcessos"
+import { formatarNome } from "../../../utils/formatters"
 import { useModalExclusao } from "../../../hooks/useModalExclusao"
-import { useCrudMode }      from "../../../hooks/useCrudMode"
-import ModalExclusao        from "../../Modals/ModalExclusao"
-import Title                from "../../Title"
+import { useCrudMode } from "../../../hooks/useCrudMode"
+import ModalExclusao from "../../Modals/ModalExclusao"
+import Title from "../../Title"
 import "./CadUsuario.css"
 
 const CadUsuario = () => {
 
-  const [nome,  setNome]                            = useState("")
-  const [email, setEmail]                           = useState("")
-  const [nivelAcesso, setNivelAcesso]               = useState("")
-  const [niveisAcesso, setNiveisAcesso]             = useState([])
+  const [nome, setNome]                 = useState("")
+  const [email, setEmail]               = useState("")
+  const [nivelAcesso, setNivelAcesso]   = useState("")
+  const [niveisAcesso, setNiveisAcesso] = useState([])
+  const [foto, setFoto]                 = useState(null)
 
 
-  const [errors, setErrors]                         = useState({})
-  const [apiError, setApiError]                     = useState("")
-  const [successMsg, setSuccessMsg]                 = useState("")
+  const [errors, setErrors] = useState({})
+  const [apiError, setApiError] = useState("")
+  const [successMsg, setSuccessMsg] = useState("")
 
-  const { id }                                      = useParams()
-  const navigate                                    = useNavigate()
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
+  const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
 
-    const {
+  const {
     isOpen,
     abrirModal,
     fecharModal
@@ -46,25 +47,26 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
      BUSCA REGISTRO POR ID
   ======================== */
 
-  const allNiveisAcesso =()=>{
+  const allNiveisAcesso = () => {
     getAllAcessos()
-    .then(res => {
-      setNiveisAcesso(res.data)
-    })
-    .catch(() => {
-      setApiError("Erro ao carregar níveis de acesso.")
-    })
+      .then(res => {
+        setNiveisAcesso(res.data)
+      })
+      .catch(() => {
+        setApiError("Erro ao carregar níveis de acesso.")
+      })
   }
 
   useEffect(() => {
-    if(!isDeletar){
+    if (!isDeletar) {
       allNiveisAcesso()
     }
-    if (id) {      
+    if (id) {
       getUsuarioById(id)
         .then((res) => {
           setNome(res.data.nome)
           setEmail(res.data.email)
+          setUrlFoto(res.data.urlFoto)
           setNivelAcesso(res.data.nivelAcessoId || "")
         })
         .catch(() => {
@@ -78,59 +80,67 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
   }
 
   function validateForm() {
-      if (isDeletar) return true
+    if (isDeletar) return true
 
-      const newErrors = {}
+    const newErrors = {}
 
-      if (!nome.trim())  newErrors.nome        = "Informe o nome"
-      if (!email.trim()) newErrors.email       = "Informe o email"
-      if (!nivelAcesso)  newErrors.nivelAcesso = "Selecione o nível de acesso"
+    if (!nome.trim()) newErrors.nome        = "Informe o nome"
+    if (!email.trim()) newErrors.email      = "Informe o email"
+    if (!nivelAcesso) newErrors.nivelAcesso = "Selecione o nível de acesso"
 
-      setErrors(newErrors)
-      return Object.keys(newErrors).length === 0
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
 
   }
 
   /* ========================
      SUBMIT PRINCIPAL
   ======================== */
-  function handleSubmit(e) {
-    e.preventDefault()
-    setApiError("")
-    setSuccessMsg("")
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setApiError("");
+  setSuccessMsg("");
 
-    if (!validateForm()) return
+  if (!validateForm()) return;
 
-    const payload = { nome, email, senha : "eas1708", nivelAcessoId: nivelAcesso }
+  const formData = new FormData();
+  formData.append("nome", nome);
+  formData.append("email", email);
+  formData.append("senha", "eas1708");
+  formData.append("nivelAcessoId", nivelAcesso);
 
+  if (foto) {
+    formData.append("foto", foto);
+  }
+
+  // DEBUG: verificar FormData
+  for (let pair of formData.entries()) {
+    console.log(pair[0], pair[1]);
+  }
+
+  try {
     if (isCadastrar) {
-      createUsuario(payload)
-        .then(() => {
-          setSuccessMsg("Usuario cadastrado com sucesso!")
-          setTimeout(voltarParaListagem, 2500)
-        })
-        .catch(() => {
-          setApiError("Este email já esta cadastrado!")
-          setTimeout(voltarParaListagem, 2500)
-        })
+      await createUsuario(formData);
+      setSuccessMsg("Usuário cadastrado com sucesso!");
+      setTimeout(voltarParaListagem, 2500);
     }
 
     if (isEditar && id) {
-      editUsuario(payload, id)
-        .then(() => {
-          setSuccessMsg("Usuario atualizado com sucesso!")
-          setTimeout(voltarParaListagem, 2500)
-        })
-        .catch(() => {
-          setApiError("Erro ao atualizar usuário.")
-          setTimeout(voltarParaListagem, 2500)
-        })
+      await editUsuario(formData, id);
+      setSuccessMsg("Usuário atualizado com sucesso!");
+      setTimeout(voltarParaListagem, 2500);
     }
 
     if (isDeletar) {
-      abrirModal()
+      abrirModal();
     }
+
+  } catch (err) {
+    // Se houver erro de email duplicado ou outro
+    setApiError("Erro ao cadastrar/atualizar usuário: " + (err.response?.data?.message || err.message));
+    setTimeout(voltarParaListagem, 2500);
   }
+};
 
   /* ========================
      CONFIRMA DELETE
@@ -139,7 +149,7 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
     deleteUsuario(id)
       .then(() => {
         fecharModal()
-        setSuccessMsg("Usuário excluído com sucesso!")       
+        setSuccessMsg("Usuário excluído com sucesso!")
         setTimeout(voltarParaListagem, 2500)
       })
       .catch(() => {
@@ -148,19 +158,19 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
       })
   }
 
- /* ============================
-     TEXTOS DINÂMICOS DOS TÍTULOS
-  =============================== */
+  /* ============================
+      TEXTOS DINÂMICOS DOS TÍTULOS
+   =============================== */
   const tituloPagina = {
-    CADASTRAR : "Cadastrar Usuário",
-    EDITAR    : `Editar Usuário - Id: ${id}`,
-    DELETAR   : `Excluir Usuário - Id: ${id}`
+    CADASTRAR: "Cadastrar Usuário",
+    EDITAR: `Editar Usuário - Id: ${id}`,
+    DELETAR: `Excluir Usuário - Id: ${id}`
   }[mode]
 
   const textoBotao = {
-    CADASTRAR : "Salvar",
-    EDITAR    : "Atualizar",
-    DELETAR   : "Excluir"
+    CADASTRAR: "Salvar",
+    EDITAR: "Atualizar",
+    DELETAR: "Excluir"
   }[mode]
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
@@ -185,47 +195,53 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
           placeholder="Nome"
           disabled={isDeletar}
           onChange={(e) => setNome(e.target.value)}
-          onBlur={(e)   => setNome(formatarNome(e.target.value))}
+          onBlur={(e) => setNome(formatarNome(e.target.value))}
         />
-         {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
+        {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
 
         <input
           className={`form-control mb-2 ${errors.email ? "is-invalid" : ""}`}
-          type="email" 
+          type="email"
           value={email}
           placeholder="Email"
           disabled={isDeletar}
           onChange={(e) => setEmail(e.target.value)}
         />
         {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-        
+
         {!isDeletar && (
           <>
-          <select
-            className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
-            value={nivelAcesso}
-            disabled={isDeletar}
-            onChange={(e) => setNivelAcesso(e.target.value)}
-          >
-            <option value="">Selecione o nível de acesso</option>
-            {niveisAcesso.map(nivel => (
-              <option key={nivel.id} value={nivel.id}>
-                {nivel.tipo}
-              </option>
-            ))}
-          </select>
-          {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
+            <select
+              className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
+              value={nivelAcesso}
+              disabled={isDeletar}
+              onChange={(e) => setNivelAcesso(e.target.value)}
+            >
+              <option value="">Selecione o nível de acesso</option>
+              {niveisAcesso.map(nivel => (
+                <option key={nivel.id} value={nivel.id}>
+                  {nivel.tipo}
+                </option>
+              ))}
+            </select>
+            {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
 
           </>
         )}
 
-        <div class="mb-3">
-          <input class="form-control mt-2" type="file" id="formFile" accept="image/*"/>
+
+        <div class="my-2">         
+          <input 
+              class="form-control" 
+              type="file"                
+              accept="image/*"
+              onChange={(e) => setFoto(e.target.files[0])}
+          />
         </div>
 
         <div className="d-flex gap-2 mt-3">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={`btn ${classeBotao} botao`}>
             {textoBotao}
           </button>
@@ -242,12 +258,12 @@ const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
 
       {/* MODAL EXCLUSÃO */}
       <ModalExclusao
-        isOpen      ={isOpen}
-        mensagem    ="Deseja realmente excluir o usuário e suas anotações?"
-        id          ={id}
-        nome        ={nome}
-        onConfirmar ={confirmDelete}
-        onCancelar  ={fecharModal}
+        isOpen={isOpen}
+        mensagem="Deseja realmente excluir o usuário e suas anotações?"
+        id={id}
+        nome={nome}
+        onConfirmar={confirmDelete}
+        onCancelar={fecharModal}
       />
 
     </div>

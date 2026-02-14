@@ -1,5 +1,5 @@
 import { useState }                      from "react"
-import  Foto                             from "../../assets/usuario_padrao.png"
+import  Foto                             from "../../assets/default-photo.png"
 import { NavLink, Outlet }               from "react-router-dom"
 import "./Admin.css"
 
