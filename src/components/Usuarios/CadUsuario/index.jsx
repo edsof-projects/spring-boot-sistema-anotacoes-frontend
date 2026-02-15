@@ -28,11 +28,11 @@ const CadUsuario = () => {
   const [foto, setFoto]                 = useState(null)
 
 
-  const [errors, setErrors] = useState({})
-  const [apiError, setApiError] = useState("")
+  const [errors, setErrors]         = useState({})
+  const [apiError, setApiError]     = useState("")
   const [successMsg, setSuccessMsg] = useState("")
 
-  const { id } = useParams()
+  const { id }   = useParams()
   const navigate = useNavigate()
 
   const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
@@ -66,8 +66,8 @@ const CadUsuario = () => {
         .then((res) => {
           setNome(res.data.nome)
           setEmail(res.data.email)
-          setUrlFoto(res.data.urlFoto)
           setNivelAcesso(res.data.nivelAcessoId || "")
+          setFoto(res.data.urlFoto)
         })
         .catch(() => {
           setApiError("Erro ao carregar o usuário.")
@@ -97,49 +97,49 @@ const CadUsuario = () => {
      SUBMIT PRINCIPAL
   ======================== */
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setApiError("");
-  setSuccessMsg("");
+    e.preventDefault();
+    setApiError("");
+    setSuccessMsg("");
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  const formData = new FormData();
-  formData.append("nome", nome);
-  formData.append("email", email);
-  formData.append("senha", "eas1708");
-  formData.append("nivelAcessoId", nivelAcesso);
+    const formData = new FormData();
+    formData.append("nome", nome);
+    formData.append("email", email);
+    formData.append("senha", "eas1708");
+    formData.append("nivelAcessoId", nivelAcesso);
 
-  if (foto) {
-    formData.append("foto", foto);
-  }
+    if (foto) {
+      formData.append("foto", foto);
+    }
 
-  // DEBUG: verificar FormData
-  for (let pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
+    // DEBUG: verificar FormData
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
-  try {
-    if (isCadastrar) {
-      await createUsuario(formData);
-      setSuccessMsg("Usuário cadastrado com sucesso!");
+    try {
+      if (isCadastrar) {
+        await createUsuario(formData);
+        setSuccessMsg("Usuário cadastrado com sucesso!");
+        setTimeout(voltarParaListagem, 2500);
+      }
+
+      if (isEditar && id) {
+        await editUsuario(formData, id);
+        setSuccessMsg("Usuário atualizado com sucesso!");
+        setTimeout(voltarParaListagem, 2500);
+      }
+
+      if (isDeletar) {
+        abrirModal();
+      }
+
+    } catch (err) {
+      // Se houver erro de email duplicado ou outro
+      setApiError("Erro ao cadastrar/atualizar usuário: " + (err.response?.data?.message || err.message));
       setTimeout(voltarParaListagem, 2500);
     }
-
-    if (isEditar && id) {
-      await editUsuario(formData, id);
-      setSuccessMsg("Usuário atualizado com sucesso!");
-      setTimeout(voltarParaListagem, 2500);
-    }
-
-    if (isDeletar) {
-      abrirModal();
-    }
-
-  } catch (err) {
-    // Se houver erro de email duplicado ou outro
-    setApiError("Erro ao cadastrar/atualizar usuário: " + (err.response?.data?.message || err.message));
-    setTimeout(voltarParaListagem, 2500);
-  }
 };
 
   /* ========================
@@ -162,15 +162,15 @@ const CadUsuario = () => {
       TEXTOS DINÂMICOS DOS TÍTULOS
    =============================== */
   const tituloPagina = {
-    CADASTRAR: "Cadastrar Usuário",
-    EDITAR: `Editar Usuário - Id: ${id}`,
-    DELETAR: `Excluir Usuário - Id: ${id}`
+    CADASTRAR : "Cadastrar Usuário",
+    EDITAR    : `Editar Usuário - Id: ${id}`,
+    DELETAR   : `Excluir Usuário - Id: ${id}`
   }[mode]
 
   const textoBotao = {
-    CADASTRAR: "Salvar",
-    EDITAR: "Atualizar",
-    DELETAR: "Excluir"
+    CADASTRAR : "Salvar",
+    EDITAR    : "Atualizar",
+    DELETAR   : "Excluir"
   }[mode]
 
   const classeBotao = isDeletar ? "btn-danger" : "btn-success"
@@ -195,7 +195,7 @@ const CadUsuario = () => {
           placeholder="Nome"
           disabled={isDeletar}
           onChange={(e) => setNome(e.target.value)}
-          onBlur={(e) => setNome(formatarNome(e.target.value))}
+          onBlur={(e)   => setNome(formatarNome(e.target.value))}
         />
         {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
 
@@ -229,14 +229,16 @@ const CadUsuario = () => {
           </>
         )}
 
-        <div class="my-2">         
-          <input 
-              class="form-control" 
-              type="file"                
-              accept="image/*"
-              onChange={(e) => setFoto(e.target.files[0])}
-          />
-        </div>
+        {!isDeletar && (
+            <div class="my-2">         
+              <input 
+                  class="form-control" 
+                  type="file"                
+                  accept="image/*"
+                  onChange={(e) => setFoto(e.target.files[0])}
+              />
+            </div>
+         )}
 
         <div className="d-flex gap-2 mt-3">
           <button
