@@ -25,7 +25,7 @@ const Admin = () => {
               <ul>
                   <li>
                     <NavLink
-                      to="/"
+                      to="/acessos"
                       end
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
                     >
@@ -61,7 +61,8 @@ const Admin = () => {
                 
         </aside>
 
-        <main className="content">     
+        <main className="content">   
+            <h2 className="pb-3">Administração</h2>  
             <Outlet context={{ textoTitle, setTextoTitle }} />
         </main>        
 

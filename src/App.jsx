@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Admin                            from './components/Admin'
 import CadAcesso                        from './components/Acessos/CadAcesso'
 import ListAcessos                      from './components/Acessos/ListAcessos'
 import CadUsuario                       from './components/Usuarios/CadUsuario'
@@ -7,8 +8,6 @@ import CadAnotacao                      from './components/Anotacoes/CadAnotacao
 import ListAnotacoes                    from './components/Anotacoes/ListAnotacoes'
 import CadTarefa                        from './components/Tarefas/CadTarefa'
 import ListTarefas                      from './components/Tarefas/ListTarefas'
-import Login                            from './components/Login'
-
 import './Global.css'
 
 function App() {
@@ -18,10 +17,10 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route element={<Login />}>
+        <Route path="/" element={<Admin />}>
 
           {/* ACESSOS */}
-          <Route index element={<ListAcessos />} />
+          <Route path="acessos"              element={<ListAcessos />} />
           <Route path="acessos/cadastrar"    element={<CadAcesso />} />
           <Route path="acessos/editar/:id"   element={<CadAcesso />} />
           <Route path="acessos/deletar/:id"  element={<CadAcesso />} />
@@ -43,8 +42,8 @@ function App() {
           <Route path="tarefas/cadastrar"   element={<CadTarefa />} />
           <Route path="tarefas/editar/:id"  element={<CadTarefa />} />
           <Route path="tarefas/fechar/:id"  element={<CadTarefa />} />
-          <Route path="tarefas/deletar/:id" element={<CadTarefa />} />
-          
+          <Route path="tarefas/deletar/:id" element={<CadTarefa />} />  
+
         </Route>
 
       </Routes>

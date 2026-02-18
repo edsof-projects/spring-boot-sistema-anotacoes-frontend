@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const RES_API_BASE_URL = "http://localhost:8081/anotacao"
+const RES_API_BASE_URL = "http://localhost:8081/anotacoes"
 
 export const getAllAnotacoes = ()             => axios.get(RES_API_BASE_URL)
 export const getAnotacaoById = (id)           => axios.get(`${RES_API_BASE_URL}/${id}`)

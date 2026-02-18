@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const RES_API_BASE_URL = "http://localhost:8081/usuario"
+const RES_API_BASE_URL = "http://localhost:8081/usuarios"
 
 export const getAllUsuarios = ()             => axios.get(RES_API_BASE_URL)
 export const getUsuarioById = (id)           => axios.get(`${RES_API_BASE_URL}/${id}`)
