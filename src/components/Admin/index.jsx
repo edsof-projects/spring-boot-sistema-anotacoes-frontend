@@ -1,57 +1,65 @@
 import { useState }                      from "react"
 import  Foto                             from "../../assets/default-photo.png"
+import  Logo                             from "/logo.png"
 import { NavLink, Outlet }               from "react-router-dom"
 import "./Admin.css"
 
 const Admin = () => {
   const [textoTitle, setTextoTitle] = useState("Cadastrar Acesso") 
-  const usuario                     = null // futuramente virá do contexto ou auth
+  const usuario                     = null         // futuramente virá do contexto ou auth
+  const [showLogo, setShowLogo]     = useState(true)
+
+  const hiddenLogo = () => {
+     setShowLogo(false)
+  }
 
   return (
-    <div className="layout">  
-    
+    <div className="layout">      
+        
         <aside className="sidebar">     
             <div className="areaFoto">
-
               <img
                 src={usuario?.foto || Foto}
                 alt="Foto"
                 className="foto_user"
-              />
-              
+              />              
             </div>   
                     
             <nav className="nav">              
               <ul>
                   <li>
                     <NavLink
-                      to="/acessos"
+                      to="/admin/acessos"
                       end
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      onClick={hiddenLogo}
                     >
                       Acessos
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to="/usuarios"
+                      to="/admin/usuarios"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      onClick={hiddenLogo}
                     >    
                       Usuários
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to="/anotacoes"
+                      to="/admin/anotacoes"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      onClick={hiddenLogo}
                     >
                       Anotações
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to="/tarefas"
+                      to="/admin/tarefas"
                       className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                      onClick={hiddenLogo}
                     >
                       Tarefas
                     </NavLink>
@@ -60,10 +68,19 @@ const Admin = () => {
             </nav>   
                 
         </aside>
-
-        <main className="content">   
-            <h2 className="pb-3">Administração</h2>  
+         
+        <main className="content">               
             <Outlet context={{ textoTitle, setTextoTitle }} />
+            {showLogo && (
+              <div className="d-flex flex-column">
+                <img        
+                    src={Logo} 
+                    alt="logo" 
+                    className="logo" id="logo"  
+                />
+                <h1 className="my-3 title">Administração</h1>
+              </div>
+            )}
         </main>        
 
       </div>
