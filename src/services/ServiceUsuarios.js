@@ -1,9 +1,23 @@
-import axios from "axios"
+import { privateApi } from "./api"; 
 
-const RES_API_BASE_URL = "http://localhost:8081/usuario"
+const RES_API_BASE_URL = "/usuarios";
 
-export const getAllUsuarios = ()             => axios.get(RES_API_BASE_URL)
-export const getUsuarioById = (id)           => axios.get(`${RES_API_BASE_URL}/${id}`)
-export const createUsuario  = (tipo)         => axios.post(RES_API_BASE_URL, tipo)
-export const editUsuario    = (tipo, id)     => axios.put(`${RES_API_BASE_URL}/${id}`, tipo)
-export const deleteUsuario  = (id)           => axios.delete(`${RES_API_BASE_URL}/${id}`)
+export const getAllUsuarios = () =>
+  privateApi.get(RES_API_BASE_URL);
+
+export const getUsuarioById = (id) =>
+  privateApi.get(`${RES_API_BASE_URL}/${id}`);
+
+export const createUsuario = (tipo) =>
+  privateApi.post(RES_API_BASE_URL, tipo);
+
+export const deleteUsuario = (id) =>
+  privateApi.delete(`${RES_API_BASE_URL}/${id}`);
+
+export const editUsuario = (formData, id) => {
+  return axios.put(`${RES_API_BASE_URL}/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}

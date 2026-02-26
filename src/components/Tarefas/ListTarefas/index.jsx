@@ -37,7 +37,7 @@ const ListTarefas = () => {
 
     function goCadastrar() {
         setTextoTitle("Cadastrar tarefa")
-        navigate("/tarefas/cadastrar")
+        navigate("cadastrar")
     }       
   
     return (
@@ -111,7 +111,7 @@ const ListTarefas = () => {
                                         className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar tarefa")
-                                            navigate(`/tarefas/editar/${tarefa.id}`)
+                                            navigate(`editar/${tarefa.id}`)
                                         }}>
                                         Editar
                                     </button>
@@ -119,7 +119,7 @@ const ListTarefas = () => {
                                         className="btn btn-danger px-3"
                                         onClick={() => {
                                             setTextoTitle("Excluir tarefa")
-                                            navigate(`/tarefas/deletar/${tarefa.id}`)
+                                            navigate(`deletar/${tarefa.id}`)
                                         }}>
                                         Excluir
                                     </button>

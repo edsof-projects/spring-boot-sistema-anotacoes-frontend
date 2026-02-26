@@ -103,7 +103,7 @@ const CadTarefa = () => {
   }
 
   function voltarParaListagem() {
-    navigate("/tarefas")
+    navigate("/home/tarefas")
   }
 
   function validateForm() {

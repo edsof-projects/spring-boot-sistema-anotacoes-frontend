@@ -37,7 +37,7 @@ const ListUsuarios = () => {
 
     function goCadastrar() {
         setTextoTitle("Cadastrar usuario")
-        navigate("/usuarios/cadastrar")
+        navigate("cadastrar")
     }    
   
     return (
@@ -102,7 +102,7 @@ const ListUsuarios = () => {
                                         className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar usuario")
-                                            navigate(`/usuarios/editar/${usuario.id}`)
+                                            navigate(`editar/${usuario.id}`)
                                         }}>
                                         Editar
                                     </button>
@@ -110,7 +110,7 @@ const ListUsuarios = () => {
                                         className="btn btn-danger px-3"
                                         onClick={() => {
                                             setTextoTitle("Excluir usuario")
-                                            navigate(`/usuarios/deletar/${usuario.id}`)
+                                            navigate(`deletar/${usuario.id}`)
                                         }}>
                                         Excluir
                                     </button>

@@ -3,3 +3,7 @@
     margin-block: 1rem;
     text-transform: uppercase;
 }
+
+.texto-secondary{
+    color: rgb(252, 252, 252) !important;
+}

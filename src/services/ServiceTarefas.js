@@ -1,10 +1,26 @@
-import axios from "axios"
+import { privateApi } from "./api"; 
 
-const RES_API_BASE_URL     = "http://localhost:8081/tarefa"
+const RES_API_BASE_URL = "/tarefas";
 
-export const getAllTarefas = ()             => axios.get(RES_API_BASE_URL)
-export const getTarefaById = (id)           => axios.get(`${RES_API_BASE_URL}/${id}`)
-export const createTarefa  = (tarefa)       => axios.post(RES_API_BASE_URL, tarefa)
-export const editTarefa    = (tarefa, id)   => axios.put(`${RES_API_BASE_URL}/${id}`, tarefa)
-export const deleteTarefa  = (id)           => axios.delete(`${RES_API_BASE_URL}/${id}`)
-export const fecharTarefa  = (id)           => axios.put(`${RES_API_BASE_URL}/${id}/fechar`)
+export const getAllTarefas = () =>
+  privateApi.get(RES_API_BASE_URL);
+
+export const getTarefaById = (id) =>
+  privateApi.get(`${RES_API_BASE_URL}/${id}`);
+
+export const createTarefa = (tipo) =>
+  privateApi.post(RES_API_BASE_URL, tipo);
+
+export const deleteTarefa = (id) =>
+  privateApi.delete(`${RES_API_BASE_URL}/${id}`);
+
+export const fecharTarefa = (id) =>
+  privateApi.delete(`${RES_API_BASE_URL}/${id}/fechar`);
+
+export const editTarefa = (formData, id) => {
+  return axios.put(`${RES_API_BASE_URL}/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}

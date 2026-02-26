@@ -28,6 +28,7 @@ const CadAnotacao = () => {
   const [successMsg, setSuccessMsg]   = useState("")
 
   const { id }                        = useParams()
+  
   const navigate                      = useNavigate()
 
   const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("anotacoes")
@@ -37,7 +38,7 @@ const CadAnotacao = () => {
     abrirModal,
     fecharModal
   } = useModalExclusao()
-
+  
   /* ========================
      BUSCAR ANOTAÇÃO POR ID
   ======================== */
@@ -57,7 +58,7 @@ const CadAnotacao = () => {
   }, [id])
 
   function voltarParaListagem() {
-    navigate("/anotacoes")
+    navigate("/home/anotacoes")
   }
 
   function validateForm() {
@@ -79,26 +80,25 @@ const CadAnotacao = () => {
   function handleSubmit(e) {
     e.preventDefault()
     setApiError("")
-    setSuccessMsg("")
+    setSuccessMsg("")       
 
     if (!validateForm()) return
-
-    // provisório até JWT onde o usuarioId devera ser o que estiver logado
+    
     const payload = {
       titulo,
-      descricao,
-      usuarioId: 14
+      descricao
     }
 
     if (isCadastrar) {
-      createAnotacao(payload)
-        .then(() => {
-          setSuccessMsg("Anotação cadastrada com sucesso!")
-          setTimeout(voltarParaListagem, 2000)
-        })
-        .catch(() => {
-          setApiError("Erro ao cadastrar anotação.")
-        })
+      createAnotacao(payload)      
+      .then((response) => {
+        console.log("Anotação cadastrada:", response.data);
+        setSuccessMsg("Anotação cadastrada com sucesso!");
+        setTimeout(voltarParaListagem, 2000);
+      })
+      .catch(() => {
+        setApiError("Erro ao cadastrar anotação.");
+      });
     }
 
     if (isEditar && id) {
