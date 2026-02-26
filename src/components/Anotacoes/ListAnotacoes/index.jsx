@@ -37,7 +37,7 @@ const ListAnotacoes = () => {
 
     function goCadastrar() {
         setTextoTitle("Cadastrar anotação")
-        navigate("/anotacoes/cadastrar")
+        navigate("cadastrar")
     }       
   
     return (
@@ -111,7 +111,7 @@ const ListAnotacoes = () => {
                                         className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar anotação")
-                                            navigate(`/anotacoes/editar/${anotacao.id}`)
+                                            navigate(`editar/${anotacao.id}`)                                           
                                         }}>
                                         Editar
                                     </button>
@@ -119,7 +119,7 @@ const ListAnotacoes = () => {
                                         className="btn btn-danger px-3"
                                         onClick={() => {
                                             setTextoTitle("Excluir anotação")
-                                            navigate(`/anotacoes/deletar/${anotacao.id}`)
+                                            navigate(`deletar/${anotacao.id}`)
                                         }}>
                                         Excluir
                                     </button>

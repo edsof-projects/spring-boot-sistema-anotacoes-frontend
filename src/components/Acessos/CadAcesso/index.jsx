@@ -52,10 +52,11 @@ const CadAcesso = () => {
   }, [id])
 
   function voltarParaListagem() {
-    navigate("/")
+    navigate("/home/acessos/")
   }
 
   function validateForm() {
+    
     if (isDeletar) return true
 
     const newErrors = {}

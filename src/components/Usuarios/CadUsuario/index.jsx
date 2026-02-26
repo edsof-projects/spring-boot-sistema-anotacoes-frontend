@@ -28,9 +28,9 @@ const CadUsuario = () => {
   const [foto, setFoto]                 = useState(null)
 
 
-  const [errors, setErrors]         = useState({})
-  const [apiError, setApiError]     = useState("")
-  const [successMsg, setSuccessMsg] = useState("")
+  const [errors, setErrors]             = useState({})
+  const [apiError, setApiError]         = useState("")
+  const [successMsg, setSuccessMsg]     = useState("")
 
   const { id }   = useParams()
   const navigate = useNavigate()
@@ -76,7 +76,7 @@ const CadUsuario = () => {
   }, [id])
 
   function voltarParaListagem() {
-    navigate("/usuarios")
+    navigate("/home/usuarios")
   }
 
   function validateForm() {
@@ -104,7 +104,7 @@ const CadUsuario = () => {
     if (!validateForm()) return;
 
     const formData = new FormData();
-    formData.append("nome", nome);
+    formData.append("nome",  nome);
     formData.append("email", email);
     formData.append("senha", "eas1708");
     formData.append("nivelAcessoId", nivelAcesso);
@@ -112,11 +112,6 @@ const CadUsuario = () => {
     if (foto) {
       formData.append("foto", foto);
     }
-
-    // DEBUG: verificar FormData
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0], pair[1]);
-    // }
 
     try {
       if (isCadastrar) {
@@ -163,7 +158,7 @@ const CadUsuario = () => {
    =============================== */
   const tituloPagina = {
     CADASTRAR : "Cadastrar Usuário",
-    EDITAR    : `Editar Usuário - Id: ${id}`,
+    EDITAR    : `Editar Usuário  - Id: ${id}`,
     DELETAR   : `Excluir Usuário - Id: ${id}`
   }[mode]
 

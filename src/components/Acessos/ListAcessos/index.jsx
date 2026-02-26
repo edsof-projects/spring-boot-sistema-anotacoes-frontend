@@ -36,7 +36,7 @@ const ListAcessos = () => {
 
     function goCadastrar() {
         setTextoTitle("Cadastrar Acesso")
-        navigate(`/acessos/cadastrar`)
+        navigate(`cadastrar`)
     }  
   
     return (
@@ -95,7 +95,7 @@ const ListAcessos = () => {
                                         className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar Acesso")
-                                            navigate(`/acessos/editar/${acesso.id}`)
+                                            navigate(`editar/${acesso.id}`)
                                         }}>
                                         Editar
                                     </button>
@@ -103,7 +103,7 @@ const ListAcessos = () => {
                                         className="btn btn-danger px-3"
                                         onClick={() => {
                                             setTextoTitle("Excluir Acesso")
-                                            navigate(`/acessos/deletar/${acesso.id}`)
+                                            navigate(`deletar/${acesso.id}`)
                                         }}>
                                         Excluir
                                     </button>

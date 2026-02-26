@@ -1,4 +1,15 @@
 .mLargura{
     max-width: 450px;
-    padding: 2rem;
+    padding: 2rem;    
+}
+
+.esqueciasenha{
+    text-decoration: none;
+    color: #ffffff9f;
+    margin-top: 1rem;
+    margin-left: 18rem;
+}
+
+.esqueciasenha:hover{
+    color: #ffffff;
 }
