@@ -94,8 +94,7 @@ const ListUsuarios = () => {
                             <td className="align-middle">{usuario.id}</td>
                             <td className="align-middle">{usuario.nome}</td>
                             <td className="align-middle">{usuario.email}</td>
-                            <td className="align-middle">{usuario.acesso}</td>
-
+                            <td className="align-middle">{usuario.acesso === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>                            
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button

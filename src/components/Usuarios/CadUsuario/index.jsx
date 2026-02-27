@@ -225,7 +225,7 @@ const CadUsuario = () => {
               <option value="">Selecione o nível de acesso</option>
               {niveisAcesso.map(nivel => (
                 <option key={nivel.id} value={nivel.id}>
-                  {nivel.tipo}
+                  {nivel.tipo === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}
                 </option>
               ))}
             </select>
