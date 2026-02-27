@@ -79,6 +79,7 @@ const ListTarefas = () => {
                     </tr>
                 </thead>
                 <tbody>
+
                     {filtrados.length === 0 && (
                         <tr>
                             <td colSpan="5" className="text-center py-3 text-muted">
@@ -111,7 +112,7 @@ const ListTarefas = () => {
                                         className="btn btn-warning px-3"
                                         onClick={() => {
                                             setTextoTitle("Editar tarefa")
-                                            navigate(`editar/${tarefa.id}`)
+                                            navigate(`editar/${tarefa.id}`)                                            
                                         }}>
                                         Editar
                                     </button>

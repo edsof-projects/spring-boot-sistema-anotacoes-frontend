@@ -50,7 +50,7 @@ const CadUsuario = () => {
   const allNiveisAcesso = () => {
     getAllAcessos()
       .then(res => {
-        setNiveisAcesso(res.data)
+        setNiveisAcesso(res.data)        
       })
       .catch(() => {
         setApiError("Erro ao carregar níveis de acesso.")
@@ -74,19 +74,28 @@ const CadUsuario = () => {
         })
     }
   }, [id])
-
+  
   function voltarParaListagem() {
     navigate("/home/usuarios")
   }
 
   function validateForm() {
+    console.log("MODE:", mode);
+    console.log("isCadastrar:", isCadastrar);
+    console.log("isEditar:", isEditar);
+    console.log("isDeletar:", isDeletar);
+
+
+
+
+
     if (isDeletar) return true
 
     const newErrors = {}
 
-    if (!nome.trim()) newErrors.nome        = "Informe o nome"
-    if (!email.trim()) newErrors.email      = "Informe o email"
-    if (!nivelAcesso) newErrors.nivelAcesso = "Selecione o nível de acesso"
+    if (!nome.trim())  newErrors.nome        = "Informe o nome"
+    if (!email.trim()) newErrors.email       = "Informe o email"
+    if (!nivelAcesso)  newErrors.nivelAcesso = "Selecione o nível de acesso"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -115,6 +124,7 @@ const CadUsuario = () => {
 
     try {
       if (isCadastrar) {
+        console.log(isCadastrar,"ENTROU NO CADASTRAR");
         await createUsuario(formData);
         setSuccessMsg("Usuário cadastrado com sucesso!");
         setTimeout(voltarParaListagem, 2500);
@@ -205,7 +215,7 @@ const CadUsuario = () => {
         {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
 
         {!isDeletar && (
-          <>
+          <>            
             <select
               className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
               value={nivelAcesso}

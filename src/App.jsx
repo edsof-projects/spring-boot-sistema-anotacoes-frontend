@@ -24,7 +24,7 @@ function App() {
         <Route
           path="/home"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={["ROLE_ADMIN","ROLE_USER"]}>
               <Home />
             </PrivateRoute>
           }
@@ -115,7 +115,7 @@ function App() {
           <Route
             path="anotacoes/editar/:id"
             element={
-              <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+              <PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_USER"]}>
                 <CadAnotacao />
               </PrivateRoute>
             }
@@ -123,7 +123,7 @@ function App() {
           <Route
             path="anotacoes/deletar/:id"
             element={
-              <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+              <PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_USER"]}>
                 <CadAnotacao />
               </PrivateRoute>
             }
@@ -148,7 +148,7 @@ function App() {
           <Route
             path="tarefas/editar/:id"
             element={
-              <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+              <PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_USER"]}>
                 <CadTarefa />
               </PrivateRoute>
             }
@@ -156,7 +156,7 @@ function App() {
           <Route
             path="tarefas/deletar/:id"
             element={
-              <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+              <PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_USER"]}>
                 <CadTarefa />
               </PrivateRoute>
             }
