@@ -8,19 +8,16 @@ export const getAllTarefas = () =>
 export const getTarefaById = (id) =>
   privateApi.get(`${RES_API_BASE_URL}/${id}`);
 
-export const createTarefa = (tipo) =>
-  privateApi.post(RES_API_BASE_URL, tipo);
+export const createTarefa = (tarefa) =>
+  privateApi.post(RES_API_BASE_URL, tarefa);
 
 export const deleteTarefa = (id) =>
   privateApi.delete(`${RES_API_BASE_URL}/${id}`);
 
 export const fecharTarefa = (id) =>
-  privateApi.delete(`${RES_API_BASE_URL}/${id}/fechar`);
+  privateApi.put(`${RES_API_BASE_URL}/${id}/fechar`);
 
-export const editTarefa = (formData, id) => {
-  return axios.put(`${RES_API_BASE_URL}/${id}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
+export const editTarefa = (tarefa, id) => {
+  return privateApi.put(`${RES_API_BASE_URL}/${id}`, tarefa, {    
   });
 }
