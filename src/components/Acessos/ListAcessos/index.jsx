@@ -88,7 +88,7 @@ const ListAcessos = () => {
                     {filtrados.map((acesso) => (
                         <tr key={acesso.id} onClick={() => abrirModal(acesso)} style={{ cursor: "pointer" }}>
                             <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo}</td>
+                            <td className="align-middle">{acesso.tipo === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
