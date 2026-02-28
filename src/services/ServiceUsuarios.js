@@ -8,14 +8,19 @@ export const getAllUsuarios = () =>
 export const getUsuarioById = (id) =>
   privateApi.get(`${RES_API_BASE_URL}/${id}`);
 
-export const createUsuario = (tipo) =>
-  privateApi.post(RES_API_BASE_URL, tipo);
+export const getUsuarioLogado = async () => {
+  const response = await privateApi.get(`${RES_API_BASE_URL}/me`);
+  return response.data; // retorna diretamente o objeto do backend
+}
+
+export const createUsuario = (user) =>
+  privateApi.post(RES_API_BASE_URL, user);
 
 export const deleteUsuario = (id) =>
   privateApi.delete(`${RES_API_BASE_URL}/${id}`);
 
-export const editUsuario = (formData, id) => {
-  return axios.put(`${RES_API_BASE_URL}/${id}`, formData, {
+export const editUsuario = (user, id) => {
+  return privateApi.put(`${RES_API_BASE_URL}/${id}`, user, {
     headers: {
       "Content-Type": "multipart/form-data"
     }

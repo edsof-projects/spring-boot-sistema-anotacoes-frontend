@@ -8,11 +8,14 @@ export default defineConfig({
     hmr: {
       protocol: 'ws',
       host: 'localhost',
-      port: 5173,
-      proxy: {
-      '/api': 'http://localhost:8081'
-    }
-
+      port: 5173
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        secure: false
+      }
     }
   }
 })

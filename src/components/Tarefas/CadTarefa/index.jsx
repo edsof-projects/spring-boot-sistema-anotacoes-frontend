@@ -83,6 +83,10 @@ const CadTarefa = () => {
     }
   }
 
+  function idUserLogado(){
+     return localStorage.getItem("id")
+  }
+
   function ultimaLinhaTemDataAberta(texto) {
     if (!texto) return false
     const linhas = texto.split("\n")
@@ -133,7 +137,7 @@ const CadTarefa = () => {
       titulo,
       historico,
       data_fechamento : dataFechamento,
-      usuarioId: 14
+      usuarioId       : idUserLogado()
     }
 
     if (isCadastrar) {
@@ -185,7 +189,6 @@ const CadTarefa = () => {
     setAcaoConfirmacao(() => confirmDelete)
     abrirModal()
   }
-
 
   function confirmFechar() {    
       fecharTarefa(id)

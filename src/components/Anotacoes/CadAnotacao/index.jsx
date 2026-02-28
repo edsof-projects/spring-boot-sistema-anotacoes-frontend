@@ -57,6 +57,10 @@ const CadAnotacao = () => {
       })
   }, [id])
 
+   function idUserLogado(){
+     return localStorage.getItem("id")
+  }
+
   function voltarParaListagem() {
     navigate("/home/anotacoes")
   }
@@ -86,7 +90,8 @@ const CadAnotacao = () => {
     
     const payload = {
       titulo,
-      descricao
+      descricao,
+      usuarioId: idUserLogado()
     }
 
     if (isCadastrar) {

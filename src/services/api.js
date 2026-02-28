@@ -16,10 +16,7 @@ export const publicApi = axios.create({
 // API PRIVADA (COM TOKEN)
 // =========================
 export const privateApi = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: API_URL
 });
 
 // =========================
@@ -29,7 +26,7 @@ privateApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
 
-    console.log("TOKEN ENVIADO:", token); // DEBUG
+    //console.log("TOKEN ENVIADO:", token); // DEBUG
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

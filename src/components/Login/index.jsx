@@ -1,14 +1,31 @@
-import { NavLink, useNavigate }   from "react-router-dom";
-import { useState }               from "react";
-import Foto                       from "/avatar-logo.png";
-import { login }                  from "../../services/ServiceLogin";
-import { jwtDecode }              from "jwt-decode"; 
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Logo from "/avatar-logo.png";
+import { login } from "../../services/ServiceLogin";
+import { recuperarSenha } from "../../services/ServiceEmails"
+import { jwtDecode } from "jwt-decode";
 import './Login.css';
 
 const Login = () => {
-  const navigate          = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  const handleEmail = async () => {
+    if (!email) {
+      alert("Digite seu e-mail primeiro.");
+      return;
+    }
+
+    try {
+      const data = await recuperarSenha(email);
+      alert(data.message);
+      setEmail("")
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,15 +41,15 @@ const Login = () => {
 
       // salva no localStorage
       localStorage.setItem("token", token);
-      localStorage.setItem("role",  data.role);
+      localStorage.setItem("role", data.role);
       localStorage.setItem("photo", data.photo);
-      localStorage.setItem("id",    data.id);
+      localStorage.setItem("id", data.id);
 
       // decodifica se precisar
-      const decoded = jwtDecode(token);      
+      const decoded = jwtDecode(token);
 
       navigate("/home");
-      
+
     } catch (error) {
       console.error(error);
       alert("Erro no login: " + error.message);
@@ -40,14 +57,14 @@ const Login = () => {
   };
 
   return (
-    <main className="vw-100 vh-100 d-flex align-items-center ">
-      <div className="content w-100 p-4 ">
+    <main className="login-container d-flex align-items-center justify-content-center">
+      <div className="content p-4 w-100">
         <form
-          className="d-flex flex-column gap-4 p-4 mLargura w-100 bg-black rounded-2 mt-3" 
+          className="login-form d-flex flex-column gap-4 p-4 rounded-2 mt-3 "
           onSubmit={handleLogin}
         >
-          <img src={Foto} alt="foto padrão" width={150} />
-          <h1 className="text-white fs-4 text-center">Bem-Vindo Faça o Login</h1>
+          <img src={Logo} alt="foto padrão" className="logo" />
+          <h1 className="text-white fs-5 text-center">Bem-Vindo Faça Login</h1>
           <div className="form-floating w-100">
             <input
               type="email"
@@ -78,9 +95,13 @@ const Login = () => {
           >
             Entrar
           </button>
-          <div>
-            <NavLink className="esqueciasenha">Esqueci a senha</NavLink>
-          </div>
+          <button
+            type="button"
+            className="esqueciasenha btn btn-link p-0"
+            onClick={handleEmail}
+          >
+            Esqueci a senha
+          </button>
         </form>
       </div>
     </main>
