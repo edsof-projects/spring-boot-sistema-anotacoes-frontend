@@ -6,6 +6,7 @@ import ListUsuarios from './components/Usuarios/ListUsuarios';
 import CadAnotacao from './components/Anotacoes/CadAnotacao';
 import ListAnotacoes from './components/Anotacoes/ListAnotacoes';
 import CadTarefa from './components/Tarefas/CadTarefa';
+import ResetarSenha from './components/ResetarSenha';
 import ListTarefas from './components/Tarefas/ListTarefas';
 import Login from './components/Login';
 import Home from './components/Home';
@@ -162,6 +163,10 @@ function App() {
             }
           />
         </Route>
+        <Route 
+            path="/resetar-senha" 
+            element={<ResetarSenha />} 
+        />
       </Routes>
     </BrowserRouter>
   );

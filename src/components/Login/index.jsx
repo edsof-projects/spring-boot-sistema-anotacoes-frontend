@@ -24,6 +24,7 @@ const Login = () => {
     } catch (error) {
       console.error(error);
       alert(error.message);
+      
     }
   };
 
@@ -53,6 +54,8 @@ const Login = () => {
     } catch (error) {
       console.error(error);
       alert("Erro no login: " + error.message);
+      setEmail("")
+      setSenha("")
     }
   };
 
