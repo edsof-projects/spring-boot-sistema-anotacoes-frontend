@@ -74,10 +74,21 @@
   justify-content: center;
 }
 
-.logo{
-   width: 25rem;
+.areaImagem{
+   width: 650px;
+   height: 650px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
-.title{
-   color: #e9e9e977;
+.areaImagem .logoAdmin{
+   width:  300px;
+   margin-bottom: 1rem;
+}
+
+@media (max-width:786px) {
+   .sidebar{
+      display: none;
+   }
 }
