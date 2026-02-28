@@ -112,8 +112,8 @@ const Home = () => {
       <main className="content">
         <Outlet context={{ textoTitle, setTextoTitle }} />
         {showLogo && (
-          <div className="d-flex flex-column">
-            <img src={Logo} alt="logo" className="logo" id="logo" />
+          <div className="d-flex flex-column areaImagem">
+            <img src={Logo} alt="logo" className="logoAdmin" id="logo" />
             <h1 className="my-3 title">Área administrativa</h1>
           </div>
         )}

@@ -1,15 +1,58 @@
-.mLargura{
-    max-width: 450px;
-    padding: 2rem;    
+/* Container principal */
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.esqueciasenha{
-    text-decoration: none;
-    color: #ffffff9f;
+/* Formulário responsivo */
+.login-form {
+  width: 100%;
+  min-width: 320px;
+  max-width: 650px;
+  background-color: rgba(0, 0, 0, 0.932) !important;
+}
+
+.area-esq-senha{
+    width: 100%;
+    min-height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.esqueciasenha{   
+    text-decoration: none !important;
+    color: #ffffffce !important;
     margin-top: 1rem;
-    margin-left: 18rem;
+    
 }
 
 .esqueciasenha:hover{
-    color: #ffffff;
+    color: #ffffff !important;
+}
+
+.logo{
+    max-width: 120px;
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 360px) {
+  .login-form {
+    padding: 1.5rem;
+  }
+
+  .login-form img {
+    width: 120px;
+  }
+
+  .login-form h1 {
+    font-size: 1rem;
+  }
+
+  .login-form button {
+    font-size: 1rem;
+  }
 }
