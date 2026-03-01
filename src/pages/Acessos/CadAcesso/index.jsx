@@ -13,8 +13,8 @@ import {
 
 import { useCrudMode }            from "../../../hooks/useCrudMode"
 import { useModalExclusao }       from "../../../hooks/useModalExclusao"
-import ModalExclusao              from "../../Modals/ModalExclusao"
-import Title                      from "../../Title"
+import ModalExclusao              from "../../../components/Modals/ModalExclusao"
+import Title                      from "../../../components/Title"
 import "./CadAcesso.css"
 
 const CadAcesso = () => {

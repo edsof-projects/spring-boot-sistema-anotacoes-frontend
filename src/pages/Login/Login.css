@@ -23,19 +23,26 @@
     justify-content: flex-end;
 }
 
-.esqueciasenha{   
+.txtesqueciasenha{   
     text-decoration: none !important;
     color: #ffffffce !important;
-    margin-top: 1rem;
     
 }
 
-.esqueciasenha:hover{
+.txtesqueciasenha:hover{
     color: #ffffff !important;
 }
 
 .logo{
-    max-width: 120px;
+    max-width: 80px;
+    margin-bottom: -1rem;;
+}
+
+.area-esqueci-senha{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;  
 }
 
 /* Ajuste para telas muito pequenas */

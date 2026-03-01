@@ -1,17 +1,19 @@
-import { useEffect, useState }              from "react"
-import { getAllAcessos }                    from "../../../services/ServiceAcessos"
-import { useSearch }                        from "../../../hooks/useSearch"
-import Title                                from "../../Title"
-import { useOutletContext, useNavigate }    from "react-router-dom"
-import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
-import ModalVisualizacao                    from "../../Modals/ModalVisualizacao"
-import './ListAcessos.css'
+import { useEffect, useState }                  from "react"
+import { useOutletContext, useNavigate }        from "react-router-dom"
+import { getAllTarefas }                        from "../../../services/ServiceTarefas"
+import { useSearch }                            from "../../../hooks/useSearch"
+import Title                                    from "../../../components/Title"
+import { limitarTexto }                         from "../../../utils/formatters"
+import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                        from "../../../components/Modals/ModalVisualizacao"
 
-const ListAcessos = () => {
+import './ListTarefas.css'
 
-    const [acessos, setAcessos] = useState([])
-    const { setTextoTitle }     = useOutletContext()
-    const navigate              = useNavigate()
+const ListTarefas = () => {
+
+    const navigate                                      = useNavigate()
+    const [tarefas, setTarefas]                         = useState([])
+    const { setTextoTitle }                             = useOutletContext()
 
     const {
         isOpen,
@@ -26,27 +28,27 @@ const ListAcessos = () => {
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(acessos, ["tipo"])
-           
-   useEffect(() => {
-        getAllAcessos()
-        .then(res => setAcessos(res.data))
+    } = useSearch(tarefas, ["titulo", "historico"])
+       
+    useEffect(() => {
+        getAllTarefas()     
+        .then(res => setTarefas(res.data))
         .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate(`cadastrar`)
-    }  
+        setTextoTitle("Cadastrar tarefa")
+        navigate("cadastrar")
+    }       
   
     return (
-        <div className="ListAcessos">
+        <div className="ListTarefas">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <div className="col-md-4">
                     <input
                         type="text"
                         className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar acessos"
+                        aria-label="Pesquisar tarefas"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={handleChange}
@@ -54,13 +56,13 @@ const ListAcessos = () => {
                     />
                 </div>
                 <div className="col-md-4 text-center">
-                    <Title title="Acessos" isPrimario={true} />
+                    <Title title="Tarefas" isPrimario={true} />
                 </div>
                 <div className="col-md-4  d-flex justify-content-end">
                     <button
                         className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}   
-                        type="button"                  
+                        disabled={isSearching}     
+                        type="button"                
                         onClick={goCadastrar}>
                         Cadastrar
                     </button>
@@ -71,39 +73,55 @@ const ListAcessos = () => {
                 <thead>
                     <tr>
                         <th className="align-middle">Id</th>
-                        <th className="align-middle">Tipo de Acesso</th>
+                        <th className="align-middle">Título</th>
+                        <th className="align-middle">Histórico</th>
+                        <th className="align-middle">Cadastrado Por:</th>
                         <th className="d-flex justify-content-end pe-5">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
+
                     {filtrados.length === 0 && (
                         <tr>
                             <td colSpan="5" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhum tipo de acesso cadastrado"}
+                                : "Nenhuma tarefa cadastrada"}
                             </td>
                         </tr>
                     )}
-                    {filtrados.map((acesso) => (
-                        <tr key={acesso.id} onClick={() => abrirModal(acesso)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>
+
+                    {filtrados.map((tarefa) => (
+                        <tr key={tarefa.id}  onClick={() => abrirModal(tarefa)} style={{ cursor: "pointer" }}>
+                            <td className="align-middle">{tarefa.id}</td>
+                            
+                            <td className="align-middle">
+                                {limitarTexto(tarefa.titulo, 45)}                               
+                            </td>                                                                              
+                            
+                            <td className="align-middle">                               
+                                {limitarTexto(tarefa.historico, 70)}
+                            </td>
+
+                            <td className="align-middle">
+                                {limitarTexto(tarefa.nomeUsuario, 20)}
+                            </td>
+
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
                                         className="btn btn-warning px-3"
                                         onClick={() => {
-                                            setTextoTitle("Editar Acesso")
-                                            navigate(`editar/${acesso.id}`)
+                                            setTextoTitle("Editar tarefa")
+                                            navigate(`editar/${tarefa.id}`)                                            
                                         }}>
                                         Editar
                                     </button>
                                     <button
                                         className="btn btn-danger px-3"
                                         onClick={() => {
-                                            setTextoTitle("Excluir Acesso")
-                                            navigate(`deletar/${acesso.id}`)
+                                            setTextoTitle("Excluir tarefa")
+                                            navigate(`deletar/${tarefa.id}`)
                                         }}>
                                         Excluir
                                     </button>
@@ -119,11 +137,10 @@ const ListAcessos = () => {
                 isOpen  ={isOpen}
                 item    ={itemSelecionado}
                 onClose ={fecharModal}
-           /> 
-
+           />
 
         </div>
     )
 }
 
-export default ListAcessos
+export default ListTarefas
