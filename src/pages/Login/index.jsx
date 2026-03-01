@@ -1,9 +1,9 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import Logo from "/avatar-logo.png";
-import { login } from "../../services/ServiceLogin";
-import { recuperarSenha } from "../../services/ServiceEmails"
-import { jwtDecode } from "jwt-decode";
+import { useNavigate }     from "react-router-dom";
+import { useState }        from "react";
+import Logo                from "/avatar-logo.png";
+import { login }           from "../../services/ServiceLogin";
+import { recuperarSenha }  from "../../services/ServiceEmails"
+import { jwtDecode }       from "jwt-decode";
 import './Login.css';
 
 const Login = () => {
@@ -67,7 +67,7 @@ const Login = () => {
           onSubmit={handleLogin}
         >
           <img src={Logo} alt="foto padrão" className="logo" />
-          <h1 className="text-white fs-5 text-center">Bem-Vindo Faça Login</h1>
+          <h1 className="text-white fs-5">Login</h1>
           <div className="form-floating w-100">
             <input
               type="email"
@@ -98,13 +98,16 @@ const Login = () => {
           >
             Entrar
           </button>
-          <button
-            type="button"
-            className="esqueciasenha btn btn-link p-0"
-            onClick={handleEmail}
-          >
-            Esqueci a senha
-          </button>
+          <div className="area-esqueci-senha">
+              <button
+                type="button"
+                className="txtesqueciasenha btn btn-link p-0"
+                onClick={handleEmail}
+              >
+                Esqueci a senha
+              </button>
+          </div>
+          
         </form>
       </div>
     </main>

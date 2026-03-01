@@ -15,8 +15,8 @@ import {
 import { primeiraLetraMaiuscula }       from "../../../utils/formatters"
 import { useCrudMode }                  from "../../../hooks/useCrudMode"
 import { useModalGeral }                from "../../../hooks/useModalGeral"
-import ModalConfirmacao                 from "../../Modals/ModalConfirmacao"
-import Title                            from "../../Title"
+import ModalConfirmacao                 from "../../../components/Modals/ModalConfirmacao"
+import Title                            from "../../../components/Title"
 import "./CadTarefa.css"
 
 const CadTarefa = () => {

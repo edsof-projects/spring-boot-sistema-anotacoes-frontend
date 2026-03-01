@@ -11,12 +11,13 @@ import {
   useParams,
 } from "react-router-dom"
 
-import { getAllAcessos } from "../../../services/ServiceAcessos"
-import { formatarNome } from "../../../utils/formatters"
-import { useModalExclusao } from "../../../hooks/useModalExclusao"
-import { useCrudMode } from "../../../hooks/useCrudMode"
-import ModalExclusao from "../../Modals/ModalExclusao"
-import Title from "../../Title"
+import { getAllAcessos }          from "../../../services/ServiceAcessos"
+import { formatarNome }           from "../../../utils/formatters"
+import { useModalExclusao }       from "../../../hooks/useModalExclusao"
+import { useCrudMode }            from "../../../hooks/useCrudMode"
+import ModalExclusao              from "../../../components/Modals/ModalExclusao"
+import Title                      from "../../../components/Title"
+
 import "./CadUsuario.css"
 
 const CadUsuario = () => {

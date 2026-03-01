@@ -1,16 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CadAcesso from './components/Acessos/CadAcesso';
-import ListAcessos from './components/Acessos/ListAcessos';
-import CadUsuario from './components/Usuarios/CadUsuario';
-import ListUsuarios from './components/Usuarios/ListUsuarios';
-import CadAnotacao from './components/Anotacoes/CadAnotacao';
-import ListAnotacoes from './components/Anotacoes/ListAnotacoes';
-import CadTarefa from './components/Tarefas/CadTarefa';
-import ResetarSenha from './components/ResetarSenha';
-import ListTarefas from './components/Tarefas/ListTarefas';
-import Login from './components/Login';
-import Home from './components/Home';
-import PrivateRoute from './components/PrivateRoute';
+
+import CadAcesso                        from './pages/Acessos/CadAcesso';
+import ListAcessos                      from './pages/Acessos/ListAcessos';
+import CadUsuario                       from './pages/Usuarios/CadUsuario';
+import ListUsuarios                     from './pages/Usuarios/ListUsuarios';
+import CadAnotacao                      from './pages/Anotacoes/CadAnotacao';
+import ListAnotacoes                    from './pages/Anotacoes/ListAnotacoes';
+import CadTarefa                        from './pages/Tarefas/CadTarefa';
+import ListTarefas                      from './pages/Tarefas/ListTarefas';
+import ResetarSenha                     from './pages/ResetarSenha';
+import Login                            from './pages/Login';
+import Home                             from './pages/Home';
+import PrivateRoute                     from './components/PrivateRoute';
 
 import './Global.css';
 

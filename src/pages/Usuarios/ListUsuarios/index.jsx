@@ -1,18 +1,18 @@
 import { useEffect, useState }                  from "react"
 import { useOutletContext, useNavigate }        from "react-router-dom"
-import { getAllAnotacoes }                      from "../../../services/ServiceAnotacoes"
+import { getAllUsuarios }                       from "../../../services/ServiceUsuarios"
 import { useSearch }                            from "../../../hooks/useSearch"
-import Title                                    from "../../Title"
-import { limitarTexto }                         from "../../../utils/formatters"
+import Title                                    from "../../../components/Title"
 import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
-import ModalVisualizacao                        from "../../Modals/ModalVisualizacao"
-import './ListAnotacoes.css'
+import ModalVisualizacao                        from "../../../components/Modals/ModalVisualizacao"
 
-const ListAnotacoes = () => {
+import './ListUsuarios.css'
 
-    const navigate                                      = useNavigate()
-    const [anotacoes, setAnotacoes]                     = useState([])
-    const { setTextoTitle }                             = useOutletContext()
+const ListUsuarios = () => {
+
+    const [usuarios, setUsuarios] = useState([])
+    const { setTextoTitle }       = useOutletContext()
+    const navigate                = useNavigate()
 
     const {
         isOpen,
@@ -27,27 +27,27 @@ const ListAnotacoes = () => {
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(anotacoes, ["titulo", "descricao"])
+    } = useSearch(usuarios, ["nome", "email"])
        
     useEffect(() => {
-        getAllAnotacoes()     
-        .then(res => setAnotacoes(res.data))
+        getAllUsuarios()     
+        .then(res => setUsuarios(res.data))
         .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar anotação")
+        setTextoTitle("Cadastrar usuario")
         navigate("cadastrar")
-    }       
+    }    
   
     return (
-        <div className="ListAnotacoes">
+        <div className="ListUsuarios">
             <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
                 <div className="col-md-4">
                     <input
                         type="text"
                         className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar anotações"
+                        aria-label="Pesquisar usuários"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={handleChange}
@@ -55,7 +55,7 @@ const ListAnotacoes = () => {
                     />
                 </div>
                 <div className="col-md-4 text-center">
-                    <Title title="Anotações" isPrimario={true} />
+                    <Title title="usuarios" isPrimario={true} />
                 </div>
                 <div className="col-md-4  d-flex justify-content-end">
                     <button
@@ -72,9 +72,9 @@ const ListAnotacoes = () => {
                 <thead>
                     <tr>
                         <th className="align-middle">Id</th>
-                        <th className="align-middle">Título</th>
-                        <th className="align-middle">Descrição</th>
-                        <th className="align-middle">Cadastrado Por:</th>
+                        <th className="align-middle">Nome</th>
+                        <th className="align-middle">Email</th>
+                        <th className="align-middle">Acesso</th>
                         <th className="d-flex justify-content-end pe-5">Ações</th>
                     </tr>
                 </thead>
@@ -84,42 +84,32 @@ const ListAnotacoes = () => {
                             <td colSpan="5" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhuma anotação cadastrada"}
+                                : "Nenhum usuário cadastrado"}
                             </td>
                         </tr>
                     )}
 
-                    {filtrados.map((anotacao) => (
-                        <tr key={anotacao.id}  onClick={() => abrirModal(anotacao)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{anotacao.id}</td>
-                            
-                            <td className="align-middle">
-                                {limitarTexto(anotacao.titulo, 45)}                               
-                            </td>                                                                              
-                            
-                            <td className="align-middle">                               
-                                {limitarTexto(anotacao.descricao, 70)}
-                            </td>
-
-                            <td className="align-middle">
-                                {limitarTexto(anotacao.nomeUsuario, 20)}
-                            </td>
-
+                    {filtrados.map((usuario) => (
+                        <tr key={usuario.id} onClick={() => abrirModal(usuario)} style={{ cursor: "pointer" }}>
+                            <td className="align-middle">{usuario.id}</td>
+                            <td className="align-middle">{usuario.nome}</td>
+                            <td className="align-middle">{usuario.email}</td>
+                            <td className="align-middle">{usuario.acesso === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>                            
                             <td className="align-middle">
                                 <div className="d-flex justify-content-end gap-2">
                                     <button
                                         className="btn btn-warning px-3"
                                         onClick={() => {
-                                            setTextoTitle("Editar anotação")
-                                            navigate(`editar/${anotacao.id}`)                                           
+                                            setTextoTitle("Editar usuario")
+                                            navigate(`editar/${usuario.id}`)
                                         }}>
                                         Editar
                                     </button>
                                     <button
                                         className="btn btn-danger px-3"
                                         onClick={() => {
-                                            setTextoTitle("Excluir anotação")
-                                            navigate(`deletar/${anotacao.id}`)
+                                            setTextoTitle("Excluir usuario")
+                                            navigate(`deletar/${usuario.id}`)
                                         }}>
                                         Excluir
                                     </button>
@@ -130,7 +120,7 @@ const ListAnotacoes = () => {
                 </tbody>
             </table>
 
-            {/* MODAL VISUALIZACAO */}
+           {/* MODAL VISUALIZACAO */}
            <ModalVisualizacao
                 isOpen  ={isOpen}
                 item    ={itemSelecionado}
@@ -141,4 +131,4 @@ const ListAnotacoes = () => {
     )
 }
 
-export default ListAnotacoes
+export default ListUsuarios
