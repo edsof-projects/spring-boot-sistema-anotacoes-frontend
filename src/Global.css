@@ -4,7 +4,7 @@
   padding: 0; 
 }
 
-body, html{
+body, html,  #root{
   font-family: Arial, Helvetica, sans-serif;   
   height: 100%;
   overflow: hidden; /* 🚫 body não rola */

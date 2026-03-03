@@ -1,9 +1,6 @@
 .ListAnotacoes {
-  flex: 1;
-  overflow-y: auto;   /* ✅ scroll vertical aqui */
-  padding: 0 1rem;
-  width: 100%;
-  height: 10rem;
+  display: flex;
+  height: 100vh;
 }
 
 .search:focus,
@@ -15,6 +12,17 @@
   border-color: #ced4da !important;
 }
 
-.title-acao{
-  margin-right: 7.4rem;
+.lista-mobile {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+/* Scroll mais elegante */
+.lista-mobile::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-mobile::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
 }

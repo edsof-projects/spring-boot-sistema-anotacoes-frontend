@@ -9,6 +9,7 @@ const Home = () => {
   const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
   const [showLogo, setShowLogo]       = useState(true);
   const [nomeUsuario, setNomeUsuario] = useState("");
+  const [menuOpen, setMenuOpen]       = useState(false)
   const navigate                      = useNavigate();
   const role                          = localStorage.getItem("role");
   const photo                         = localStorage.getItem("photo");  
@@ -33,6 +34,10 @@ const Home = () => {
 
       fetchNomeUsuario();
     }, []);
+
+  function toggleMenu() {
+    setMenuOpen(!menuOpen)
+  }
 
   const handleLogout  = () => {
     localStorage.removeItem("token");
