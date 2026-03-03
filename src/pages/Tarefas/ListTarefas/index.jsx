@@ -6,6 +6,10 @@ import Title                                    from "../../../components/Title"
 import { limitarTexto }                         from "../../../utils/formatters"
 import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
 import ModalVisualizacao                        from "../../../components/Modals/ModalVisualizacao"
+import { hojeSemHora }                          from "../../../utils/formatters"
+import Menu                                     from "../../../assets/menu.png"
+import { format, parseISO }                     from "date-fns";
+
 
 import './ListTarefas.css'
 
@@ -28,7 +32,7 @@ const ListTarefas = () => {
         handleChange,
         handleKeyDown,
         isSearching
-    } = useSearch(tarefas, ["titulo", "historico"])
+    } = useSearch(tarefas, ["titulo", "historico", "data_prazo"])
        
     useEffect(() => {
         getAllTarefas()     
@@ -67,6 +71,9 @@ const ListTarefas = () => {
                         Cadastrar
                     </button>
                 </div>
+                <div className="menuBurger">
+                    <img src={Menu} alt="menu burger" id="menuBurger" />
+                </div>
 
             </div>
             <table className="table table-striped">
@@ -75,15 +82,16 @@ const ListTarefas = () => {
                         <th className="align-middle">Id</th>
                         <th className="align-middle">Título</th>
                         <th className="align-middle">Histórico</th>
-                        <th className="align-middle">Cadastrado Por:</th>
-                        <th className="d-flex justify-content-end pe-5">Ações</th>
+                        <th className="align-middle">Autor</th>
+                        <th className="align-middle">Prazo</th>
+                        <th className="d-flex justify-content-end title-acao">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     {filtrados.length === 0 && (
                         <tr>
-                            <td colSpan="5" className="text-center py-3 text-muted">
+                            <td colSpan="6" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
                                 : "Nenhuma tarefa cadastrada"}
@@ -93,18 +101,36 @@ const ListTarefas = () => {
 
                     {filtrados.map((tarefa) => (
                         <tr key={tarefa.id}  onClick={() => abrirModal(tarefa)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{tarefa.id}</td>
-                            
-                            <td className="align-middle">
-                                {limitarTexto(tarefa.titulo, 45)}                               
-                            </td>                                                                              
-                            
-                            <td className="align-middle">                               
-                                {limitarTexto(tarefa.historico, 70)}
+                           
+                            <td className="align-middle" style={{ width: "5%" }}>
+                                {tarefa.id}
                             </td>
 
-                            <td className="align-middle">
+                            <td className="align-middle" style={{ width: "30%" }}>
+                                {limitarTexto(tarefa.titulo, 45)}
+                            </td>
+
+                            <td className="align-middle" style={{ width: "30%" }}>
+                                {limitarTexto(tarefa.historico, 60)}
+                            </td>
+
+                            <td className="align-middle" style={{ width: "25%" }}>
                                 {limitarTexto(tarefa.nomeUsuario, 20)}
+                            </td>                            
+
+                            <td
+                                className="align-middle"
+                                style={{
+                                    width: "10%",
+                                    color:
+                                    tarefa.data_prazo && parseISO(tarefa.data_prazo) < hojeSemHora()
+                                        ? "red"
+                                        : "inherit"
+                                }}
+                                >
+                                {tarefa.data_prazo
+                                    ? format(parseISO(tarefa.data_prazo), "dd/MM/yyyy")
+                                    : ""}
                             </td>
 
                             <td className="align-middle">

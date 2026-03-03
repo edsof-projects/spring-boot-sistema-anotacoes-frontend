@@ -21,3 +21,14 @@ export function limitarTexto(texto = "", limite = 0) {
   return texto.slice(0, limite) + "..."
 }
 
+export function formatDate(dateString) {
+  if (!dateString) return "";
+  const [year, month, day] = dateString.split("T")[0].split("-");
+  return `${day}/${month}/${year}`;
+}
+
+export function hojeSemHora() {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return hoje;
+}

@@ -1,18 +1,24 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState }                     from "react";
 import Logo                             from "/avatar-logo.png";
+import { toast }                        from 'react-toastify';
 import './ResetarSenha.css';
 
 const ResetarSenha = () => {
   const [searchParams]              = useSearchParams();
   const [novaSenha, setNovaSenha]   = useState("");
+  const notify                      = (texto, tipo = "success") => toast.error(texto, {type : tipo , autoClose:4500});
   
   const navigate = useNavigate();
   const token    = searchParams.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    if (!novaSenha || novaSenha.trim() === "") {
+        notify("Digite a nova senha para continuar", "error");
+        return
+    }
     const response = await fetch("http://localhost:8081/auth/resetar-senha", {
       method: "POST",
       headers: {
@@ -22,7 +28,7 @@ const ResetarSenha = () => {
     });
 
     const data = await response.json();
-    alert(data.message);
+    notify(data.message, "success");
 
     if (response.ok) {
       navigate("/");

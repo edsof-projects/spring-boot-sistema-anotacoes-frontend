@@ -17,6 +17,7 @@ import { useCrudMode }                  from "../../../hooks/useCrudMode"
 import { useModalGeral }                from "../../../hooks/useModalGeral"
 import ModalConfirmacao                 from "../../../components/Modals/ModalConfirmacao"
 import Title                            from "../../../components/Title"
+import { format, parseISO }             from "date-fns";
 import "./CadTarefa.css"
 
 const CadTarefa = () => {
@@ -28,6 +29,7 @@ const CadTarefa = () => {
   const [successMsg, setSuccessMsg]                 = useState("")
   const [mensagemModal, setMensagemModal]           = useState("")
   const [dataFechamento, setDataFechamento]         = useState(null)
+  const [dataPrazo, setDataPrazo]                   = useState(null)
   const [acaoConfirmacao, setAcaoConfirmacao]       = useState(null)
   const [textoConfirmar, setTextoConfirmar]         = useState("Confirmar")
   
@@ -55,6 +57,7 @@ const CadTarefa = () => {
       .then(res => {
         setTitulo(res.data.titulo)
         setHistorico(res.data.historico)
+        setDataPrazo(res.data.data_prazo)
       })
       .catch(() => {
         setApiError("Erro ao carregar a tarefa.")
@@ -67,14 +70,18 @@ const CadTarefa = () => {
     return dataFormatada;
   }
 
- function handleCriarHistoricoInicial() {
-    if (!isCadastrar) return
+function handleCriarHistoricoInicial() {
+  if (!isCadastrar) return;
 
-    if (!historicoInicialCriado.current) {
-      setHistorico(`${inserirData()} : Tarefa criada com sucesso!`)
-      historicoInicialCriado.current = true
+  if (!historicoInicialCriado.current) {
+    if (dataPrazo) {
+      setHistorico(`${inserirData()} : Tarefa criada com sucesso, com prazo para ${format(parseISO(dataPrazo), "dd/MM/yyyy.")}`);
+    } else {
+      setHistorico(`${inserirData()} : Tarefa criada com sucesso!`);
     }
+    historicoInicialCriado.current = true;
   }
+}
 
   function handleKeyDown(e) {
     if (e.key === "Enter" && isCadastrar) {
@@ -137,6 +144,7 @@ const CadTarefa = () => {
       titulo,
       historico,
       data_fechamento : dataFechamento,
+      data_prazo      : dataPrazo,
       usuarioId       : idUserLogado()
     }
 
@@ -237,6 +245,7 @@ const CadTarefa = () => {
       {apiError && <div className="alert alert-danger">{apiError}</div>}
 
       <form onSubmit={handleSubmit}>
+        <label htmlFor="titulo" >Título</label>
         <input
           className={`form-control mb-2 ${errors.titulo ? "is-invalid" : ""}`}
           type="text"
@@ -248,20 +257,37 @@ const CadTarefa = () => {
         />
         {errors.titulo && <div className="invalid-feedback">{errors.titulo}</div>}
 
-        <textarea
-          className   ={`form-control mb-2 ${errors.historico ? "is-invalid" : ""}`}
-          rows        ={15}
-          value       ={historico}
-          placeholder ="Histórico"
-          disabled    ={isDeletar}
-          onFocus     ={handleCriarHistoricoInicial}
-          onChange    ={(e) => setHistorico(e.target.value)}
-          onKeyDown   ={handleKeyDown}    
-          onClick     ={() => { if (isEditar) {inserirNovaLinhaHistorico()} }}      
-        />
-        {errors.historico && (
-          <div className="invalid-feedback">{errors.historico}</div>
-        )}
+        {/* DATAPICKER */}
+        <div className="py-2">
+          <label htmlFor="prazo" >Prazo</label>
+          <input
+            name="prazo"
+            type="date"
+            className="form-control mb-2"
+            value={dataPrazo || ""}
+            min={new Date().toISOString().split("T")[0]} // <-- impede datas anteriores
+            disabled={isDeletar || isEditar}
+            onChange={(e) => setDataPrazo(e.target.value)}          
+          />
+        </div>
+
+        <div className="py-2">
+          <label htmlFor="historico" >Histórico</label>
+          <textarea
+            className   ={`form-control mb-2 ${errors.historico ? "is-invalid" : ""}`}
+            rows        ={15}
+            value       ={historico}
+            placeholder ="Histórico"
+            disabled    ={isDeletar}
+            onFocus     ={handleCriarHistoricoInicial}
+            onChange    ={(e) => setHistorico(e.target.value)}
+            onKeyDown   ={handleKeyDown}    
+            onClick     ={() => { if (isEditar) {inserirNovaLinhaHistorico()} }}      
+          />
+          {errors.historico && (
+            <div className="invalid-feedback">{errors.historico}</div>
+          )}   
+        </div>     
 
         <div className="d-flex gap-2 mt-3 ">          
             <button 

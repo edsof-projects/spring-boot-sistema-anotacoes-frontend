@@ -74,8 +74,8 @@ const ListAnotacoes = () => {
                         <th className="align-middle">Id</th>
                         <th className="align-middle">Título</th>
                         <th className="align-middle">Descrição</th>
-                        <th className="align-middle">Cadastrado Por:</th>
-                        <th className="d-flex justify-content-end pe-5">Ações</th>
+                        <th className="align-middle">Autor</th>
+                        <th className="d-flex justify-content-end title-acao">Ações</th>
                     </tr>
                 </thead>
                 <tbody>

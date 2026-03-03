@@ -1,6 +1,7 @@
 .layout {
   display: flex;
-  width: 100vw;
+  width: 100%;
+  min-width: 635px;
   height: 98vh;
   display: flex;
   align-items: center;
@@ -11,7 +12,7 @@
 }
 
 .sidebar{
-   display: flex;
+   display: none;
    flex-direction: column;
    width: 240px;
    height: 95vh;
@@ -87,8 +88,16 @@
    margin-bottom: 1rem;
 }
 
-@media (max-width:786px) {
+ #menuBurger{
+      display: block;
+      cursor: pointer;
+   }
+
+@media (min-width:767px) {
    .sidebar{
+      display: flex;
+   }
+   #menuBurger{
       display: none;
    }
 }

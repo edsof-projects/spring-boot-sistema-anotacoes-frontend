@@ -2,31 +2,33 @@ import { useNavigate }     from "react-router-dom";
 import { useState }        from "react";
 import Logo                from "/avatar-logo.png";
 import { login }           from "../../services/ServiceLogin";
-import { recuperarSenha }  from "../../services/ServiceEmails"
+import { recuperarSenha }  from "../../services/ServiceRecuperarSenha"
 import { jwtDecode }       from "jwt-decode";
+import { toast }           from 'react-toastify';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const notify            = (texto, tipo = "success") => toast.error(texto, {type : tipo , autoClose:4500});
 
-  const handleEmail = async () => {
+  const handleVerificarEmail = async () => {
+    //verifica se o email foi digitado para recuperacao de senha
     if (!email) {
-      alert("Digite seu e-mail primeiro.");
+      notify("Digite seu e-mail para continuar.", "error");
       return;
     }
 
     try {
-      const data = await recuperarSenha(email);
-      alert(data.message);
-      setEmail("")
+      await recuperarSenha(email);
+      notify("Acesse a caixa de entrada do e-mail digitado para maiores instruções!", "success");
+      setEmail("");
     } catch (error) {
-      console.error(error);
-      alert(error.message);
-      
+      // mesmo em caso de erro, mostra a mesma mensagem
+      notify("Acesse a caixa de entrada do e-mail digitado para maiores instruções!", "success");
     }
-  };
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,9 +44,9 @@ const Login = () => {
 
       // salva no localStorage
       localStorage.setItem("token", token);
-      localStorage.setItem("role", data.role);
+      localStorage.setItem("role",  data.role);
       localStorage.setItem("photo", data.photo);
-      localStorage.setItem("id", data.id);
+      localStorage.setItem("id",    data.id);
 
       // decodifica se precisar
       const decoded = jwtDecode(token);
@@ -52,12 +54,11 @@ const Login = () => {
       navigate("/home");
 
     } catch (error) {
-      console.error(error);
-      alert("Erro no login: " + error.message);
-      setEmail("")
-      setSenha("")
+      notify("Email ou senha inválidos. Tente novamente!", "error"); // mensagem amigável
+      setEmail(""); 
+      setSenha(""); 
     }
-  };
+  }
 
   return (
     <main className="login-container d-flex align-items-center justify-content-center">
@@ -67,7 +68,7 @@ const Login = () => {
           onSubmit={handleLogin}
         >
           <img src={Logo} alt="foto padrão" className="logo" />
-          <h1 className="text-white fs-5">Login</h1>
+          <h1 className="text-white fs-6">Login</h1>
           <div className="form-floating w-100">
             <input
               type="email"
@@ -77,6 +78,7 @@ const Login = () => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <label htmlFor="floatingInput">E-mail</label>
           </div>
@@ -89,6 +91,7 @@ const Login = () => {
               name="senha"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
+              required
             />
             <label htmlFor="floatingInput">Senha</label>
           </div>
@@ -102,7 +105,7 @@ const Login = () => {
               <button
                 type="button"
                 className="txtesqueciasenha btn btn-link p-0"
-                onClick={handleEmail}
+                onClick={handleVerificarEmail}
               >
                 Esqueci a senha
               </button>
