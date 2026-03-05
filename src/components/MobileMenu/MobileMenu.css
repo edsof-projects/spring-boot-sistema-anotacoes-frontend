@@ -1,0 +1,59 @@
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s ease;
+
+  z-index: 9999;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* MENU CENTRAL */
+.mobile-nav {
+  text-align: center;
+}
+
+.mobile-nav a {
+  display: block;
+  color: white;
+  font-size: 26px;
+  margin: 22px 0;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.mobile-nav a:hover {
+  color: #22c55e;
+  transform: scale(1.05);
+}
+
+/* BOTÃO FECHAR */
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  font-size: 30px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* só exibir em telas pequenas */
+@media (min-width: 768px) {
+  .mobile-overlay {
+    display: none !important;
+  }
+}

@@ -1,23 +1,19 @@
-import { useEffect, useState }                  from "react"
-import { useOutletContext, useNavigate }        from "react-router-dom"
-import { getAllTarefas }                        from "../../../services/ServiceTarefas"
-import { useSearch }                            from "../../../hooks/useSearch"
-import Title                                    from "../../../components/Title"
-import { limitarTexto }                         from "../../../utils/formatters"
-import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
-import ModalVisualizacao                        from "../../../components/Modals/ModalVisualizacao"
-import { hojeSemHora }                          from "../../../utils/formatters"
-import Menu                                     from "../../../assets/menu.png"
-import { format, parseISO }                     from "date-fns";
-
-
-import './ListTarefas.css'
+import { useEffect, useState }              from "react"
+import { useOutletContext, useNavigate }    from "react-router-dom"
+import { getAllTarefas }                    from "../../../services/ServiceTarefas"
+import { useSearch }                        from "../../../hooks/useSearch"
+import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                    from "../../../components/Modals/ModalVisualizacao"
+import TabelaTarefas                        from "../TabelaTarefas"
+import CardTarefas                          from "../CardTarefas"
+import ListPage                             from "../../../components/ListPage"
+import HeaderPage                           from "../../../components/HeaderPage"
 
 const ListTarefas = () => {
 
-    const navigate                                      = useNavigate()
-    const [tarefas, setTarefas]                         = useState([])
-    const { setTextoTitle }                             = useOutletContext()
+    const navigate = useNavigate()
+    const [tarefas, setTarefas]          = useState([])
+    const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
         isOpen,
@@ -33,138 +29,56 @@ const ListTarefas = () => {
         handleKeyDown,
         isSearching
     } = useSearch(tarefas, ["titulo", "historico", "data_prazo"])
-       
+
     useEffect(() => {
-        getAllTarefas()     
-        .then(res => setTarefas(res.data))
-        .catch(console.error)
+        getAllTarefas()
+            .then(res => setTarefas(res.data))
+            .catch(console.error)
     }, [])
 
     function goCadastrar() {
         setTextoTitle("Cadastrar tarefa")
         navigate("cadastrar")
-    }       
-  
+    }
+
+    function goEditar(id) {
+        setTextoTitle("Editar tarefa")
+        navigate(`editar/${id}`)
+    }
+
+    function goExcluir(id) {
+        setTextoTitle("Excluir tarefa")
+        navigate(`deletar/${id}`)
+    }
+
     return (
-        <div className="ListTarefas">
-            <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div className="col-md-4">
-                    <input
-                        type="text"
-                        className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar tarefas"
-                        placeholder="Pesquisar..."
-                        value={search}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                    />
-                </div>
-                <div className="col-md-4 text-center">
-                    <Title title="Tarefas" isPrimario={true} />
-                </div>
-                <div className="col-md-4  d-flex justify-content-end">
-                    <button
-                        className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}     
-                        type="button"                
-                        onClick={goCadastrar}>
-                        Cadastrar
-                    </button>
-                </div>
-                <div className="menuBurger">
-                    <img src={Menu} alt="menu burger" id="menuBurger" />
-                </div>
+        <div className="container-fluid">
+            <ListPage
+                entity          = "Tarefas"
+                search          = {search}
+                handleChange    = {handleChange}
+                handleKeyDown   = {handleKeyDown}
+                goCadastrar     = {goCadastrar}
+                isSearching     = {isSearching}
+                data            = {filtrados}
 
-            </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th className="align-middle">Id</th>
-                        <th className="align-middle">Título</th>
-                        <th className="align-middle">Histórico</th>
-                        <th className="align-middle">Autor</th>
-                        <th className="align-middle">Prazo</th>
-                        <th className="d-flex justify-content-end title-acao">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
+                HeaderComponent = {HeaderPage}
+                TableComponent  = {TabelaTarefas}
+                CardComponent   = {CardTarefas}
 
-                    {filtrados.length === 0 && (
-                        <tr>
-                            <td colSpan="6" className="text-center py-3 text-muted">
-                            {isSearching
-                                ? "Nenhum resultado encontrado"
-                                : "Nenhuma tarefa cadastrada"}
-                            </td>
-                        </tr>
-                    )}
+                abrirModal      = {abrirModal}
+                goEditar        = {goEditar}
+                goExcluir       = {goExcluir}
+                onMenuClick     = {onMenuClick}
 
-                    {filtrados.map((tarefa) => (
-                        <tr key={tarefa.id}  onClick={() => abrirModal(tarefa)} style={{ cursor: "pointer" }}>
-                           
-                            <td className="align-middle" style={{ width: "5%" }}>
-                                {tarefa.id}
-                            </td>
-
-                            <td className="align-middle" style={{ width: "30%" }}>
-                                {limitarTexto(tarefa.titulo, 45)}
-                            </td>
-
-                            <td className="align-middle" style={{ width: "30%" }}>
-                                {limitarTexto(tarefa.historico, 60)}
-                            </td>
-
-                            <td className="align-middle" style={{ width: "25%" }}>
-                                {limitarTexto(tarefa.nomeUsuario, 20)}
-                            </td>                            
-
-                            <td
-                                className="align-middle"
-                                style={{
-                                    width: "10%",
-                                    color:
-                                    tarefa.data_prazo && parseISO(tarefa.data_prazo) < hojeSemHora()
-                                        ? "red"
-                                        : "inherit"
-                                }}
-                                >
-                                {tarefa.data_prazo
-                                    ? format(parseISO(tarefa.data_prazo), "dd/MM/yyyy")
-                                    : ""}
-                            </td>
-
-                            <td className="align-middle">
-                                <div className="d-flex justify-content-end gap-2">
-                                    <button
-                                        className="btn btn-warning px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Editar tarefa")
-                                            navigate(`editar/${tarefa.id}`)                                            
-                                        }}>
-                                        Editar
-                                    </button>
-                                    <button
-                                        className="btn btn-danger px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Excluir tarefa")
-                                            navigate(`deletar/${tarefa.id}`)
-                                        }}>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-           {/* MODAL VISUALIZACAO */}
-           <ModalVisualizacao
-                isOpen  ={isOpen}
-                item    ={itemSelecionado}
-                onClose ={fecharModal}
-           />
-
+                modal={
+                <ModalVisualizacao
+                    isOpen      = {isOpen}
+                    item        = {itemSelecionado}
+                    onClose     = {fecharModal}
+                />
+                }
+            />
         </div>
     )
 }

@@ -2,17 +2,19 @@ import { useEffect, useState }              from "react"
 import { useOutletContext, useNavigate }    from "react-router-dom"
 import { getAllAcessos }                    from "../../../services/ServiceAcessos"
 import { useSearch }                        from "../../../hooks/useSearch"
-import Title                                from "../../../components/Title"
 import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
 import ModalVisualizacao                    from "../../../components/Modals/ModalVisualizacao"
+import TabelaAcessos                        from "../TabelaAcessos"
+import CardAcessos                          from "../CardAcessos"
+import ListPage                             from "../../../components/ListPage"
+import HeaderPage                           from "../../../components/HeaderPage"
 
-import './ListAcessos.css'
 
 const ListAcessos = () => {
 
-    const [acessos, setAcessos] = useState([])
-    const { setTextoTitle }     = useOutletContext()
-    const navigate              = useNavigate()
+    const navigate = useNavigate()
+    const [acessos, setAcessos]          = useState([])
+    const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
         isOpen,
@@ -28,103 +30,59 @@ const ListAcessos = () => {
         handleKeyDown,
         isSearching
     } = useSearch(acessos, ["tipo"])
-           
-   useEffect(() => {
+
+    useEffect(() => {
         getAllAcessos()
-        .then(res => setAcessos(res.data))
-        .catch(console.error)
+            .then(res => setAcessos(res.data))
+            .catch(console.error)
     }, [])
 
     function goCadastrar() {
-        setTextoTitle("Cadastrar Acesso")
-        navigate(`cadastrar`)
-    }  
-  
+        setTextoTitle("Cadastrar acesso")
+        navigate("cadastrar")
+    }
+
+    function goEditar(id) {
+        setTextoTitle("Editar acesso")
+        navigate(`editar/${id}`)
+    }
+
+    function goExcluir(id) {
+        setTextoTitle("Excluir acesso")
+        navigate(`deletar/${id}`)
+    }
+    
     return (
-        <div className="ListAcessos">
-            <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div className="col-md-4">
-                    <input
-                        type="text"
-                        className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar acessos"
-                        placeholder="Pesquisar..."
-                        value={search}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                    />
-                </div>
-                <div className="col-md-4 text-center">
-                    <Title title="Acessos" isPrimario={true} />
-                </div>
-                <div className="col-md-4  d-flex justify-content-end">
-                    <button
-                        className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}   
-                        type="button"                  
-                        onClick={goCadastrar}>
-                        Cadastrar
-                    </button>
-                </div>
+        <div className="container-fluid">
+            <ListPage
+                entity          = "Acessos"
+                search          = {search}
+                handleChange    = {handleChange}
+                handleKeyDown   = {handleKeyDown}
+                goCadastrar     = {goCadastrar}
+                isSearching     = {isSearching}
+                data            = {filtrados}
 
-            </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th className="align-middle">Id</th>
-                        <th className="align-middle">Tipo de Acesso</th>
-                        <th className="d-flex justify-content-end pe-5">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filtrados.length === 0 && (
-                        <tr>
-                            <td colSpan="5" className="text-center py-3 text-muted">
-                            {isSearching
-                                ? "Nenhum resultado encontrado"
-                                : "Nenhum tipo de acesso cadastrado"}
-                            </td>
-                        </tr>
-                    )}
-                    {filtrados.map((acesso) => (
-                        <tr key={acesso.id} onClick={() => abrirModal(acesso)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{acesso.id}</td>
-                            <td className="align-middle">{acesso.tipo === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>
-                            <td className="align-middle">
-                                <div className="d-flex justify-content-end gap-2">
-                                    <button
-                                        className="btn btn-warning px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Editar Acesso")
-                                            navigate(`editar/${acesso.id}`)
-                                        }}>
-                                        Editar
-                                    </button>
-                                    <button
-                                        className="btn btn-danger px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Excluir Acesso")
-                                            navigate(`deletar/${acesso.id}`)
-                                        }}>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                HeaderComponent = {HeaderPage}
+                TableComponent  = {TabelaAcessos}
+                CardComponent   = {CardAcessos}
 
-           {/* MODAL VISUALIZACAO */}
-           <ModalVisualizacao
-                isOpen  ={isOpen}
-                item    ={itemSelecionado}
-                onClose ={fecharModal}
-           /> 
+                abrirModal      = {abrirModal}
+                goEditar        = {goEditar}
+                goExcluir       = {goExcluir}
+                onMenuClick     = {onMenuClick}
 
-
+                modal={
+                <ModalVisualizacao
+                    isOpen      = {isOpen}
+                    item        = {itemSelecionado}
+                    onClose     = {fecharModal}
+                />
+                }
+            />
         </div>
     )
+       
 }
 
 export default ListAcessos
