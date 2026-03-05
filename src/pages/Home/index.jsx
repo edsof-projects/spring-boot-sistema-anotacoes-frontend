@@ -1,17 +1,17 @@
-import { NavLink, Outlet, useNavigate }  from "react-router-dom";
+import { NavLink, Outlet }               from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { useState, useEffect }           from "react";
 import FotoPadrao                        from "../../assets/default-photo.png";
-import Logo                              from "/logo.png";
 import { getUsuarioLogado }              from "../../services/ServiceUsuarios";
+import { getUser }                       from "../../utils/auth"
+import MobileMenu                        from "../../components/MobileMenu";
 import "./Home.css";
 
 const Home = () => {
   const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
-  const [showLogo, setShowLogo]       = useState(true);
   const [nomeUsuario, setNomeUsuario] = useState("");
-  const [menuOpen, setMenuOpen]       = useState(false)
+  const [menuOpen, setMenuOpen]       = useState(false);
   const navigate                      = useNavigate();
-  const role                          = localStorage.getItem("role");
   const photo                         = localStorage.getItem("photo");  
 
   const API_URL                       = "http://localhost:8081"; // ajuste conforme seu backend
@@ -19,6 +19,20 @@ const Home = () => {
   const photoUrl                      = photo 
     ? `${API_URL}/uploads/usuarios/${photo}` 
     : FotoPadrao;
+
+  const roleRaw = getUser()?.role || "";
+
+  // normaliza role vinda do backend
+  const role = roleRaw.startsWith("ROLE_")
+    ? roleRaw
+    : `ROLE_${roleRaw}`;
+
+  const parentContext  = useOutletContext() || {};
+  
+  // função que abre/fecha menu
+  function toggleMenu() {
+    setMenuOpen(!menuOpen);   
+  }
 
   const hiddenLogo    = () => setShowLogo(false); 
 
@@ -34,11 +48,7 @@ const Home = () => {
 
       fetchNomeUsuario();
     }, []);
-
-  function toggleMenu() {
-    setMenuOpen(!menuOpen)
-  }
-
+ 
   const handleLogout  = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -65,10 +75,10 @@ const Home = () => {
   };
 
   const links = linksPermissions(role);
-
+  
   return (
     <div className="layout">
-      <aside className="sidebar">
+      <aside className={"sidebar"}>
         <div className="areaFoto">
           <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
           <span 
@@ -114,15 +124,23 @@ const Home = () => {
         </nav>
       </aside>
 
-      <main className="content">
-        <Outlet context={{ textoTitle, setTextoTitle }} />
-        {showLogo && (
-          <div className="d-flex flex-column areaImagem">
-            <img src={Logo} alt="logo" className="logoAdmin" id="logo" />
-            <h1 className="my-3 title">Área administrativa</h1>
-          </div>
-        )}
+      <main className="contentAdmin">
+        <Outlet
+          context={{
+            ...parentContext,   // ⭐ ESSENCIAL
+            textoTitle,
+            setTextoTitle,
+            onMenuClick: toggleMenu
+          }}
+        />      
       </main>
+      
+      {/* Menu mobile */}
+      <MobileMenu 
+        open={menuOpen} 
+        onClose={() => setMenuOpen(false)} 
+      />
+      
     </div>
   );
 };

@@ -4,15 +4,16 @@ import { getAllTarefas }                    from "../../../services/ServiceTaref
 import { useSearch }                        from "../../../hooks/useSearch"
 import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
 import ModalVisualizacao                    from "../../../components/Modals/ModalVisualizacao"
-import HeaderTarefas                        from "../HeaderTarefas"
 import TabelaTarefas                        from "../TabelaTarefas"
 import CardTarefas                          from "../CardTarefas"
+import ListPage                             from "../../../components/ListPage"
+import HeaderPage                           from "../../../components/HeaderPage"
 
 const ListTarefas = () => {
 
     const navigate = useNavigate()
-    const { setTextoTitle }     = useOutletContext()
-    const [tarefas, setTarefas] = useState([])
+    const [tarefas, setTarefas]          = useState([])
+    const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
         isOpen,
@@ -51,45 +52,33 @@ const ListTarefas = () => {
     }
 
     return (
-        <div className="ListTarefas container-fluid">
-            <div className="container-fluid">
+        <div className="container-fluid">
+            <ListPage
+                entity          = "Tarefas"
+                search          = {search}
+                handleChange    = {handleChange}
+                handleKeyDown   = {handleKeyDown}
+                goCadastrar     = {goCadastrar}
+                isSearching     = {isSearching}
+                data            = {filtrados}
 
-                <HeaderTarefas
-                    search={search}
-                    handleChange={handleChange}
-                    handleKeyDown={handleKeyDown}
-                    goCadastrar={goCadastrar}
-                    isSearching={isSearching}
-                />
+                HeaderComponent = {HeaderPage}
+                TableComponent  = {TabelaTarefas}
+                CardComponent   = {CardTarefas}
 
-                {/* Desktop */}
-                <div className="d-none d-md-block">
-                    <TabelaTarefas
-                        tarefas={filtrados}
-                        abrirModal={abrirModal}
-                        goEditar={goEditar}
-                        goExcluir={goExcluir}
-                        isSearching={isSearching}
-                    />
-                </div>
+                abrirModal      = {abrirModal}
+                goEditar        = {goEditar}
+                goExcluir       = {goExcluir}
+                onMenuClick     = {onMenuClick}
 
-                {/* Mobile */}
-                <div className="d-md-none lista-mobile">
-                    <CardTarefas
-                        tarefas={filtrados}
-                        abrirModal={abrirModal}
-                        goEditar={goEditar}
-                        goExcluir={goExcluir}
-                        isSearching={isSearching}
-                    />
-                </div>
-
+                modal={
                 <ModalVisualizacao
-                    isOpen={isOpen}
-                    item={itemSelecionado}
-                    onClose={fecharModal}
+                    isOpen      = {isOpen}
+                    item        = {itemSelecionado}
+                    onClose     = {fecharModal}
                 />
-            </div>
+                }
+            />
         </div>
     )
 }

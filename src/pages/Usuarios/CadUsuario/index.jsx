@@ -238,7 +238,7 @@ const CadUsuario = () => {
         {!isDeletar && (
             <div class="my-2">         
               <input 
-                  class="form-control" 
+                  className="form-control" 
                   type="file"                
                   accept="image/*"
                   onChange={(e) => setFoto(e.target.files[0])}

@@ -1,18 +1,19 @@
-import { useEffect, useState }                  from "react"
-import { useOutletContext, useNavigate }        from "react-router-dom"
-import { getAllUsuarios }                       from "../../../services/ServiceUsuarios"
-import { useSearch }                            from "../../../hooks/useSearch"
-import Title                                    from "../../../components/Title"
-import { useModalVisualizacao }                 from "../../../hooks/useModalVisualizacao"
-import ModalVisualizacao                        from "../../../components/Modals/ModalVisualizacao"
-
-import './ListUsuarios.css'
+import { useEffect, useState }              from "react"
+import { useOutletContext, useNavigate }    from "react-router-dom"
+import { getAllUsuarios }                   from "../../../services/ServiceUsuarios"
+import { useSearch }                        from "../../../hooks/useSearch"
+import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
+import ModalVisualizacao                    from "../../../components/Modals/ModalVisualizacao"
+import TabelaUsuarios                       from "../TabelaUsuarios"
+import CardUsuarios                         from "../CardUsuarios"
+import ListPage                             from "../../../components/ListPage"
+import HeaderPage                           from "../../../components/HeaderPage"
 
 const ListUsuarios = () => {
 
-    const [usuarios, setUsuarios] = useState([])
-    const { setTextoTitle }       = useOutletContext()
-    const navigate                = useNavigate()
+    const navigate = useNavigate()
+    const [usuarios, setUsuarios]        = useState([])
+    const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
         isOpen,
@@ -28,105 +29,56 @@ const ListUsuarios = () => {
         handleKeyDown,
         isSearching
     } = useSearch(usuarios, ["nome", "email"])
-       
+
     useEffect(() => {
-        getAllUsuarios()     
-        .then(res => setUsuarios(res.data))
-        .catch(console.error)
+        getAllUsuarios()
+            .then(res => setUsuarios(res.data))
+            .catch(console.error)
     }, [])
 
     function goCadastrar() {
         setTextoTitle("Cadastrar usuario")
         navigate("cadastrar")
-    }    
-  
+    }
+
+    function goEditar(id) {
+        setTextoTitle("Editar usuario")
+        navigate(`editar/${id}`)
+    }
+
+    function goExcluir(id) {
+        setTextoTitle("Excluir usuario")
+        navigate(`deletar/${id}`)
+    }
+
     return (
-        <div className="ListUsuarios">
-            <div className="d-flex justify-content-between align-items-center border px-2 mb-1">
-                <div className="col-md-4">
-                    <input
-                        type="text"
-                        className="search form-control py-2 px-3 rounded-5 fs-6"
-                        aria-label="Pesquisar usuários"
-                        placeholder="Pesquisar..."
-                        value={search}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                    />
-                </div>
-                <div className="col-md-4 text-center">
-                    <Title title="usuarios" isPrimario={true} />
-                </div>
-                <div className="col-md-4  d-flex justify-content-end">
-                    <button
-                        className="btn btn-success px-5 md-3"  
-                        disabled={isSearching}     
-                        type="button"                
-                        onClick={goCadastrar}>
-                        Cadastrar
-                    </button>
-                </div>
+        <div className="container-fluid">
+            <ListPage
+                entity          = "Usuarios"
+                search          = {search}
+                handleChange    = {handleChange}
+                handleKeyDown   = {handleKeyDown}
+                goCadastrar     = {goCadastrar}
+                isSearching     = {isSearching}
+                data            = {filtrados}
 
-            </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th className="align-middle">Id</th>
-                        <th className="align-middle">Nome</th>
-                        <th className="align-middle">Email</th>
-                        <th className="align-middle">Acesso</th>
-                        <th className="d-flex justify-content-end pe-5">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filtrados.length === 0 && (
-                        <tr>
-                            <td colSpan="5" className="text-center py-3 text-muted">
-                            {isSearching
-                                ? "Nenhum resultado encontrado"
-                                : "Nenhum usuário cadastrado"}
-                            </td>
-                        </tr>
-                    )}
+                HeaderComponent = {HeaderPage}
+                TableComponent  = {TabelaUsuarios}
+                CardComponent   = {CardUsuarios}
 
-                    {filtrados.map((usuario) => (
-                        <tr key={usuario.id} onClick={() => abrirModal(usuario)} style={{ cursor: "pointer" }}>
-                            <td className="align-middle">{usuario.id}</td>
-                            <td className="align-middle">{usuario.nome}</td>
-                            <td className="align-middle">{usuario.email}</td>
-                            <td className="align-middle">{usuario.acesso === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}</td>                            
-                            <td className="align-middle">
-                                <div className="d-flex justify-content-end gap-2">
-                                    <button
-                                        className="btn btn-warning px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Editar usuario")
-                                            navigate(`editar/${usuario.id}`)
-                                        }}>
-                                        Editar
-                                    </button>
-                                    <button
-                                        className="btn btn-danger px-3"
-                                        onClick={() => {
-                                            setTextoTitle("Excluir usuario")
-                                            navigate(`deletar/${usuario.id}`)
-                                        }}>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                abrirModal      = {abrirModal}
+                goEditar        = {goEditar}
+                goExcluir       = {goExcluir}
+                onMenuClick     = {onMenuClick}
 
-           {/* MODAL VISUALIZACAO */}
-           <ModalVisualizacao
-                isOpen  ={isOpen}
-                item    ={itemSelecionado}
-                onClose ={fecharModal}
-           />
-
+                modal={
+                <ModalVisualizacao
+                    isOpen      = {isOpen}
+                    item        = {itemSelecionado}
+                    onClose     = {fecharModal}
+                />
+                }
+            />
         </div>
     )
 }

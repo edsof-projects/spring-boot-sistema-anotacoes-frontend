@@ -2,20 +2,25 @@
 .login-container {
   width: 100%;
   min-height: 100vh;
+}
+
+.conteudo{
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 /* Formulário responsivo */
 .login-form {
+  display: flex;
+  align-items: center;
   width: 100%;
   min-width: 320px;
   max-width: 650px;
   background-color: rgba(0, 0, 0, 0.932) !important;
 }
 
-.area-esq-senha{
+.area-esqueci-senha{
     width: 100%;
     min-height: 1rem;
     display: flex;
@@ -33,7 +38,7 @@
     color: #ffffff !important;
 }
 
-.logo{
+.imgLogin{
     max-width: 80px;
     margin-bottom: -1rem;;
 }

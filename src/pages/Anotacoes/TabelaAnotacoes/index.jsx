@@ -1,10 +1,9 @@
-import { format, parseISO }          from "date-fns"
-import { limitarTexto, hojeSemHora } from "../../../utils/formatters"
+import { limitarTexto } from "../../../utils/formatters"
 
 // PARA DESKTOP
 
 const TabelaAnotacoes = ({
-    anotacoes,
+    itens = [], 
     abrirModal,
     goEditar,
     goExcluir,
@@ -25,7 +24,7 @@ const TabelaAnotacoes = ({
 
             <tbody>
 
-                {anotacoes.length === 0 && (
+                {itens.length === 0 && (
                     <tr>
                         <td colSpan="6" className="text-center py-3 text-muted">
                             {isSearching
@@ -35,7 +34,7 @@ const TabelaAnotacoes = ({
                     </tr>
                 )}
 
-                {anotacoes.map(anotacao => (
+                {itens.map(anotacao => (
                     <tr
                         key={anotacao.id}
                         onClick={() => abrirModal(anotacao)}

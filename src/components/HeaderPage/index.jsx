@@ -1,14 +1,17 @@
-import Title from "../../../components/Title"
+import Title from "../Title";
 
-const HeaderAnotacoes = ({
+const HeaderPage = ({
     search,
     handleChange,
     handleKeyDown,
     goCadastrar,
-    isSearching
+    isSearching,
+    entity,
+    onMenuClick
 }) => {
 
     return (
+        
         <div className="border px-2 py-2 mb-3">
 
             {/* Desktop */}
@@ -26,7 +29,7 @@ const HeaderAnotacoes = ({
                 </div>
 
                 <div className="col-md-4 text-center">
-                    <Title title="Anotacoes" isPrimario={true} />
+                    <Title title={entity} isPrimario={true} />
                 </div>
 
                 <div className="col-md-4 d-flex justify-content-end">
@@ -34,6 +37,7 @@ const HeaderAnotacoes = ({
                         className="btn btn-success px-4"
                         disabled={isSearching}
                         onClick={goCadastrar}
+                        
                     >
                         Cadastrar
                     </button>
@@ -43,8 +47,17 @@ const HeaderAnotacoes = ({
             {/* Mobile */}
             <div className="d-md-none">
 
-                <div className="text-center mb-2">
-                    <Title title="Anotacoes" isPrimario={true} />
+                <div className="text-center mb-2 d-flex justify-content-between align-items-center">
+
+                    <Title title={entity} isPrimario={true} />
+
+                    <button
+                        className="menu-btn border-0 bg-transparent fs-3"
+                        onClick={onMenuClick}
+                    >
+                        ☰
+                    </button>
+
                 </div>
 
                 <input
@@ -66,7 +79,7 @@ const HeaderAnotacoes = ({
 
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default HeaderAnotacoes
+export default HeaderPage;

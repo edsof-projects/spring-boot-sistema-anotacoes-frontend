@@ -1,9 +1,8 @@
-import { format, parseISO }          from "date-fns"
-import { limitarTexto, hojeSemHora } from "../../../utils/formatters"
+import { limitarTexto } from "../../../utils/formatters"
 
 // PARA MOBILE
 
-const CardAnotacoes = ({
+const CardUsuarios = ({
     itens = [], 
     abrirModal,
     goEditar,
@@ -16,58 +15,43 @@ const CardAnotacoes = ({
             <p className="text-center text-muted mt-3">
                 {isSearching
                     ? "Nenhum resultado encontrado"
-                    : "Nenhuma anotacao cadastrada"}
+                    : "Nenhuma usuario cadastrada"}
             </p>
         )
     }
 
     return (
         <>
-            {itens.map(anotacao => (
+            {itens.map(usuario => (
                 <div
-                    key={anotacao.id}
+                    key={usuario.id}
                     className="card mb-3 shadow-sm"
-                    onClick={() => abrirModal(anotacao)}
+                    onClick={() => abrirModal(usuario)}
                     style={{ cursor: "pointer" }}
                 >
                     <div className="card-body w-100">
 
                         <div className="d-flex justify-content-between border mb-2 py-2 pb-0">
                             <h6 className="fw-bold">
-                                {limitarTexto(anotacao.titulo, 40)}
+                                {limitarTexto(usuario.nome, 40)}
                             </h6>
-                            <span className="fw-bold">#{anotacao.id}</span>
+                            <span className="fw-bold">#{usuario.id}</span>
                         </div>
 
                         <p className="mb-2">
-                            Descrição : {limitarTexto(anotacao.descricao, 40)}
+                            Email : {limitarTexto(usuario.email, 40)}
                         </p>
 
                         <p className="mb-2">
-                            {limitarTexto(anotacao.nomeUsuario, 40)}
+                            Acesso : {limitarTexto(usuario.acesso === "ADMIN" ? "ADMINISTRADOR" : "USUARIO", 40)}
                         </p>
-
-                        <small
-                            className="d-block mb-3"
-                            style={{
-                                color:
-                                    anotacao.data_prazo &&
-                                    parseISO(anotacao.data_prazo) < hojeSemHora()
-                                        ? "red"
-                                        : "inherit"
-                            }}
-                        >
-                            Prazo: {anotacao.data_prazo
-                                ? format(parseISO(anotacao.data_prazo), "dd/MM/yyyy")
-                                : "—"}
-                        </small>
 
                         <div className="d-flex gap-2 ">
                             <button
                                 className="btn btn-warning btn-sm w-100"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    goEditar(anotacao.id)
+                                    goEditar(usuario.id)
                                 }}
                             >
                                 Editar
@@ -77,7 +61,7 @@ const CardAnotacoes = ({
                                 className="btn btn-danger btn-sm w-100"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    goExcluir(anotacao.id)
+                                    goExcluir(usuario.id)
                                 }}
                             >
                                 Excluir
@@ -91,4 +75,4 @@ const CardAnotacoes = ({
     )
 }
 
-export default CardAnotacoes
+export default CardUsuarios

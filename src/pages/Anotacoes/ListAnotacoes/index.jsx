@@ -4,15 +4,16 @@ import { getAllAnotacoes }                  from "../../../services/ServiceAnota
 import { useSearch }                        from "../../../hooks/useSearch"
 import { useModalVisualizacao }             from "../../../hooks/useModalVisualizacao"
 import ModalVisualizacao                    from "../../../components/Modals/ModalVisualizacao"
-import HeaderAnotacoes                      from "../HeaderAnotacoes"
 import TabelaAnotacoes                      from "../TabelaAnotacoes"
 import CardAnotacoes                        from "../CardAnotacoes"
+import ListPage                             from "../../../components/ListPage"
+import HeaderPage                           from "../../../components/HeaderPage"
 
 const ListAnotacoes = () => {
 
     const navigate = useNavigate()
-    const { setTextoTitle }         = useOutletContext()
-    const [anotacoes, setAnotacoes] = useState([])
+    const [anotacoes, setAnotacoes]      = useState([])
+    const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
         isOpen,
@@ -50,43 +51,33 @@ const ListAnotacoes = () => {
         navigate(`deletar/${id}`)
     }
 
-    return (
-        <div className="ListAnotacoes container-fluid">
+   return (
+        <div className="container-fluid">
+            <ListPage
+                entity          = "Anotacoes"
+                search          = {search}
+                handleChange    = {handleChange}
+                handleKeyDown   = {handleKeyDown}
+                goCadastrar     = {goCadastrar}
+                isSearching     = {isSearching}
+                data            = {filtrados}
 
-            <HeaderAnotacoes
-                search={search}
-                handleChange={handleChange}
-                handleKeyDown={handleKeyDown}
-                goCadastrar={goCadastrar}
-                isSearching={isSearching}
-            />
+                HeaderComponent = {HeaderPage}
+                TableComponent  = {TabelaAnotacoes}
+                CardComponent   = {CardAnotacoes}
 
-            {/* Desktop */}
-            <div className="d-none d-md-block">
-                <TabelaAnotacoes
-                    anotacoes={filtrados}
-                    abrirModal={abrirModal}
-                    goEditar={goEditar}
-                    goExcluir={goExcluir}
-                    isSearching={isSearching}
+                abrirModal      = {abrirModal}
+                goEditar        = {goEditar}
+                goExcluir       = {goExcluir}
+                onMenuClick     = {onMenuClick}
+
+                modal={
+                <ModalVisualizacao
+                    isOpen      = {isOpen}
+                    item        = {itemSelecionado}
+                    onClose     = {fecharModal}
                 />
-            </div>
-
-            {/* Mobile */}
-            <div className="d-md-none lista-mobile">
-                <CardAnotacoes
-                    anotacoes={filtrados}
-                    abrirModal={abrirModal}
-                    goEditar={goEditar}
-                    goExcluir={goExcluir}
-                    isSearching={isSearching}
-                />
-            </div>
-
-            <ModalVisualizacao
-                isOpen={isOpen}
-                item={itemSelecionado}
-                onClose={fecharModal}
+                }
             />
         </div>
     )

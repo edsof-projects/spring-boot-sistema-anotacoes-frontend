@@ -1,9 +1,8 @@
-import { format, parseISO }          from "date-fns"
-import { limitarTexto, hojeSemHora } from "../../../utils/formatters"
+import { limitarTexto } from "../../../utils/formatters"
 
 // PARA DESKTOP
 
-const TabelaTarefas = ({
+const TabelaUsuarios = ({
     itens = [],
     abrirModal,
     goEditar,
@@ -16,10 +15,9 @@ const TabelaTarefas = ({
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Título</th>
-                    <th>Histórico</th>
-                    <th>Autor</th>
-                    <th>Prazo</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Acesso</th>
                     <th className="text-end px-5">Ações</th>
                 </tr>
             </thead>
@@ -31,42 +29,28 @@ const TabelaTarefas = ({
                         <td colSpan="6" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhuma tarefa cadastrada"}
+                                : "Nenhuma usuario cadastrada"}
                         </td>
                     </tr>
                 )}
 
-                {itens.map(tarefa => (
+                {itens.map(usuario => (
                     <tr
-                        key={tarefa.id}
-                        onClick={() => abrirModal(tarefa)}
+                        key={usuario.id}
+                        onClick={() => abrirModal(usuario)}
                         style={{ cursor: "pointer" }}
                     >
-                        <td>{tarefa.id}</td>
-                        <td>{limitarTexto(tarefa.titulo, 45)}</td>
-                        <td>{limitarTexto(tarefa.historico, 60)}</td>
-                        <td>{limitarTexto(tarefa.nomeUsuario, 20)}</td>
-
-                        <td
-                            style={{
-                                color:
-                                    tarefa.data_prazo &&
-                                    parseISO(tarefa.data_prazo) < hojeSemHora()
-                                        ? "red"
-                                        : "inherit"
-                            }}
-                        >
-                            {tarefa.data_prazo
-                                ? format(parseISO(tarefa.data_prazo), "dd/MM/yyyy")
-                                : ""}
-                        </td>
+                        <td>{usuario.id}</td>
+                        <td>{limitarTexto(usuario.nome, 45)}</td>
+                        <td>{limitarTexto(usuario.email, 60)}</td>
+                        <td>{limitarTexto(usuario.acesso === "ADMIN" ? "ADMINISTRADOR" : "USUARIO", 20)}</td>                       
 
                         <td className="text-end">
                             <button
                                 className="btn btn-warning btn-sm me-2"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    goEditar(tarefa.id)
+                                    goEditar(usuario.id)
                                 }}
                             >
                                 Editar
@@ -76,7 +60,7 @@ const TabelaTarefas = ({
                                 className="btn btn-danger btn-sm"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    goExcluir(tarefa.id)
+                                    goExcluir(usuario.id)
                                 }}
                             >
                                 Excluir
@@ -89,4 +73,4 @@ const TabelaTarefas = ({
     )
 }
 
-export default TabelaTarefas
+export default TabelaUsuarios
