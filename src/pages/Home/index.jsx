@@ -8,15 +8,15 @@ import MobileMenu                        from "../../components/MobileMenu";
 import "./Home.css";
 
 const Home = () => {
-  const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
-  const [nomeUsuario, setNomeUsuario] = useState("");
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const navigate                      = useNavigate();
-  const photo                         = localStorage.getItem("photo");  
+  const [textoTitle, setTextoTitle]     = useState("Cadastrar Acesso");
+  const [nomeUsuario, setNomeUsuario]   = useState("");
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const navigate                        = useNavigate();
+  const photo                           = localStorage.getItem("photo");  
 
-  const API_URL                       = "http://localhost:8081"; // ajuste conforme seu backend
+  const API_URL                         = "http://localhost:8081"; // ajuste conforme seu backend
   
-  const photoUrl                      = photo 
+  const photoUrl                        = photo 
     ? `${API_URL}/uploads/usuarios/${photo}` 
     : FotoPadrao;
 
@@ -47,7 +47,7 @@ const Home = () => {
       };
 
       fetchNomeUsuario();
-    }, []);
+    }, []);   
  
   const handleLogout  = () => {
     localStorage.removeItem("token");
@@ -88,8 +88,12 @@ const Home = () => {
                 ? nomeUsuario.slice(0, 20) + "..."
                 : nomeUsuario
               : ""
-            }
+            }           
           </span>
+          <span className="small">
+            {roleRaw === "ROLE_ADMIN" ? "Administrador" : "Usuário"}
+          </span>
+
         </div>
 
         <nav className="nav">

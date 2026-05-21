@@ -4,14 +4,22 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;  
 }
+
+.content {
+  max-width: 650px;
+  width: 100%;
+
+}
+
 
 /* Formulário responsivo */
 .login-form {
   width: 100%;
   min-width: 320px;
   max-width: 650px;
+  min-height: 350px;
   background-color: rgba(0, 0, 0, 0.932) !important;
 }
 
