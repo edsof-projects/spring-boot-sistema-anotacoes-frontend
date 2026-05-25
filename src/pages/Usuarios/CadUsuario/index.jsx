@@ -17,7 +17,6 @@ import { useModalExclusao }       from "../../../hooks/useModalExclusao"
 import { useCrudMode }            from "../../../hooks/useCrudMode"
 import ModalExclusao              from "../../../components/Modals/ModalExclusao"
 import Title                      from "../../../components/Title"
-import FotoPadrao                 from "../../../assets/default-photo.png";
 
 import "./CadUsuario.css"
 
