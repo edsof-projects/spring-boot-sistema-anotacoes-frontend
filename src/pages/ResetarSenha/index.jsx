@@ -38,7 +38,7 @@ const ResetarSenha = () => {
   return (     
 
         <main className="login-container d-flex align-items-center justify-content-center">
-            <div className="content p-4 w-100">
+            <div className="content p-4 ">
               <form
                   className="login-form d-flex flex-column gap-4 p-4 rounded-2 mt-3 "
                   onSubmit={handleSubmit}
@@ -58,7 +58,7 @@ const ResetarSenha = () => {
                     <label htmlFor="floatingInput">Senha</label>
                   </div>
                   <button
-                    className="btn btn-secondary px-3 py-2 fs-5"
+                    className="btn btn-secondary px-3 py-2 fs-5 w-100"
                     type="submit"
                   >
                     Salvar

@@ -99,8 +99,7 @@ const Login = () => {
           <div className="area-btn w-100">          
             <button
               className="btn btn-secondary px-3 py-2 fs-5 w-100"
-              type="submit"
-              
+              type="submit"              
             >
               Entrar
             </button>

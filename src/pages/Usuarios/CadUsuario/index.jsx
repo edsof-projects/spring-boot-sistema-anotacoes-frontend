@@ -17,6 +17,7 @@ import { useModalExclusao }       from "../../../hooks/useModalExclusao"
 import { useCrudMode }            from "../../../hooks/useCrudMode"
 import ModalExclusao              from "../../../components/Modals/ModalExclusao"
 import Title                      from "../../../components/Title"
+import FotoPadrao                 from "../../../assets/default-photo.png";
 
 import "./CadUsuario.css"
 
@@ -27,17 +28,15 @@ const CadUsuario = () => {
   const [nivelAcesso, setNivelAcesso]   = useState("")
   const [niveisAcesso, setNiveisAcesso] = useState([])
   const [foto, setFoto]                 = useState(null)
-
-
   const [errors, setErrors]             = useState({})
   const [apiError, setApiError]         = useState("")
-  const [successMsg, setSuccessMsg]     = useState("")
-
-  const { id }   = useParams()
-  const navigate = useNavigate()
+  const [successMsg, setSuccessMsg]     = useState("")     
+  const [preview, setPreview]           = useState("")     
+  const { id }                          = useParams()
+  const navigate                        = useNavigate()
 
   const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
-
+   
   const {
     isOpen,
     abrirModal,
@@ -57,7 +56,7 @@ const CadUsuario = () => {
         setApiError("Erro ao carregar níveis de acesso.")
       })
   }
-
+  
   useEffect(() => {
     if (!isDeletar) {
       allNiveisAcesso()
@@ -68,12 +67,12 @@ const CadUsuario = () => {
           setNome(res.data.nome)
           setEmail(res.data.email)
           setNivelAcesso(res.data.nivelAcessoId || "")
-          setFoto(res.data.urlFoto)
+          setFoto(res.data.foto)          
         })
         .catch(() => {
           setApiError("Erro ao carregar o usuário.")
-        })
-    }
+        })               
+    }   
   }, [id])
   
   function voltarParaListagem() {
@@ -85,10 +84,6 @@ const CadUsuario = () => {
     console.log("isCadastrar:", isCadastrar);
     console.log("isEditar:", isEditar);
     console.log("isDeletar:", isDeletar);
-
-
-
-
 
     if (isDeletar) return true
 
@@ -125,7 +120,6 @@ const CadUsuario = () => {
 
     try {
       if (isCadastrar) {
-        console.log(isCadastrar,"ENTROU NO CADASTRAR");
         await createUsuario(formData);
         setSuccessMsg("Usuário cadastrado com sucesso!");
         setTimeout(voltarParaListagem, 2500);
@@ -186,11 +180,17 @@ const CadUsuario = () => {
   ======================== */
   return (
     <div className="cadUsuario">
+      <div className="area-title-foto">
 
-      <Title title={tituloPagina} isPrimario />
+          <Title title={tituloPagina} isPrimario />   
+         
+          {foto && (
+            <img src={preview || foto}  alt="Foto do usuário para editar" className="foto-user" />
+          )}
+
+      </div>   
 
       {successMsg && (<div className="alert alert-success">{successMsg}</div>)}
-
       {apiError && (<div className="alert alert-danger">{apiError}</div>)}
 
       <form onSubmit={handleSubmit}>
@@ -236,12 +236,16 @@ const CadUsuario = () => {
         )}
 
         {!isDeletar && (
-            <div class="my-2">         
+            <div className="my-2">         
               <input 
                   className="form-control" 
                   type="file"                
                   accept="image/*"
-                  onChange={(e) => setFoto(e.target.files[0])}
+                  onChange={(e) => {
+                  const file = e.target.files[0];
+                  setFoto(file); // mantém o File para enviar no FormData
+                  setPreview(URL.createObjectURL(file)); // cria URL temporária para mostrar no <img>
+                }}              
               />
             </div>
          )}
@@ -261,6 +265,7 @@ const CadUsuario = () => {
             Voltar
           </button>
         </div>
+
       </form>
 
       {/* MODAL EXCLUSÃO */}

@@ -15,7 +15,7 @@ const CardUsuarios = ({
             <p className="text-center text-muted mt-3">
                 {isSearching
                     ? "Nenhum resultado encontrado"
-                    : "Nenhuma usuario cadastrada"}
+                    : "Nenhuma usuario cadastrado"}
             </p>
         )
     }
