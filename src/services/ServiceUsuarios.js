@@ -8,6 +8,9 @@ export const getAllUsuarios = () =>
 export const getUsuarioById = (id) =>
   privateApi.get(`${RES_API_BASE_URL}/${id}`);
 
+export const getUrlFotoById = (id) =>
+  privateApi.get(`/usuarios/${id}/foto`);
+
 export const getUsuarioLogado = async () => {
   const response = await privateApi.get(`${RES_API_BASE_URL}/me`);
   return response.data; // retorna diretamente o objeto do backend

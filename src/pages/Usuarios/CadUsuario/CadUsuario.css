@@ -8,3 +8,14 @@
   min-width: 7.5rem;
   display: none;
 }
+
+.area-title-foto{
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.foto-user{
+  width: 40px;
+  height: 40px;
+}

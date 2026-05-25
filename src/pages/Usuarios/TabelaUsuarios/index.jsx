@@ -29,7 +29,7 @@ const TabelaUsuarios = ({
                         <td colSpan="6" className="text-center py-3 text-muted">
                             {isSearching
                                 ? "Nenhum resultado encontrado"
-                                : "Nenhuma usuario cadastrada"}
+                                : "Nenhuma usuario cadastrado"}
                         </td>
                     </tr>
                 )}
@@ -50,7 +50,7 @@ const TabelaUsuarios = ({
                                 className="btn btn-warning btn-sm me-2"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    goEditar(usuario.id)
+                                    goEditar(usuario.id)                                    
                                 }}
                             >
                                 Editar
