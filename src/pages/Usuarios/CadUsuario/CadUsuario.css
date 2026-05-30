@@ -1,0 +1,21 @@
+.cadUsuario {
+  flex: 1;
+  padding: 16px;
+  width  : 100%;
+}
+
+.botao{
+  min-width: 7.5rem;
+  display: none;
+}
+
+.area-title-foto{
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.foto-user{
+  width: 40px;
+  height: 40px;
+}

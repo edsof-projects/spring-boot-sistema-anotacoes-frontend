@@ -1,0 +1,70 @@
+/* Container principal */
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.conteudo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Formulário responsivo */
+.login-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 320px;
+  max-width: 650px;
+  background-color: rgba(0, 0, 0, 0.932) !important;
+}
+
+.area-esqueci-senha{
+    width: 100%;
+    min-height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.txtesqueciasenha{   
+    text-decoration: none !important;
+    color: #ffffffce !important;
+    
+}
+
+.txtesqueciasenha:hover{
+    color: #ffffff !important;
+}
+
+.imgLogin{
+    max-width: 80px;
+    margin-bottom: -1rem;;
+}
+
+.area-esqueci-senha{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;  
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 360px) {
+  .login-form {
+    padding: 1.5rem;
+  }
+
+  .login-form img {
+    width: 120px;
+  }
+
+  .login-form h1 {
+    font-size: 1rem;
+  }
+
+  .login-form button {
+    font-size: 1rem;
+  }
+}

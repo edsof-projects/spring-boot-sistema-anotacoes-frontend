@@ -1,0 +1,47 @@
+/* Container principal */
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.content {
+  max-width: 650px;
+  width: 100%;
+}
+
+
+/* Formulário responsivo */
+.login-form {
+  width: 100%;
+  min-width: 320px;
+  max-width: 650px;
+  min-height: 350px;
+  background-color: rgba(0, 0, 0, 0.932) !important;
+}
+
+.logo{
+    max-width: 80px;
+    margin-bottom: -1rem;;
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 360px) {
+  .login-form {
+    padding: 1.5rem;
+  }
+
+  .login-form img {
+    width: 120px;
+  }
+
+  .login-form h1 {
+    font-size: 1rem;
+  }
+
+  .login-form button {
+    font-size: 1rem;
+  }
+}

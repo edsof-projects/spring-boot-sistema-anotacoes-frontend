@@ -1,0 +1,294 @@
+import { useEffect, useState } from "react"
+import {
+  createUsuario,
+  deleteUsuario,
+  editUsuario,
+  getUsuarioById
+} from "../../../services/ServiceUsuarios"
+
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom"
+
+import { getAllAcessos }          from "../../../services/ServiceAcessos"
+import { formatarNome }           from "../../../utils/formatters"
+import { useModalExclusao }       from "../../../hooks/useModalExclusao"
+import { useCrudMode }            from "../../../hooks/useCrudMode"
+import ModalExclusao              from "../../../components/Modals/ModalExclusao"
+import Title                      from "../../../components/Title"
+
+import "./CadUsuario.css"
+
+const CadUsuario = () => {
+
+  const [nome, setNome]                 = useState("")
+  const [email, setEmail]               = useState("")
+  const [nivelAcesso, setNivelAcesso]   = useState("")
+  const [niveisAcesso, setNiveisAcesso] = useState([])
+  const [foto, setFoto]                 = useState(null)
+  const [errors, setErrors]             = useState({})
+  const [apiError, setApiError]         = useState("")
+  const [successMsg, setSuccessMsg]     = useState("")     
+  const [preview, setPreview]           = useState("")     
+  const { id }                          = useParams()
+  const navigate                        = useNavigate()
+
+  const { mode, isCadastrar, isEditar, isDeletar } = useCrudMode("usuarios")
+   
+  const {
+    isOpen,
+    abrirModal,
+    fecharModal
+  } = useModalExclusao()
+
+  /* ========================
+     BUSCA REGISTRO POR ID
+  ======================== */
+
+  const allNiveisAcesso = () => {
+    getAllAcessos()
+      .then(res => {
+        setNiveisAcesso(res.data)        
+      })
+      .catch(() => {
+        setApiError("Erro ao carregar níveis de acesso.")
+      })
+  }
+  
+  useEffect(() => {
+    if (!isDeletar) {
+      allNiveisAcesso()
+    }
+    if (id) {
+      getUsuarioById(id)
+        .then((res) => {
+          setNome(res.data.nome)
+          setEmail(res.data.email)
+          setNivelAcesso(res.data.nivelAcessoId || "")
+          setFoto(res.data.foto)          
+        })
+        .catch(() => {
+          setApiError("Erro ao carregar o usuário.")
+        })               
+    }   
+  }, [id])
+  
+  function voltarParaListagem() {
+    navigate("/home/usuarios")
+  }
+
+  function validateForm() {
+    //console.log("MODE:", mode);
+    //console.log("isCadastrar:", isCadastrar);
+    //console.log("isEditar:", isEditar);
+    //console.log("isDeletar:", isDeletar);
+
+    if (isDeletar) return true
+
+    const newErrors = {}
+
+    if (!nome.trim())  newErrors.nome        = "Informe o nome"
+    if (!email.trim()) newErrors.email       = "Informe o email"
+    if (!nivelAcesso)  newErrors.nivelAcesso = "Selecione o nível de acesso"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+
+  }
+
+  /* ========================
+     SUBMIT PRINCIPAL
+  ======================== */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setApiError("");
+    setSuccessMsg("");
+
+    if (!validateForm()) return;
+
+    const formData = new FormData();
+    formData.append("usuario", new Blob([JSON.stringify({
+      nome,
+      email,
+      senha: "eas1708",
+      nivelAcessoId: nivelAcesso
+    })], { type: "application/json" }));
+
+    if (foto) {
+      formData.append("foto", foto);
+    }
+
+    try {
+      if (isCadastrar) {
+        await createUsuario(formData);
+        setSuccessMsg("Usuário cadastrado com sucesso!");
+        setTimeout(voltarParaListagem, 2500);
+      }
+
+      if (isEditar && id) {
+        await editUsuario(formData, id);
+        setSuccessMsg("Usuário atualizado com sucesso!");
+        setTimeout(voltarParaListagem, 2500);
+      }
+
+      if (isDeletar) {
+        abrirModal();
+      }
+
+    } catch (err) {
+      // Se ocorrer algum erro 
+      setApiError("Erro ao cadastrar/atualizar usuário: " + (err.response?.data?.message || err.message));
+      setTimeout(voltarParaListagem, 2500);
+    }
+};
+
+  /* ========================
+     CONFIRMA DELETE
+  ======================== */
+  function confirmDelete() {
+    deleteUsuario(id)
+      .then(() => {
+        fecharModal()
+        setSuccessMsg("Usuário excluído com sucesso!")
+        setTimeout(voltarParaListagem, 2500)
+      })
+      .catch(() => {
+        setApiError("Erro ao excluir o usuário.")
+        fecharModal()
+      })
+  }
+
+  /* ============================
+      TEXTOS DINÂMICOS DOS TÍTULOS
+   =============================== */
+  const tituloPagina = {
+    CADASTRAR : "Cadastrar Usuário",
+    EDITAR    : `Editar Usuário  - Id: ${id}`,
+    DELETAR   : `Excluir Usuário - Id: ${id}`
+  }[mode]
+
+  const textoBotao = {
+    CADASTRAR : "Salvar",
+    EDITAR    : "Atualizar",
+    DELETAR   : "Excluir"
+  }[mode]
+
+  const classeBotao = isDeletar ? "btn-danger" : "btn-success"
+
+  /* ========================
+     RENDER
+  ======================== */
+  return (
+    <div className="cadUsuario">
+      <div className="area-title-foto">
+
+          <Title title={tituloPagina} isPrimario />   
+         
+          {foto && (
+            <img src={preview || foto}  alt="Foto do usuário para editar" className="foto-user" />
+          )}
+
+      </div>   
+
+      {successMsg && (<div className="alert alert-success">{successMsg}</div>)}
+      {apiError && (<div className="alert alert-danger">{apiError}</div>)}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          className={`form-control mb-2 ${errors.nome ? "is-invalid" : ""}`}
+          type="text"
+          value={nome}
+          placeholder="Nome"
+          disabled={isDeletar}
+          onChange={(e) => setNome(e.target.value)}
+          onBlur={(e)   => setNome(formatarNome(e.target.value))}
+        />
+        {errors.nome && (<div className="invalid-feedback">{errors.nome}</div>)}
+
+        <input
+          className={`form-control mb-2 ${errors.email ? "is-invalid" : ""}`}
+          type="email"
+          value={email}
+          placeholder="Email"
+          disabled={isDeletar}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
+
+        {!isDeletar && (
+          <>            
+            <select
+              className={`form-select ${errors.nivelAcesso ? "is-invalid" : ""}`}
+              value={nivelAcesso}
+              disabled={isDeletar}
+              onChange={(e) => setNivelAcesso(e.target.value)}
+            >
+              <option value="">Selecione o nível de acesso</option>
+              {niveisAcesso.map(nivel => (
+                <option key={nivel.id} value={nivel.id}>
+                  {                   
+                    (
+                      nivel.tipo === "ADMIN" 
+                      ? "ADMINISTRADOR" 
+                      : nivel.tipo === "USER" 
+                      ? "USUÁRIO" 
+                      : nivel.tipo
+                    )
+                  }
+                </option>
+              ))}
+            </select>
+            {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
+
+          </>
+        )}
+
+        {!isDeletar && (
+            <div className="my-2">         
+              <input 
+                  className="form-control" 
+                  type="file"                
+                  accept="image/*"
+                  onChange={(e) => {
+                  const file = e.target.files[0];
+                  setFoto(file); // mantém o File para enviar no FormData
+                  setPreview(URL.createObjectURL(file)); // cria URL temporária para mostrar no <img>
+                }}              
+              />
+            </div>
+         )}
+
+        <div className="d-flex gap-2 mt-3">
+          <button
+            type="submit"
+            className={`btn ${classeBotao} botao`}>
+            {textoBotao}
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary botao"
+            onClick={voltarParaListagem}
+          >
+            Voltar
+          </button>
+        </div>
+
+      </form>
+
+      {/* MODAL EXCLUSÃO */}
+      <ModalExclusao
+        isOpen={isOpen}
+        mensagem="Deseja realmente excluir o usuário e suas anotações?"
+        id={id}
+        nome={nome}
+        onConfirmar={confirmDelete}
+        onCancelar={fecharModal}
+      />
+
+    </div>
+  )
+}
+
+export default CadUsuario
