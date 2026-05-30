@@ -1,29 +1,29 @@
 import { privateApi } from "./api"; 
 
-const RES_API_BASE_URL = "/usuarios";
+const BASE_URL = "/usuarios";
 
 export const getAllUsuarios = () =>
-  privateApi.get(RES_API_BASE_URL);
+  privateApi.get(BASE_URL);
 
 export const getUsuarioById = (id) =>
-  privateApi.get(`${RES_API_BASE_URL}/${id}`);
+  privateApi.get(`${BASE_URL}/${id}`);
 
 export const getUrlFotoById = (id) =>
   privateApi.get(`/usuarios/${id}/foto`);
 
-export const getUsuarioLogado = async () => {
-  const response = await privateApi.get(`${RES_API_BASE_URL}/me`);
-  return response.data; // retorna diretamente o objeto do backend
-}
-
 export const createUsuario = (user) =>
-  privateApi.post(RES_API_BASE_URL, user);
+  privateApi.post(BASE_URL, user);
 
 export const deleteUsuario = (id) =>
-  privateApi.delete(`${RES_API_BASE_URL}/${id}`);
+  privateApi.delete(`${BASE_URL}/${id}`);
+
+export const getUsuarioLogado = async () => {
+  const response = await privateApi.get(`${BASE_URL}/me`);
+  return response.data; 
+}
 
 export const editUsuario = (user, id) => {
-  return privateApi.put(`${RES_API_BASE_URL}/${id}`, user, {
+  return privateApi.put(`${BASE_URL}/${id}`, user, {
     headers: {
       "Content-Type": "multipart/form-data"
     }

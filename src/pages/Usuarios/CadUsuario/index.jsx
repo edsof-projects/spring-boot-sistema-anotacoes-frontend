@@ -79,10 +79,10 @@ const CadUsuario = () => {
   }
 
   function validateForm() {
-    console.log("MODE:", mode);
-    console.log("isCadastrar:", isCadastrar);
-    console.log("isEditar:", isEditar);
-    console.log("isDeletar:", isDeletar);
+    //console.log("MODE:", mode);
+    //console.log("isCadastrar:", isCadastrar);
+    //console.log("isEditar:", isEditar);
+    //console.log("isDeletar:", isDeletar);
 
     if (isDeletar) return true
 
@@ -108,10 +108,12 @@ const CadUsuario = () => {
     if (!validateForm()) return;
 
     const formData = new FormData();
-    formData.append("nome",  nome);
-    formData.append("email", email);
-    formData.append("senha", "eas1708");
-    formData.append("nivelAcessoId", nivelAcesso);
+    formData.append("usuario", new Blob([JSON.stringify({
+      nome,
+      email,
+      senha: "eas1708",
+      nivelAcessoId: nivelAcesso
+    })], { type: "application/json" }));
 
     if (foto) {
       formData.append("foto", foto);
@@ -135,7 +137,7 @@ const CadUsuario = () => {
       }
 
     } catch (err) {
-      // Se houver erro de email duplicado ou outro
+      // Se ocorrer algum erro 
       setApiError("Erro ao cadastrar/atualizar usuário: " + (err.response?.data?.message || err.message));
       setTimeout(voltarParaListagem, 2500);
     }
@@ -225,7 +227,15 @@ const CadUsuario = () => {
               <option value="">Selecione o nível de acesso</option>
               {niveisAcesso.map(nivel => (
                 <option key={nivel.id} value={nivel.id}>
-                  {nivel.tipo === "ADMIN" ? "ADMINISTRADOR" : "USUARIO"}
+                  {                   
+                    (
+                      nivel.tipo === "ADMIN" 
+                      ? "ADMINISTRADOR" 
+                      : nivel.tipo === "USER" 
+                      ? "USUÁRIO" 
+                      : nivel.tipo
+                    )
+                  }
                 </option>
               ))}
             </select>
