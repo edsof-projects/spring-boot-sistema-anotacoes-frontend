@@ -79,6 +79,9 @@ const ListAnotacoes = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : anotacoes.length}</span>
+            </div>
         </div>
     )
 }
