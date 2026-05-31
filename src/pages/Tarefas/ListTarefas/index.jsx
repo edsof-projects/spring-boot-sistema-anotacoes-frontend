@@ -79,6 +79,9 @@ const ListTarefas = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : tarefas.length}</span>
+            </div>
         </div>
     )
 }

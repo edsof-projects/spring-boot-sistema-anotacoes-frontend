@@ -13,6 +13,7 @@ const ListUsuarios = () => {
 
     const navigate = useNavigate()
     const [usuarios, setUsuarios]        = useState([])
+    const [totalregs, setTotalRegs]      = useState()
     const { setTextoTitle, onMenuClick } = useOutletContext();
 
     const {
@@ -32,7 +33,13 @@ const ListUsuarios = () => {
 
     useEffect(() => {
         getAllUsuarios()
-            .then(res => setUsuarios(res.data))
+            .then(
+                res => 
+                    {
+                        setUsuarios(res.data)        
+                        setTotalRegs(res.data.length)
+                    }                        
+            )
             .catch(console.error)
     }, [])
 
@@ -79,6 +86,9 @@ const ListUsuarios = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : usuarios.length}</span>
+            </div>
         </div>
     )
 }
