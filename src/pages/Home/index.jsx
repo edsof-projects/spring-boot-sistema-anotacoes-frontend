@@ -1,10 +1,11 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import FotoPadrao from "../../assets/default-photo.png";
-import { getUsuarioLogado } from "../../services/ServiceUsuarios";
-import { getUser } from "../../utils/auth";
-import MobileMenu from "../../components/MobileMenu";
+import { NavLink, Outlet, useLocation, Link }   from "react-router-dom";
+import { useOutletContext, useNavigate }        from "react-router-dom";
+import { useState, useEffect }                  from "react";
+import { getUsuarioLogado }                     from "../../services/ServiceUsuarios";
+import { getUser }                              from "../../utils/auth";
+import MobileMenu                               from "../../components/MobileMenu";
+import FotoPadrao                               from "../../assets/default-photo.png";
+import ImagemLogo                               from "/logo.png";
 import "./Home.css";
 
 const Home = () => {
@@ -75,7 +76,11 @@ const Home = () => {
     <div className="layout">
       <aside className="sidebar">
         <div className="areaFoto">
-          <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
+
+          <Link to="/home">
+            <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
+          </Link>
+          
           <span className="text-center nomeUsuario">
             Bem-vindo<br/>
             {nomeUsuario
@@ -124,7 +129,7 @@ const Home = () => {
       <main className="contentAdmin">
         {isHomeRoot ? (
           <div className="area_logoHome">
-            <img src="/logo.png" alt="logo" className="logoHome"/>
+            <img src={ImagemLogo} alt="logo" className="logoHome"/>
             <h2>EDSOF INFORMÁTICA</h2>
           </div>
         ) : (

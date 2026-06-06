@@ -11,12 +11,12 @@ import {
   useParams,
 } from "react-router-dom"
 
-import { getAllAcessos }          from "../../../services/ServiceAcessos"
-import { formatarNome }           from "../../../utils/formatters"
-import { useModalExclusao }       from "../../../hooks/useModalExclusao"
-import { useCrudMode }            from "../../../hooks/useCrudMode"
-import ModalExclusao              from "../../../components/Modals/ModalExclusao"
-import Title                      from "../../../components/Title"
+import { getAllAcessos }                  from "../../../services/ServiceAcessos"
+import { useModalExclusao }               from "../../../hooks/useModalExclusao"
+import { useCrudMode }                    from "../../../hooks/useCrudMode"
+import ModalExclusao                      from "../../../components/Modals/ModalExclusao"
+import Title                              from "../../../components/Title"
+import { formatarNome,todasMinusculas }   from "../../../utils/formatters"
 
 import "./CadUsuario.css"
 
@@ -79,11 +79,6 @@ const CadUsuario = () => {
   }
 
   function validateForm() {
-    //console.log("MODE:", mode);
-    //console.log("isCadastrar:", isCadastrar);
-    //console.log("isEditar:", isEditar);
-    //console.log("isDeletar:", isDeletar);
-
     if (isDeletar) return true
 
     const newErrors = {}
@@ -110,9 +105,9 @@ const CadUsuario = () => {
     const formData = new FormData();
     formData.append("usuario", new Blob([JSON.stringify({
       nome,
-      email,
-      senha: "eas1708",
-      nivelAcessoId: nivelAcesso
+      email : todasMinusculas(email),
+      senha : "eas1708",
+      nivelAcessoId : nivelAcesso
     })], { type: "application/json" }));
 
     if (foto) {
