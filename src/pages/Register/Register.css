@@ -32,7 +32,6 @@
 .txtesqueciasenha{   
     text-decoration: none !important;
     color: #ffffffce !important;
-    font-size: .8rem !important;
     
 }
 
@@ -45,10 +44,12 @@
     margin-bottom: -1rem;;
 }
 
+
+
 .rodape{
     width: 100%;
     display: flex;
-    justify-content: space-between;    
+    justify-content: space-between;
   }
 
 /* Ajuste para telas muito pequenas */

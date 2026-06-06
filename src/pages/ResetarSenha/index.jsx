@@ -19,8 +19,8 @@ const ResetarSenha = () => {
         notify("Digite a nova senha para continuar", "error");
         return
     }
-    const response = await fetch("http://localhost:8081/auth/resetar-senha", {
-      method: "POST",
+    const response = await fetch("http://localhost:8081/auth/salvar-senha", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
@@ -43,9 +43,9 @@ const ResetarSenha = () => {
                   className="login-form d-flex flex-column gap-4 p-4 rounded-2 mt-3 "
                   onSubmit={handleSubmit}
               >
-                  <img src={Logo} alt="foto padrão" className="logo" />
+                  <img src={Logo} alt="foto padrão" className="logo mt-3" />
                   <h1 className="text-white fs-5">Redefinir Senha</h1>                 
-                  <div className="form-floating w-100">
+                  <div className="form-floating w-100 mt-2">
                     <input
                       type="password"
                       className="form-control"
@@ -58,7 +58,7 @@ const ResetarSenha = () => {
                     <label htmlFor="floatingInput">Senha</label>
                   </div>
                   <button
-                    className="btn btn-secondary px-3 py-2 fs-5 w-100"
+                    className="btn btn-secondary px-3 py-3 fs-5 w-100 mt-3"
                     type="submit"
                   >
                     Salvar

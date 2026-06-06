@@ -29,3 +29,8 @@ export const editUsuario = (user, id) => {
     }
   });
 }
+
+export const registerUsuario = (user) => {
+  return privateApi.post(`${BASE_URL}/register`, user);
+};
+
