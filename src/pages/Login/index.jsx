@@ -1,10 +1,9 @@
 import { useNavigate }     from "react-router-dom";
 import { useState }        from "react";
 import { login }           from "../../services/ServiceLogin";
-import { confirmarCadastro }  from "../../services/ServiceConfirmarCadastro"
 import { toast }           from 'react-toastify';
+import { enviarEmail }     from "../../services/ServiceEnviarEmail";
 import './Login.css';
-import { enviarEmail } from "../../services/ServiceEnviarEmail";
 
 const Login = () => {
   const navigate          = useNavigate();
@@ -18,10 +17,25 @@ const Login = () => {
       return;
     }
 
+    let toastId;
+
     try {
+
+      // Mostra o toast de loading persistente
+      toastId = toast.loading("Processando...   Aguarde  a confirmação da solicitação.");
+
       await enviarEmail(email);
-      notify("Acesse a caixa de entrada do e-mail digitado para maiores instruções!", "success");
+
+      // Atualiza o mesmo toast para sucesso
+      toast.update(toastId, {
+        render: "Enviamos um e-mail para conclusão de sua solicitação acesse sua caixa de entrada!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2500
+      });
+
       setEmail("");
+
     } catch (error) {
       notify("Não foi possível enviar o e-mail de confirmação!", "error");
     }

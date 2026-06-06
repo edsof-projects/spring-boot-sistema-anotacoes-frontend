@@ -3,7 +3,7 @@ import { toast }                                      from 'react-toastify';
 import { registerUsuario }                            from "../../services/ServiceUsuarios"
 import { useNavigate }                                from "react-router-dom"
 import { formatarNomeNormalizado, todasMinusculas }   from "../../utils/formatters"
-import { confirmarCadastro }                          from "../../services/ServiceConfirmarCadastro"
+import { enviarEmail }                                from "../../services/ServiceEnviarEmail";
 import './Register.css';
 
 const Register = () => {
@@ -36,18 +36,43 @@ const Register = () => {
     nivelAcessoId: 2
   })], { type: "application/json" }));
 
-  try {
-    await registerUsuario(formData);
-    notify("Cadastro efetuado com sucesso! Verifique seu e-mail para maiores instruções!", "success");
-    setNome("");
-    setEmail("");
-    setTimeout(voltarParaLogin, 2500);
-  } catch (err) {
-    notify("Erro ao tentar cadastrar! Possível causa  :  duplicidade de cadastro!", "error");
-    setTimeout(voltarParaLogin, 2500);
-  }
+  let toastId;
 
-}
+    try {
+      await registerUsuario(formData);
+
+      // Mostra o toast de loading persistente
+      toastId = toast.loading("Processando...Aguarde a confirmação do cadastro.");
+
+      await enviarEmail(email);
+
+      // Atualiza o mesmo toast para sucesso
+      toast.update(toastId, {
+        render: "Cadastro efetuado com sucesso! Verifique seu e-mail para maiores instruções!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2500
+      });
+
+      setNome("");
+      setEmail("");
+      setTimeout(voltarParaLogin, 2500);
+    } catch (err) {
+      // Atualiza o mesmo toast para erro
+      if (toastId) {
+        toast.update(toastId, {
+          render: "Erro ao tentar cadastrar! Possível causa: duplicidade de cadastro!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2500
+        });
+      } else {
+        toast.error("Erro ao tentar cadastrar! Possível causa: duplicidade de cadastro!");
+      }
+      setTimeout(voltarParaLogin, 2500);
+    }
+  };
+
 
   return (    
     <main className="login-container d-flex align-items-center justify-content-center">
