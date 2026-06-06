@@ -1,0 +1,19 @@
+.areaDados{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.txtTitulo{
+    text-align: justify;
+}
+
+.txtId{
+    text-align: center;
+}
+
+.botao{
+  min-width: 7.5rem;
+  display: none;
+}

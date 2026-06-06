@@ -5,6 +5,8 @@ import { getUsuarioLogado }                     from "../../services/ServiceUsua
 import { getUser }                              from "../../utils/auth";
 import MobileMenu                               from "../../components/MobileMenu";
 import FotoPadrao                               from "../../assets/default-photo.png";
+import ModalAlteraFoto                          from "../../components/Modals/ModalAlteraFoto";
+import { useModalAlteraFoto }                   from "../../hooks/useModalAlteraFoto"
 import ImagemLogo                               from "/logo.png";
 import "./Home.css";
 
@@ -12,9 +14,17 @@ const Home = () => {
   const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
   const [nomeUsuario, setNomeUsuario] = useState("");
   const [menuOpen, setMenuOpen]       = useState(false);
-  const navigate                      = useNavigate();
-  const location                      = useLocation();   // ⭐ pega rota atual
+  const location                      = useLocation();  
   const photo                         = localStorage.getItem("photo");  
+  const id                            = localStorage.getItem("id");  
+
+  const {
+    isOpen,
+    abrirModal,
+    fecharModal
+  } = useModalAlteraFoto()
+  
+  const navigate                      = useNavigate();
 
   const API_URL = "http://localhost:8081";
   
@@ -28,8 +38,8 @@ const Home = () => {
 
   function toggleMenu() {
     setMenuOpen(!menuOpen);   
-  }
-
+  }   
+ 
   useEffect(() => {
     const fetchNomeUsuario = async () => {
       try {
@@ -78,7 +88,7 @@ const Home = () => {
         <div className="areaFoto">
 
           <Link to="/home">
-            <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
+            <img src={photoUrl} alt="Foto do usuário" className="foto_user" onClick= {abrirModal} />
           </Link>
           
           <span className="text-center nomeUsuario">
@@ -148,8 +158,19 @@ const Home = () => {
         open={menuOpen} 
         onClose={() => setMenuOpen(false)} 
       />
+
+      {/* MODAL ALTERAR FOTO */}
+      <ModalAlteraFoto
+        isOpen={isOpen}
+        mensagem="Escolha a nova foto!" 
+        id={id}
+        // nome={nome}
+        // onConfirmar={confirmDelete}
+        onCancelar={fecharModal}
+      />
+
     </div>
-  );
-};
+  )
+}
 
 export default Home;
