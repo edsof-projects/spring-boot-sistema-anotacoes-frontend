@@ -105,10 +105,10 @@ const CadUsuario = () => {
     const formData = new FormData();
     formData.append("usuario", new Blob([JSON.stringify({
       nome,
-      email : todasMinusculas(email),
-      senha : "eas1708",
+      email         : todasMinusculas(email),
+      senha         : "eas1708",
       nivelAcessoId : nivelAcesso
-    })], { type: "application/json" }));
+    })], { type     : "application/json" }));
 
     if (foto) {
       formData.append("foto", foto);
@@ -235,7 +235,6 @@ const CadUsuario = () => {
               ))}
             </select>
             {errors.nivelAcesso && (<div className="invalid-feedback">{errors.nivelAcesso}</div>)}
-
           </>
         )}
 
@@ -280,7 +279,7 @@ const CadUsuario = () => {
         nome={nome}
         onConfirmar={confirmDelete}
         onCancelar={fecharModal}
-      />
+      />     
 
     </div>
   )

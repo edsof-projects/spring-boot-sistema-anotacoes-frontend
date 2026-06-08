@@ -2,9 +2,12 @@ import { NavLink, Outlet, useLocation, Link }   from "react-router-dom";
 import { useOutletContext, useNavigate }        from "react-router-dom";
 import { useState, useEffect }                  from "react";
 import { getUsuarioLogado }                     from "../../services/ServiceUsuarios";
+import { editFotoUsuario }                      from "../../services/ServiceUsuarios";
 import { getUser }                              from "../../utils/auth";
 import MobileMenu                               from "../../components/MobileMenu";
 import FotoPadrao                               from "../../assets/default-photo.png";
+import ModalAlteraFoto                          from "../../components/Modals/ModalAlteraFoto";
+import { useModalAlteraFoto }                   from "../../hooks/useModalAlteraFoto"
 import ImagemLogo                               from "/logo.png";
 import "./Home.css";
 
@@ -12,24 +15,65 @@ const Home = () => {
   const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
   const [nomeUsuario, setNomeUsuario] = useState("");
   const [menuOpen, setMenuOpen]       = useState(false);
-  const navigate                      = useNavigate();
-  const location                      = useLocation();   // ⭐ pega rota atual
+  const location                      = useLocation();  
   const photo                         = localStorage.getItem("photo");  
-
-  const API_URL = "http://localhost:8081";
+  const id                            = localStorage.getItem("id"); 
+  const API_URL                       = "http://localhost:8081";
   
-  const photoUrl = photo 
-    ? `${API_URL}/uploads/usuarios/${photo}` 
-    : FotoPadrao;
-
-  const roleRaw = getUser()?.role || "";
-  const role = roleRaw.startsWith("ROLE_") ? roleRaw : `ROLE_${roleRaw}`;
-  const parentContext = useOutletContext() || {};
+  const {
+    isOpen,
+    abrirModal   : abrirModalOriginal,
+    fecharModal  : fecharModalOriginal
+  } = useModalAlteraFoto()
+    
+  const [photoUrl, setPhotoUrl]       = useState(
+    photo ? `${API_URL}/uploads/usuarios/${photo}` : FotoPadrao
+  );
+  
+  const navigate                      = useNavigate();
+  const [file, setFile]               = useState(null);
+  const [preview, setPreview]         = useState(photoUrl);
+  const roleRaw                       = getUser()?.role || "";
+  const role                          = roleRaw.startsWith("ROLE_") ? roleRaw : `ROLE_${roleRaw}`;
+  const parentContext                 = useOutletContext() || {};
 
   function toggleMenu() {
     setMenuOpen(!menuOpen);   
+  }  
+
+  function abrirModal() {
+    setFile(null);
+    setPreview(photoUrl); // volta para a foto atual
+    abrirModalOriginal();
+    navigate("/"); 
   }
 
+  function fecharModal() {
+    setFile(null);
+    setPreview(photoUrl); // reseta para foto atual
+    fecharModalOriginal();
+  }
+  
+function confirmUpdateFoto() {
+  if (!file) {
+    fecharModal();
+    return;
+  } 
+
+  editFotoUsuario(id, file)
+    .then((response) => {
+      const novaFoto = response.data.foto; 
+      localStorage.setItem("photo", novaFoto);
+      const novaUrl = `${response.data.foto}?t=${Date.now()}`;
+      setPhotoUrl(novaUrl);
+      setPreview(novaUrl);
+      fecharModal();
+    })
+    .catch(() => {
+      fecharModal();
+    });
+}
+ 
   useEffect(() => {
     const fetchNomeUsuario = async () => {
       try {
@@ -78,7 +122,7 @@ const Home = () => {
         <div className="areaFoto">
 
           <Link to="/home">
-            <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
+            <img src={photoUrl} alt="Foto do usuário" className="foto_user" onClick= {abrirModal} />
           </Link>
           
           <span className="text-center nomeUsuario">
@@ -130,7 +174,7 @@ const Home = () => {
         {isHomeRoot ? (
           <div className="area_logoHome">
             <img src={ImagemLogo} alt="logo" className="logoHome"/>
-            <h2>EDSOF INFORMÁTICA</h2>
+            <h2 className="title-home fs-4">EDSOF INFORMÁTICA</h2>
           </div>
         ) : (
           <Outlet
@@ -148,8 +192,21 @@ const Home = () => {
         open={menuOpen} 
         onClose={() => setMenuOpen(false)} 
       />
+
+      {/* MODAL ALTERAR FOTO */}
+      <ModalAlteraFoto
+        isOpen={isOpen}
+        mensagem="Escolha a nova foto!" 
+        id={id}
+        onConfirmar={confirmUpdateFoto}
+        onCancelar={fecharModal}
+        setFoto={setFile}
+        setPreview={setPreview}
+        preview={preview || photoUrl}
+      />
+
     </div>
-  );
-};
+  )
+}
 
 export default Home;

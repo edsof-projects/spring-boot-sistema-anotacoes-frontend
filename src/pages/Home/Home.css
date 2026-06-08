@@ -102,10 +102,14 @@
 }
 
 .logoHome{
-   width: 250px;     
+   width: 180px;     
 }
 
-@media (min-width:767px) {  
+.title-home{
+     display: none;
+}
+
+@media (min-width:768px) {  
    .sidebar{
       display: flex;
    }
@@ -114,5 +118,20 @@
    }
    .mobile-overlay {
     display: none !important;
+  }
+
+  .logoHome{
+    width: 200px;
+  }
+
+  .title-home{
+     display: flex;
+  }
+
+}
+
+@media (min-width:992px) {    
+  .logoHome{
+    width: 250px;
   }
 }
