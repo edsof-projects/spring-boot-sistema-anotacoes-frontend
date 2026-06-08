@@ -2,12 +2,12 @@ import './ModalAlteraFoto.css'
 
 const ModalAlteraFoto = ({
   isOpen,
-  titleHeader = "Alterar Foto",
-  mensagem,
-  id,
-  nome,
+  titleHeader = "PERSONALIZE SUA FOTO",  
   onConfirmar,
-  onCancelar
+  onCancelar,
+  setFoto,
+  setPreview,
+  preview
 }) => {
   if (!isOpen) return null
 
@@ -15,47 +15,43 @@ const ModalAlteraFoto = ({
     <>
       <div className="modal fade show d-block modal-fullscreen" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content p-4 rounded-2">
+          <div className="modal-content p-5 rounded-2">
 
             <div className="modal-header">
-              <h5 className="modal-title text-danger">
+              <h5 className="modal-title txtTitulo">
                 {titleHeader}
               </h5>
             </div>
 
             <div className="modal-body areaDados">
-
-              {/* <p className="text-center">{mensagem}</p> */}
-
-              {/* {(id || nome) && (
-                <div>
-                  <div>
-                    {id && <p className="txtId">Id : <strong className="text-danger">{id}</strong></p>}
-                  </div>
-                  <div>
-                    {nome && <p className="txtTitulo">Nome : <strong className="text-danger ">{nome}</strong></p>}
-                  </div>
-                </div>
-              )} */}
-
-              {
+              { 
               <div className="my-2">         
                 <input 
                     className="form-control" 
                     type="file"                
                     accept="image/*"
                     onChange={(e) => {
-                    const file = e.target.files[0];
-                    setFoto(file);                          // mantém o File para enviar no FormData
-                    setPreview(URL.createObjectURL(file));  // cria URL temporária para mostrar no <img>
-                  }}              
+                      const file = e.target.files[0];
+                      setFoto(file);                          // mantém o File para enviar no FormData
+                      setPreview(URL.createObjectURL(file));  // cria URL temporária para mostrar no <img>
+                    }}              
                 />
+                { preview && 
+                  <div className="d-flex justify-content-center">
+                    <img 
+                      src={preview} 
+                      alt="Preview" 
+                      className="mt-3 img-fluid rounded" 
+                      width="180"
+                    />
+                  </div>
+                }
             </div>
               }
 
             </div>
 
-            <div className="modal-footer">
+            <div className="modal-footer d-flex justify-content-between">
               <button
                 className="btn btn-success botao"
                 onClick={onConfirmar}
