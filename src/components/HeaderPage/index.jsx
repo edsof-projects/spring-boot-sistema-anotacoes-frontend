@@ -7,8 +7,8 @@ const HeaderPage = ({
     goCadastrar,
     isSearching,
     entity,
-    onMenuClick
-}) => {
+    voltarHomeMobile={voltarHomeMobile}
+}) => {   
 
     return (
         
@@ -36,8 +36,7 @@ const HeaderPage = ({
                     <button
                         className="btn btn-success px-4"
                         disabled={isSearching}
-                        onClick={goCadastrar}
-                        
+                        onClick={goCadastrar}                        
                     >
                         Cadastrar
                     </button>
@@ -53,9 +52,11 @@ const HeaderPage = ({
 
                     <button
                         className="menu-btn border-0 bg-transparent fs-3"
-                        onClick={onMenuClick}
+                        onClick={() => {
+                            voltarHomeMobile();  
+                        }}
                     >
-                        ☰
+                        ✕
                     </button>
 
                 </div>

@@ -13,7 +13,11 @@ const ListAnotacoes = () => {
 
     const navigate = useNavigate()
     const [anotacoes, setAnotacoes]      = useState([])
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -70,6 +74,7 @@ const ListAnotacoes = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao
@@ -79,6 +84,9 @@ const ListAnotacoes = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : anotacoes.length}</span>
+            </div>
         </div>
     )
 }

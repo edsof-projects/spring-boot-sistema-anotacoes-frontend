@@ -1,34 +1,80 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import FotoPadrao from "../../assets/default-photo.png";
-import { getUsuarioLogado } from "../../services/ServiceUsuarios";
-import { getUser } from "../../utils/auth";
-import MobileMenu from "../../components/MobileMenu";
+import { NavLink, Outlet, useLocation, Link }   from "react-router-dom";
+import { useOutletContext, useNavigate }        from "react-router-dom";
+import { useState, useEffect }                  from "react";
+import { getUsuarioLogado }                     from "../../services/ServiceUsuarios";
+import { editFotoUsuario }                      from "../../services/ServiceUsuarios";
+import { getUser }                              from "../../utils/auth";
+import MobileMenu                               from "../../components/MobileMenu";
+import FotoPadrao                               from "../../assets/default-photo.png";
+import ModalAlteraFoto                          from "../../components/Modals/ModalAlteraFoto";
+import { useModalAlteraFoto }                   from "../../hooks/useModalAlteraFoto"
+import ImagemLogo                               from "/logo.png";
 import "./Home.css";
 
 const Home = () => {
-  const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
-  const [nomeUsuario, setNomeUsuario] = useState("");
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const navigate                      = useNavigate();
-  const location                      = useLocation();   // ⭐ pega rota atual
-  const photo                         = localStorage.getItem("photo");  
-
-  const API_URL = "http://localhost:8081";
+  const [textoTitle, setTextoTitle]         = useState("Cadastrar Acesso");
+  const [nomeUsuario, setNomeUsuario]       = useState("");
+  const [menuOpen, setMenuOpen]             = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const location                            = useLocation();  
+  const photo                               = localStorage.getItem("photo");  
+  const id                                  = localStorage.getItem("id"); 
+  const API_URL                             = "http://localhost:8081";
   
-  const photoUrl = photo 
-    ? `${API_URL}/uploads/usuarios/${photo}` 
-    : FotoPadrao;
-
-  const roleRaw = getUser()?.role || "";
-  const role = roleRaw.startsWith("ROLE_") ? roleRaw : `ROLE_${roleRaw}`;
-  const parentContext = useOutletContext() || {};
+  const {
+    isOpen,
+    abrirModal   : abrirModalOriginal,
+    fecharModal  : fecharModalOriginal
+  } = useModalAlteraFoto()
+    
+  const [photoUrl, setPhotoUrl]       = useState(
+    photo ? `${API_URL}/uploads/usuarios/${photo}` : FotoPadrao
+  );
+  
+  const navigate                      = useNavigate();
+  const [file, setFile]               = useState(null);
+  const [preview, setPreview]         = useState(photoUrl);
+  const roleRaw                       = getUser()?.role || "";
+  const role                          = roleRaw.startsWith("ROLE_") ? roleRaw : `ROLE_${roleRaw}`;
+  const parentContext                 = useOutletContext() || {};
 
   function toggleMenu() {
     setMenuOpen(!menuOpen);   
+  }  
+  
+  function abrirModal() {
+    setFile(null);
+    setPreview(photoUrl); // volta para a foto atual
+    abrirModalOriginal();
+    navigate("/"); 
   }
 
+  function fecharModal() {
+    setFile(null);
+    setPreview(photoUrl); // reseta para foto atual
+    fecharModalOriginal();
+  }
+  
+function confirmUpdateFoto() {
+  if (!file) {
+    fecharModal();
+    return;
+  } 
+
+  editFotoUsuario(id, file)
+    .then((response) => {
+      const novaFoto = response.data.foto; 
+      localStorage.setItem("photo", novaFoto);
+      const novaUrl = `${response.data.foto}?t=${Date.now()}`;
+      setPhotoUrl(novaUrl);
+      setPreview(novaUrl);
+      fecharModal();
+    })
+    .catch(() => {
+      fecharModal();
+    });
+}
+ 
   useEffect(() => {
     const fetchNomeUsuario = async () => {
       try {
@@ -39,7 +85,20 @@ const Home = () => {
       }
     };
     fetchNomeUsuario();
-  }, []);   
+  }, []);  
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 700) {
+        setSidebarVisible(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () =>
+      window.removeEventListener("resize", handleResize);
+  }, []);
  
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -73,9 +132,14 @@ const Home = () => {
   
   return (
     <div className="layout">
+      {(sidebarVisible || window.innerWidth >= 700) && (
       <aside className="sidebar">
         <div className="areaFoto">
-          <img src={photoUrl} alt="Foto do usuário" className="foto_user" />
+
+          <Link to="/home">
+            <img src={photoUrl} alt="Foto do usuário" className="foto_user" onClick= {abrirModal} />
+          </Link>
+          
           <span className="text-center nomeUsuario">
             Bem-vindo<br/>
             {nomeUsuario
@@ -105,12 +169,17 @@ const Home = () => {
                   >
                     {link.label}
                   </NavLink>
-                ) : (
+                ) : (                  
                   <NavLink
                     to={link.path}
                     className={({ isActive }) =>
                       isActive ? "nav-link active" : "nav-link"
                     }
+                    onClick={() => {
+                      if (window.innerWidth < 700) {
+                        setSidebarVisible(false);
+                      }
+                    }}
                   >
                     {link.label}
                   </NavLink>
@@ -120,31 +189,53 @@ const Home = () => {
           </ul>
         </nav>
       </aside>
+      )}
 
-      <main className="contentAdmin">
-        {isHomeRoot ? (
-          <div className="area_logoHome">
-            <img src="/logo.png" alt="logo" className="logoHome"/>
-            <h2>EDSOF INFORMÁTICA</h2>
-          </div>
-        ) : (
-          <Outlet
-            context={{
-              ...parentContext,
-              textoTitle,
-              setTextoTitle,
-              onMenuClick: toggleMenu
-            }}
-          />
-        )}
-      </main>
+      {(!sidebarVisible || window.innerWidth >= 700) && (
+        <main className="contentAdmin">
+          {isHomeRoot ? (
+            <div className="area_logoHome">
+              <img src={ImagemLogo} alt="logo" className="logoHome"/>
+              <h2 className="title-home fs-4">EDSOF INFORMÁTICA</h2>
+            </div>
+          ) : (
+            <Outlet
+              context={{
+                ...parentContext,
+                textoTitle,
+                setTextoTitle,
+                onMenuClick: toggleMenu,
+
+                voltarHomeMobile: () => {
+                  setSidebarVisible(true);
+                  navigate("/home");
+                }
+
+              }}
+            />
+          )}
+        </main>
+      )}
       
       <MobileMenu 
         open={menuOpen} 
         onClose={() => setMenuOpen(false)} 
       />
+
+      {/* MODAL ALTERAR FOTO */}
+      <ModalAlteraFoto
+        isOpen={isOpen}
+        mensagem="Escolha a nova foto!" 
+        id={id}
+        onConfirmar={confirmUpdateFoto}
+        onCancelar={fecharModal}
+        setFoto={setFile}
+        setPreview={setPreview}
+        preview={preview || photoUrl}
+      />
+
     </div>
-  );
-};
+  )
+}
 
 export default Home;

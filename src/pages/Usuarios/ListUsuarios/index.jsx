@@ -13,7 +13,12 @@ const ListUsuarios = () => {
 
     const navigate = useNavigate()
     const [usuarios, setUsuarios]        = useState([])
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const [totalregs, setTotalRegs]      = useState()
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -32,7 +37,13 @@ const ListUsuarios = () => {
 
     useEffect(() => {
         getAllUsuarios()
-            .then(res => setUsuarios(res.data))
+            .then(
+                res => 
+                    {
+                        setUsuarios(res.data)        
+                        setTotalRegs(res.data.length)
+                    }                        
+            )
             .catch(console.error)
     }, [])
 
@@ -70,6 +81,7 @@ const ListUsuarios = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao
@@ -79,6 +91,9 @@ const ListUsuarios = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : usuarios.length}</span>
+            </div>
         </div>
     )
 }

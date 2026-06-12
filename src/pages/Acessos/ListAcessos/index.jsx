@@ -14,7 +14,12 @@ const ListAcessos = () => {
 
     const navigate = useNavigate()
     const [acessos, setAcessos]          = useState([])
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const [totalregs, setTotalRegs]      = useState()
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -32,10 +37,16 @@ const ListAcessos = () => {
     } = useSearch(acessos, ["tipo"])
 
     useEffect(() => {
-        getAllAcessos()
-            .then(res => setAcessos(res.data))
-            .catch(console.error)
-    }, [])
+            getAllAcessos()
+                .then(
+                    res => 
+                        {
+                            setAcessos(res.data)        
+                            setTotalRegs(res.data.length)
+                        }                        
+                )
+                .catch(console.error)
+        }, [])
 
     function goCadastrar() {
         setTextoTitle("Cadastrar acesso")
@@ -71,6 +82,7 @@ const ListAcessos = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao
@@ -80,7 +92,11 @@ const ListAcessos = () => {
                 />
                 }
             />
+            <div className="totalreg" style={{display: "flex", justifyContent: "flex-end", marginRight : 20}}>
+                <span>Total de registros: {isSearching ? filtrados.length : acessos.length}</span>
+            </div>            
         </div>
+        
     )
        
 }

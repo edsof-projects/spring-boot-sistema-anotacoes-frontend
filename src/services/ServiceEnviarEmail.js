@@ -1,7 +1,7 @@
 
-export async function recuperarSenha(email) {
+export async function enviarEmail(email) {
 
-  const response = await fetch("http://localhost:8081/auth/recuperar-senha", {
+  const response = await fetch("http://localhost:8081/auth/enviar-email", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

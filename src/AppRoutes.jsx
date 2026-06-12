@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import Login from "./pages/Login";
 import ResetarSenha from "./pages/ResetarSenha";
+import Register     from "./pages/Register";
 
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
@@ -25,7 +26,8 @@ export default function AppRoutes() {
 
       {/* PUBLICAS */}
       <Route path="/" element={<Login />} />
-      <Route path="/resetar-senha" element={<ResetarSenha />} />
+      <Route path="/auth/alterar-senha" element={<ResetarSenha />} />
+      <Route path="/register" element={<Register />} />
 
       {/* ===== HOME + LAYOUT GLOBAL ===== */}
       <Route

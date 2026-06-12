@@ -29,3 +29,22 @@ export const editUsuario = (user, id) => {
     }
   });
 }
+
+export const editFotoUsuario = (id, file) => {
+  const formData = new FormData();
+  formData.append("foto", file); // "foto" deve bater com o nome do @RequestPart no backend
+
+  return privateApi.patch(`${BASE_URL}/${id}/foto`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
+
+export const registerUsuario = (user) => {
+  return privateApi.post(`${BASE_URL}/register`, user);
+};
+
+
+
