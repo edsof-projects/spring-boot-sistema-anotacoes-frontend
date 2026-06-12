@@ -13,7 +13,11 @@ const ListTarefas = () => {
 
     const navigate = useNavigate()
     const [tarefas, setTarefas]          = useState([])
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -70,6 +74,7 @@ const ListTarefas = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao

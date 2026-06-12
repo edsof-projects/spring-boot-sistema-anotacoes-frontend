@@ -15,7 +15,8 @@ export default function ListPage({
   goEditar,
   goExcluir,
   modal,
-  onMenuClick
+  onMenuClick,
+  voltarHomeMobile={voltarHomeMobile}
 }) {
 
   const Header = HeaderComponent ?? HeaderPage;
@@ -32,6 +33,7 @@ export default function ListPage({
         goCadastrar={goCadastrar}
         isSearching={isSearching}
         onMenuClick={onMenuClick}
+        voltarHomeMobile={voltarHomeMobile}
       />
 
       {/* DESKTOP */}

@@ -17,7 +17,7 @@ const ModalAlteraFoto = ({
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content p-5 rounded-2">
 
-            <div className="modal-header">
+            <div className="modal-header justify-content-center">
               <h5 className="modal-title txtTitulo">
                 {titleHeader}
               </h5>

@@ -12,13 +12,14 @@ import ImagemLogo                               from "/logo.png";
 import "./Home.css";
 
 const Home = () => {
-  const [textoTitle, setTextoTitle]   = useState("Cadastrar Acesso");
-  const [nomeUsuario, setNomeUsuario] = useState("");
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const location                      = useLocation();  
-  const photo                         = localStorage.getItem("photo");  
-  const id                            = localStorage.getItem("id"); 
-  const API_URL                       = "http://localhost:8081";
+  const [textoTitle, setTextoTitle]         = useState("Cadastrar Acesso");
+  const [nomeUsuario, setNomeUsuario]       = useState("");
+  const [menuOpen, setMenuOpen]             = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const location                            = useLocation();  
+  const photo                               = localStorage.getItem("photo");  
+  const id                                  = localStorage.getItem("id"); 
+  const API_URL                             = "http://localhost:8081";
   
   const {
     isOpen,
@@ -40,7 +41,7 @@ const Home = () => {
   function toggleMenu() {
     setMenuOpen(!menuOpen);   
   }  
-
+  
   function abrirModal() {
     setFile(null);
     setPreview(photoUrl); // volta para a foto atual
@@ -84,7 +85,20 @@ function confirmUpdateFoto() {
       }
     };
     fetchNomeUsuario();
-  }, []);   
+  }, []);  
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 700) {
+        setSidebarVisible(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () =>
+      window.removeEventListener("resize", handleResize);
+  }, []);
  
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -118,6 +132,7 @@ function confirmUpdateFoto() {
   
   return (
     <div className="layout">
+      {(sidebarVisible || window.innerWidth >= 700) && (
       <aside className="sidebar">
         <div className="areaFoto">
 
@@ -154,12 +169,17 @@ function confirmUpdateFoto() {
                   >
                     {link.label}
                   </NavLink>
-                ) : (
+                ) : (                  
                   <NavLink
                     to={link.path}
                     className={({ isActive }) =>
                       isActive ? "nav-link active" : "nav-link"
                     }
+                    onClick={() => {
+                      if (window.innerWidth < 700) {
+                        setSidebarVisible(false);
+                      }
+                    }}
                   >
                     {link.label}
                   </NavLink>
@@ -169,24 +189,33 @@ function confirmUpdateFoto() {
           </ul>
         </nav>
       </aside>
+      )}
 
-      <main className="contentAdmin">
-        {isHomeRoot ? (
-          <div className="area_logoHome">
-            <img src={ImagemLogo} alt="logo" className="logoHome"/>
-            <h2 className="title-home fs-4">EDSOF INFORMÁTICA</h2>
-          </div>
-        ) : (
-          <Outlet
-            context={{
-              ...parentContext,
-              textoTitle,
-              setTextoTitle,
-              onMenuClick: toggleMenu
-            }}
-          />
-        )}
-      </main>
+      {(!sidebarVisible || window.innerWidth >= 700) && (
+        <main className="contentAdmin">
+          {isHomeRoot ? (
+            <div className="area_logoHome">
+              <img src={ImagemLogo} alt="logo" className="logoHome"/>
+              <h2 className="title-home fs-4">EDSOF INFORMÁTICA</h2>
+            </div>
+          ) : (
+            <Outlet
+              context={{
+                ...parentContext,
+                textoTitle,
+                setTextoTitle,
+                onMenuClick: toggleMenu,
+
+                voltarHomeMobile: () => {
+                  setSidebarVisible(true);
+                  navigate("/home");
+                }
+
+              }}
+            />
+          )}
+        </main>
+      )}
       
       <MobileMenu 
         open={menuOpen} 
