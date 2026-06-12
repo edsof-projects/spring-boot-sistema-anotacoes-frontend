@@ -15,7 +15,11 @@ const ListAcessos = () => {
     const navigate = useNavigate()
     const [acessos, setAcessos]          = useState([])
     const [totalregs, setTotalRegs]      = useState()
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -78,6 +82,7 @@ const ListAcessos = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao

@@ -5,13 +5,13 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  /* border: 1px solid #ccc; */
 }
 
 .sidebar{
-   display: none;
+   display: flex;
    flex-direction: column;
-   width: 240px;
+   /* width: 240px; */
+   width: 100%;
    height: 95vh;
    background-color: #333333;
 }
@@ -65,7 +65,6 @@
 
 .contentAdmin {
   flex: 1;
-  display: flex;
   flex-direction: column;
   height: 95vh;
   overflow-y: auto;
@@ -109,8 +108,11 @@
      display: none;
 }
 
-@media (min-width:768px) {  
+@media (min-width:700px) {  
    .sidebar{
+      width: 240px;
+   }
+   .contentAdmin{
       display: flex;
    }
    #menuBurger{

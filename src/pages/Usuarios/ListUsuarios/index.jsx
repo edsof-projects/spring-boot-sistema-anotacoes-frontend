@@ -14,7 +14,11 @@ const ListUsuarios = () => {
     const navigate = useNavigate()
     const [usuarios, setUsuarios]        = useState([])
     const [totalregs, setTotalRegs]      = useState()
-    const { setTextoTitle, onMenuClick } = useOutletContext();
+    const {
+        setTextoTitle,
+        onMenuClick,
+        voltarHomeMobile
+    } = useOutletContext();
 
     const {
         isOpen,
@@ -77,6 +81,7 @@ const ListUsuarios = () => {
                 goEditar        = {goEditar}
                 goExcluir       = {goExcluir}
                 onMenuClick     = {onMenuClick}
+                voltarHomeMobile = {voltarHomeMobile}
 
                 modal={
                 <ModalVisualizacao
